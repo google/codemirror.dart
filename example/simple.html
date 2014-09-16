@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<!-- Copyright (c) 2014, Google Inc. Please see the AUTHORS file for details.
+     All rights reserved. Use of this source code is governed by a BSD-style
+     license that can be found in the LICENSE file. -->
+
+<html>
+  <head>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dart CodeMirror Demo</title>
+    <link href="simple.css" rel="stylesheet">
+    <link href="packages/codemirror/codemirror.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <script src="packages/codemirror/codemirror.js"></script>
+
+    <h2>Dart CodeMirror Demo</h2>
+
+    <div id="controls">
+      <select id="theme"></select>
+      <select id="mode"></select>
+      <input type="checkbox" id="lineNumbers">Line numbers
+      <input type="checkbox" id="tabIndent">Indent with tabs
+    </div>
+
+    <div id="textContainer"></div>
+
+    <p id="footer"></p>
+
+    <script type="application/dart" src="simple.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

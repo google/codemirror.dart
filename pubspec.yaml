@@ -1,0 +1,13 @@
+# Copyright (c) 2014, Google Inc. Please see the AUTHORS file for details.
+# All rights reserved. Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+
+name: codemirror
+version: 0.0.1+4.4.0
+description: A Dart wrapper around the CodeMirror text editor.
+homepage: https://github.com/Google/codemirror.dart
+environment:
+  sdk: '>=1.0.0 <2.0.0'
+dev_dependencies:
+  browser: any
+  unittest: any

@@ -1,7 +1,7 @@
 URL: http://codemirror.net/doc/compress.html
 Version: 4.4.0
 License: MIT
-License File: LICENSE
+License File: third_party/codemirror/LICENSE
 
 Description:
 CodeMirror is a JavaScript component that provides a code editor in

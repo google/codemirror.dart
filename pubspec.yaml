@@ -10,4 +10,5 @@ environment:
   sdk: '>=1.0.0 <2.0.0'
 dev_dependencies:
   browser: any
+  grinder: ">=0.6.0 <0.7.0"
   unittest: any

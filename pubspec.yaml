@@ -5,7 +5,7 @@
 name: codemirror
 version: 0.0.1+4.4.0
 description: A Dart wrapper around the CodeMirror text editor.
-homepage: https://github.com/Google/codemirror.dart
+homepage: https://github.com/google/codemirror.dart
 environment:
   sdk: '>=1.0.0 <2.0.0'
 dev_dependencies:

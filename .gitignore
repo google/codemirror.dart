@@ -9,3 +9,8 @@ pubspec.lock
 *.dart.js
 *.js.deps
 *.js.map
+
+# Ignore the codemirror copied resources.
+lib/codemirror.js
+lib/css/
+lib/theme/

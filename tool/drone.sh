@@ -18,9 +18,11 @@ dart --version
 # Get our packages.
 pub get
 
+# Copy codemirror from third_party.
+./grind copy-codemirror
+
 # Verify that the libraries are error free.
-dartanalyzer --package-root packages/ \
-  --fatal-warnings \
+dartanalyzer --package-root packages/ --fatal-warnings \
   example/simple.dart \
   lib/codemirror.dart \
   test/all.dart

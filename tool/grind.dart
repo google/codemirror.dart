@@ -9,6 +9,7 @@ import 'package:grinder/grinder.dart';
 void main([List<String> args]) {
   task('init', init);
   task('copy-codemirror', copyCodeMirror, ['init']);
+  task('test', test, ['copy-codemirror']);
   task('clean', clean);
 
   startGrinder(args);
@@ -42,6 +43,14 @@ void copyCodeMirror(GrinderContext context) {
   // Copy the themes.
   copyDirectory(joinDir(SRC_DIR, ['theme']), joinDir(DEST_DIR, ['theme']),
       context);
+}
+
+/**
+ * Run the tests.
+ */
+void test(GrinderContext context) {
+  // TODO(devoncarew): Run browser tests.
+  //Tests.runCliTests(context);
 }
 
 /**

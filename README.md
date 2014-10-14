@@ -1,5 +1,7 @@
 # codemirror.dart
 
+[![Build Status](https://travis-ci.org/google/codemirror.dart.svg?branch=master)](https://travis-ci.org/google/codemirror.dart)
+
 ## What is it?
 
 A Dart wrapper around the CodeMirror text editor. From 

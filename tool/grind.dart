@@ -6,6 +6,9 @@ import 'dart:io';
 
 import 'package:grinder/grinder.dart';
 
+final Directory srcDir = new Directory('third_party/codemirror');
+final Directory destDir = new Directory('lib');
+
 void main([List<String> args]) {
   task('init', init);
   task('copy-codemirror', copyCodeMirror, ['init']);
@@ -30,18 +33,17 @@ void init(GrinderContext context) {
  * consume.
  */
 void copyCodeMirror(GrinderContext context) {
-  final Directory SRC_DIR = new Directory('third_party/codemirror');
-  final Directory DEST_DIR = new Directory('lib');
-
   // Copy codemirror.js.
-  copyFile(joinFile(SRC_DIR, ['lib', 'codemirror.js']), DEST_DIR, context);
+  String jsSource = _concatenateModes(srcDir);
+  joinFile(destDir, ['codemirror.js']).writeAsStringSync(jsSource);
+  //copyFile(joinFile(srcDir, ['lib', 'codemirror.js']), destDir, context);
 
   // Copy codemirror.css.
-  copyFile(joinFile(SRC_DIR, ['lib', 'codemirror.css']),
-      joinDir(DEST_DIR, ['css']), context);
+  copyFile(joinFile(srcDir, ['lib', 'codemirror.css']),
+      joinDir(destDir, ['css']), context);
 
   // Copy the themes.
-  copyDirectory(joinDir(SRC_DIR, ['theme']), joinDir(DEST_DIR, ['theme']),
+  copyDirectory(joinDir(srcDir, ['theme']), joinDir(destDir, ['theme']),
       context);
 }
 
@@ -57,5 +59,30 @@ void test(GrinderContext context) {
  * Delete all generated artifacts.
  */
 void clean(GrinderContext context) {
+  deleteEntity(joinFile(destDir, ['codemirror.js']), context);
+  deleteEntity(joinFile(destDir, ['css', 'codemirror.css']), context);
+  deleteEntity(joinFile(destDir, ['theme']), context);
+}
 
+String _concatenateModes(Directory dir) {
+  List files = [];
+
+  // Read lib/codemirror.js.
+  files.add(joinFile(dir, ['lib', 'codemirror.js']));
+
+  // Read mode/meta.js.
+  files.add(joinFile(dir, ['mode', 'meta.js']));
+
+  // Read all the mode files.
+  var modeFiles = joinDir(dir, ['mode'])
+    .listSync()
+    .where((dir) => dir is Directory)
+    .map((dir) => joinFile(dir, ['${fileName(dir)}.js']))
+    .where((f) => f.existsSync());
+  files.addAll(modeFiles);
+
+  return files.map((File file) {
+    String header = "// ${fileName(file)}\n\n";
+    return header + file.readAsStringSync().trim() + "\n";
+  }).join("\n");
 }

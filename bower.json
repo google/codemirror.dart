@@ -1,0 +1,7 @@
+{
+  "name": "codemirror.dart",
+  "private": true,
+  "dependencies": {
+    "codemirror": "~4.4.0"
+  }
+}

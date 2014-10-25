@@ -34,7 +34,7 @@ void copyCodeMirror(GrinderContext context) {
   final Directory DEST_DIR = new Directory('lib');
 
   // Copy codemirror.js.
-  copyFile(joinFile(SRC_DIR, ['codemirror.js']), DEST_DIR, context);
+  copyFile(joinFile(SRC_DIR, ['lib', 'codemirror.js']), DEST_DIR, context);
 
   // Copy codemirror.css.
   copyFile(joinFile(SRC_DIR, ['lib', 'codemirror.css']),

@@ -37,3 +37,14 @@ reference the CodeMirror JavaScript code:
 and, in your Dart code, import the library:
 
     import 'package:codemirror/codemirror.dart';
+
+## Polymer transformer
+
+The Polymer transfomer will inline our theme css references incorrectly. Currently, to use the `codemirror` package with Polymer, you'll need to add the following lines to your `pubspec.yaml` file.
+
+```
+- polymer:
+    entry_points: web/codemirror_sample.html
+    inline_stylesheets:
+      packages/codemirror/codemirror.css: false
+```          

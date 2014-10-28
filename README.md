@@ -32,7 +32,7 @@ In your main html file, link to the style sheet:
     
 reference the CodeMirror JavaScript code:
 
-    <script src="packages/codemirror/lib/codemirror.js"></script>
+    <script src="packages/codemirror/codemirror.js"></script>
 
 and, in your Dart code, import the library:
 

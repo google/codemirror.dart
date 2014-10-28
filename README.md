@@ -44,7 +44,7 @@ The Polymer transfomer will inline our theme css references incorrectly. Current
 
 ```
 - polymer:
-    entry_points: web/codemirror_sample.html
+    entry_points: web/foo_bar.html
     inline_stylesheets:
       packages/codemirror/codemirror.css: false
 ```          

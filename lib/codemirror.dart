@@ -91,7 +91,7 @@ class CodeMirror extends ProxyHolder {
   /**
    * Fires every time the content of the editor is changed.
    */
-  Stream get onChange => onEvent('change');
+  Stream get onChange => onEvent('change', true);
 
   /**
    * Will be fired when the cursor or selection moves, or any change is made to

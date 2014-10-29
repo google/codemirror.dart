@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.4
+- fix for exception when listening for changes
+
 # 0.0.3
 - republished to capture files omitted due to the .gitignore pub behavior
 

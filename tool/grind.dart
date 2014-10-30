@@ -11,6 +11,7 @@ final Directory destDir = new Directory('lib');
 
 void main([List<String> args]) {
   task('init', init);
+  task('install', install, ['init']);
   task('copy-codemirror', copyCodeMirror, ['init']);
   task('test', test, ['copy-codemirror']);
   task('clean', clean);
@@ -26,6 +27,13 @@ void init(GrinderContext context) {
   if (!getDir('lib').existsSync() || !getFile('pubspec.yaml').existsSync()) {
     context.fail('This script must be run from the project root.');
   }
+}
+
+/**
+ * Update / install a new version of the codemirror library.
+ */
+void install(GrinderContext context) {
+  runProcess(context, 'bower', arguments: ['install']);
 }
 
 /**

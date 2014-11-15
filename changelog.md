@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.5
+- add a `CodeMirror.swapDoc` method
+
 # 0.0.4
 - fix for exception when listening for changes
 

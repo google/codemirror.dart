@@ -124,6 +124,13 @@ class CodeMirror extends ProxyHolder {
   }
 
   /**
+   * Attach a new document to the editor.
+   */
+  void swapDoc(Doc doc) {
+    callArg('swapDoc', doc.jsProxy);
+  }
+
+  /**
    * Retrieves the current value of the given option for this editor instance.
    */
   dynamic getOption(String option) => callArg('getOption', option);
@@ -151,7 +158,7 @@ class CodeMirror extends ProxyHolder {
   /**
    * Valid options are `default`, `vim`, `emacs`, and `sublime`.
    */
-  void setKeyMap(String mode) => setOption('keyMap', mode);
+  void setKeyMap(String value) => setOption('keyMap', value);
 
   /**
    * Whether to show line numbers to the left of the editor.
@@ -241,10 +248,10 @@ class CodeMirror extends ProxyHolder {
 }
 
 /**
- * Each editor is associated with an instance of [Doc], its document. A
- * document represents the editor content, plus a selection, an undo history,
- * and a mode. A document can only be associated with a single editor at a time.
- * You can create new documents by calling the
+ * Each editor is associated with an instance of [Doc], its document. A document
+ * represents the editor content, plus a selection, an undo history, and a mode.
+ * A document can only be associated with a single editor at a time. You can
+ * create new documents by calling the
  * `CodeMirror.Doc(text, mode, firstLineNumber)` constructor. The last two
  * arguments are optional and can be used to set a mode for the document and
  * make it start at a line number other than 0, respectively.

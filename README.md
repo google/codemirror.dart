@@ -21,7 +21,7 @@ Map options = {
 
 CodeMirror editor = new CodeMirror.fromElement(
     querySelector('#textContainer'), options: options);
-editor.setValue('foo.bar(1, 2, 3);');
+editor.getDoc().setValue('foo.bar(1, 2, 3);');
 ```
 
 ## How do I use it?

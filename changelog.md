@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.0.7
+- fixed a bug in `Doc.onChange`
+- fixed a bug in `CodeMirror.getReadOnly`
+- added `Doc.getSelection`
+
 # 0.0.6
 - added a new constructor for `Doc`
 

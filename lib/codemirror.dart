@@ -127,6 +127,7 @@ class CodeMirror extends ProxyHolder {
    * Attach a new document to the editor.
    */
   void swapDoc(Doc doc) {
+    _doc = doc;
     callArg('swapDoc', doc.jsProxy);
   }
 
@@ -185,12 +186,25 @@ class CodeMirror extends ProxyHolder {
   /**
    * Whether editing is disabled.
    */
-  bool getReadOnly() => getOption('readOnly');
+  bool getReadOnly() =>
+      getOption('readOnly') == true ||
+      getOption('readOnly') == 'true' ||
+      getOption('readOnly') == 'nocursor';
 
   /**
    * This disables editing of the editor content by the user.
    */
-  void setReadOnly(bool value) => setOption('readOnly', value);
+  void setReadOnly(bool value, [bool noCursor = false]) {
+    if (value) {
+      if (noCursor) {
+        setOption('readOnly', 'nocursor');
+      } else {
+        setOption('readOnly', value);
+      }
+    } else {
+      setOption('readOnly', value);
+    }
+  }
 
   /**
    * The width of a tab character. Defaults to 4.
@@ -228,7 +242,7 @@ class CodeMirror extends ProxyHolder {
   void focus() => call('focus');
 
   /**
-   * Retrieve one end of the primary selection. start is a an optional string
+   * Retrieve one end of the primary selection. [start] is a an optional string
    * indicating which end of the selection to return. It may be "from", "to",
    * "head" (the side of the selection that moves when you press shift+arrow),
    * or "anchor" (the fixed side of the selection). Omitting the argument is the
@@ -298,6 +312,13 @@ class Doc extends ProxyHolder {
   String getLine(int n) => callArg('getLine', n);
 
   /**
+   * Get the currently selected code. Optionally pass a line separator to put
+   * between the lines in the output. When multiple selections are present, they
+   * are concatenated with instances of [lineSep] in between.
+   */
+  String getSelection([String lineSep]) => callArg('getSelection', lineSep);
+
+  /**
    * Set the editor content as 'clean', a flag that it will retain until it is
    * edited, and which will be set again when such an edit is undone again.
    * Useful to track whether the content needs to be saved. This function is
@@ -348,10 +369,10 @@ class Doc extends ProxyHolder {
   }
 
   /**
-   * Fired whenever a change occurs to the document. changeObj has a similar
+   * Fired whenever a change occurs to the document. `changeObj` has a similar
    * type as the object passed to the editor's "change" event.
    */
-  Stream get onChange => onEvent('change');
+  Stream get onChange => onEvent('change', true);
 }
 
 /**
@@ -369,6 +390,9 @@ class Position {
 
   JsObject toProxy() => jsify({'line': line, 'ch': ch});
 
+  operator==(other) => other is Position &&
+      line == other.line && ch == other.ch;
+
   String toString() => '[${line}:${ch}]';
 }
 
@@ -384,6 +408,9 @@ class Span {
   Span.fromProxy(var obj) :
       head = new Position.fromProxy(obj['head']),
       anchor = new Position.fromProxy(obj['anchor']);
+
+  operator==(other) => other is Span &&
+      head == other.head && anchor == other.anchor;
 
   String toString() => '${head}=>${anchor}]';
 }

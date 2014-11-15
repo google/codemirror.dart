@@ -9,8 +9,8 @@ import 'dart:html';
 import 'package:codemirror/codemirror.dart';
 
 void main() {
-  Map options = {
-    'value': """\n// You can edit this code! Click here and start typing.
+  Map options = { 'theme': "3024-day" };
+  String text = """\n// You can edit this code! Click here and start typing.
 
 package main
 
@@ -18,13 +18,12 @@ import "fmt"
 
 func main() {
   fmt.Println("Hello, 世界")
-}\n""",
-    'mode':  "go",
-    'theme': "3024-day"
-  };
+}\n""";
 
   CodeMirror editor = new CodeMirror.fromElement(
       querySelector('#textContainer'), options: options);
+  Doc doc = new Doc(text, 'go');
+  editor.swapDoc(doc);
 
   // Theme control.
   SelectElement themeSelect = querySelector('#theme');

@@ -257,6 +257,17 @@ class CodeMirror extends ProxyHolder {
  * make it start at a line number other than 0, respectively.
  */
 class Doc extends ProxyHolder {
+  static JsObject _create(String text, String mode, int firstLineNumber) {
+    if (firstLineNumber == null) {
+      return new JsObject(context['CodeMirror']['Doc'], [text, mode]);
+    } else {
+      return new JsObject(context['CodeMirror']['Doc'], [text, mode, firstLineNumber]);
+    }
+  }
+
+  Doc(String text, [String mode, int firstLineNumber]) :
+    super(_create(text, mode, firstLineNumber));
+
   Doc.fromProxy(JsObject proxy) : super(proxy);
 
   String getValue() => call('getValue');

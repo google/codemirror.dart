@@ -37,8 +37,11 @@ func main() {
 
   // Mode control.
   SelectElement modeSelect = querySelector('#mode');
-  for (String theme in ['go', 'css', 'javascript']) {
-    modeSelect.children.add(new OptionElement(value: theme)..text = theme);
+  for (String mode in CodeMirror.MODES) {
+    modeSelect.children.add(new OptionElement(value: mode)..text = mode);
+    if (mode == 'go') {
+      modeSelect.selectedIndex = modeSelect.length - 1;
+    }
   }
   modeSelect.onChange.listen((e) {
     String modeName = modeSelect.options[modeSelect.selectedIndex].value;

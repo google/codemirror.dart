@@ -65,7 +65,8 @@ class CodeMirror extends ProxyHolder {
     'vim',
   ];
 
-  static List<String> get MODES => keys(context['CodeMirror']['modes']);
+  static List<String> get MODES => keys(context['CodeMirror']['modes'])
+      .where((modeName) => modeName != 'null').toList();
 
   static List<String> get MIME_MODES => keys(context['CodeMirror']['mimeModes']);
 

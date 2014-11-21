@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.8
+- upgrade to codemirror 4.7.0
+
 # 0.0.7
 - fixed a bug in `Doc.onChange`
 - fixed a bug in `CodeMirror.getReadOnly`

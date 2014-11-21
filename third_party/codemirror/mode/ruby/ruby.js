@@ -107,16 +107,16 @@ CodeMirror.defineMode("ruby", function(config) {
       }
 
       // Symbols can't start by a digit
-      if (stream.eat(/[a-zA-Z$@_]/)) {
-        stream.eatWhile(/[\w]/);
+      if (stream.eat(/[a-zA-Z$@_\xa1-\uffff]/)) {
+        stream.eatWhile(/[\w$\xa1-\uffff]/);
         // Only one ? ! = is allowed and only as the last character
         stream.eat(/[\?\!\=]/);
         return "atom";
       }
       return "operator";
-    } else if (ch == "@" && stream.match(/^@?[a-zA-Z_]/)) {
+    } else if (ch == "@" && stream.match(/^@?[a-zA-Z_\xa1-\uffff]/)) {
       stream.eat("@");
-      stream.eatWhile(/[\w]/);
+      stream.eatWhile(/[\w\xa1-\uffff]/);
       return "variable-2";
     } else if (ch == "$") {
       if (stream.eat(/[a-zA-Z_]/)) {
@@ -127,8 +127,8 @@ CodeMirror.defineMode("ruby", function(config) {
         stream.next(); // Must be a special global like $: or $!
       }
       return "variable-3";
-    } else if (/[a-zA-Z_]/.test(ch)) {
-      stream.eatWhile(/[\w]/);
+    } else if (/[a-zA-Z_\xa1-\uffff]/.test(ch)) {
+      stream.eatWhile(/[\w\xa1-\uffff]/);
       stream.eat(/[\?\!]/);
       if (stream.eat(":")) return "atom";
       return "ident";
@@ -141,24 +141,26 @@ CodeMirror.defineMode("ruby", function(config) {
     } else if (ch == "-" && stream.eat(">")) {
       return "arrow";
     } else if (/[=+\-\/*:\.^%<>~|]/.test(ch)) {
-      stream.eatWhile(/[=+\-\/*:\.^%<>~|]/);
+      var more = stream.eatWhile(/[=+\-\/*:\.^%<>~|]/);
+      if (ch == "." && !more) curPunc = ".";
       return "operator";
     } else {
       return null;
     }
   }
 
-  function tokenBaseUntilBrace() {
-    var depth = 1;
+  function tokenBaseUntilBrace(depth) {
+    if (!depth) depth = 1;
     return function(stream, state) {
       if (stream.peek() == "}") {
-        depth--;
-        if (depth == 0) {
+        if (depth == 1) {
           state.tokenize.pop();
           return state.tokenize[state.tokenize.length-1](stream, state);
+        } else {
+          state.tokenize[state.tokenize.length - 1] = tokenBaseUntilBrace(depth - 1);
         }
       } else if (stream.peek() == "{") {
-        depth++;
+        state.tokenize[state.tokenize.length - 1] = tokenBaseUntilBrace(depth + 1);
       }
       return tokenBase(stream, state);
     };
@@ -232,20 +234,25 @@ CodeMirror.defineMode("ruby", function(config) {
     token: function(stream, state) {
       if (stream.sol()) state.indented = stream.indentation();
       var style = state.tokenize[state.tokenize.length-1](stream, state), kwtype;
+      var thisTok = curPunc;
       if (style == "ident") {
         var word = stream.current();
-        style = keywords.propertyIsEnumerable(stream.current()) ? "keyword"
+        style = state.lastTok == "." ? "property"
+          : keywords.propertyIsEnumerable(stream.current()) ? "keyword"
           : /^[A-Z]/.test(word) ? "tag"
           : (state.lastTok == "def" || state.lastTok == "class" || state.varList) ? "def"
           : "variable";
-        if (indentWords.propertyIsEnumerable(word)) kwtype = "indent";
-        else if (dedentWords.propertyIsEnumerable(word)) kwtype = "dedent";
-        else if ((word == "if" || word == "unless") && stream.column() == stream.indentation())
-          kwtype = "indent";
-        else if (word == "do" && state.context.indented < state.indented)
-          kwtype = "indent";
+        if (style == "keyword") {
+          thisTok = word;
+          if (indentWords.propertyIsEnumerable(word)) kwtype = "indent";
+          else if (dedentWords.propertyIsEnumerable(word)) kwtype = "dedent";
+          else if ((word == "if" || word == "unless") && stream.column() == stream.indentation())
+            kwtype = "indent";
+          else if (word == "do" && state.context.indented < state.indented)
+            kwtype = "indent";
+        }
       }
-      if (curPunc || (style && style != "comment")) state.lastTok = word || curPunc || style;
+      if (curPunc || (style && style != "comment")) state.lastTok = thisTok;
       if (curPunc == "|") state.varList = !state.varList;
 
       if (kwtype == "indent" || /[\(\[\{]/.test(curPunc))

@@ -81,6 +81,9 @@ String _concatenateModes(Directory dir) {
   // Read mode/meta.js.
   files.add(joinFile(dir, ['mode', 'meta.js']));
 
+  // Read addon/mode/simple.js - required by some modes.
+  files.add(joinFile(dir, ['addon', 'mode', 'simple.js']));
+
   // Read all the mode files.
   var modeFiles = joinDir(dir, ['mode'])
     .listSync()

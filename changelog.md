@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.0.9
+- upgrade to codemirror 4.8.0
+- expose `CodeMirror.findModeByExtension`, `CodeMirror.findModeByMime`,
+  and `CodeMirror.findModeByName`
+
 # 0.0.8
 - upgrade to codemirror 4.7.0
 

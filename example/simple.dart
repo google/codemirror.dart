@@ -68,6 +68,7 @@ func main() {
   });
 
   editor.refresh();
+  editor.focus();
 
   editor.addCommand('find', (foo) {
     print('todo: handle find');

@@ -65,18 +65,29 @@ class CodeMirror extends ProxyHolder {
     'vim',
   ];
 
-  static List<String> get MODES => keys(context['CodeMirror']['modes'])
+  static JsObject get _cm => context['CodeMirror'];
+
+  static List<String> get MODES => keys(_cm['modes'])
       .where((modeName) => modeName != 'null').toList();
 
-  static List<String> get MIME_MODES => keys(context['CodeMirror']['mimeModes']);
+  static List<String> get MIME_MODES => keys(_cm['mimeModes']);
 
-  static List<String> get COMMANDS => keys(context['CodeMirror']['commands']);
+  static List<String> get COMMANDS => keys(_cm['commands']);
+
+  static ModeInfo findModeByExtension(String ext)
+      => new ModeInfo(_cm.callMethod('findModeByExtension', [ext]));
+
+  static ModeInfo findModeByMime(String mime)
+      => new ModeInfo(_cm.callMethod('findModeByMIME', [mime]));
+
+  static ModeInfo findModeByName(String name)
+      => new ModeInfo(_cm.callMethod('findModeByName', [name]));
 
   static JsObject _createFromElement(Element element, Map options) {
     if (options == null) {
-      return new JsObject(context['CodeMirror'], [element]);
+      return new JsObject(_cm, [element]);
     } else {
-      return new JsObject(context['CodeMirror'], [element, jsify(options)]);
+      return new JsObject(_cm, [element, jsify(options)]);
     }
   }
 
@@ -256,7 +267,7 @@ class CodeMirror extends ProxyHolder {
    * Add a new custom command to CodeMirror.
    */
   void addCommand(String name, CommandHandler callback) {
-    context['CodeMirror']['commands'][name] = (_) {
+    _cm['commands'][name] = (_) {
       callback(this);
     };
   }
@@ -395,6 +406,31 @@ class Position {
       line == other.line && ch == other.ch;
 
   String toString() => '[${line}:${ch}]';
+}
+
+class ModeInfo extends ProxyHolder {
+  factory ModeInfo(JsObject proxy) =>
+      proxy == null ? null : new ModeInfo._(proxy);
+
+  ModeInfo._(JsObject proxy) : super(proxy);
+
+  /// The mode's human readable, display name.
+  String get name => jsProxy['name'];
+
+  String get mime => jsProxy['mime'];
+
+  List<String> get mimes =>
+      jsProxy.hasProperty('mimes') ? jsProxy['mimes']: [mime];
+
+  /// The mode's id.
+  String get mode => jsProxy['mode'];
+
+  /// The mode's file extension.
+  List<String> get ext => jsProxy['ext'];
+
+  /// The mode's other file extensions.
+  List<String> get alias =>
+      jsProxy.hasProperty('alias') ? jsProxy['alias']: [];
 }
 
 /**

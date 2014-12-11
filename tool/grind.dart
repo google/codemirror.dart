@@ -53,6 +53,10 @@ void copyCodeMirror(GrinderContext context) {
   // Copy the themes.
   copyDirectory(joinDir(srcDir, ['theme']), joinDir(destDir, ['theme']),
       context);
+
+  // Copy the addons.
+  copyDirectory(joinDir(srcDir, ['addon']), joinDir(destDir, ['addon']),
+      context);
 }
 
 /**
@@ -83,6 +87,13 @@ String _concatenateModes(Directory dir) {
 
   // Read addon/mode/simple.js - required by some modes.
   files.add(joinFile(dir, ['addon', 'mode', 'simple.js']));
+
+  // Add some likely addons.
+  files.add(joinFile(dir, ['addon', 'edit', 'closebrackets.js']));
+  files.add(joinFile(dir, ['addon', 'edit', 'matchbrackets.js']));
+  files.add(joinFile(dir, ['addon', 'hint', 'show-hint.js']));
+  files.add(joinFile(dir, ['addon', 'hint', 'css-hint.js']));
+  files.add(joinFile(dir, ['addon', 'hint', 'html-hint.js']));
 
   // Read all the mode files.
   var modeFiles = joinDir(dir, ['mode'])

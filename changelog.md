@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.0.10
+- included the addon/ directory in the package
+- concatentated likely addons to the codemirror.js script
+
 # 0.0.9
 - upgrade to codemirror 4.8.0
 - expose `CodeMirror.findModeByExtension`, `CodeMirror.findModeByMime`,

@@ -10,6 +10,8 @@ pubspec.lock
 *.js.deps
 *.js.map
 
+.settings/
+
 # Ignore the codemirror copied resources.
 lib/addon/
 lib/codemirror.js

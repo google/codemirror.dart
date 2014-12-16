@@ -37,8 +37,7 @@ void install(GrinderContext context) {
 }
 
 /**
- * Concatenate the template files into data files that the generators can
- * consume.
+ * Copy the codemirror files from third_party/ into lib/.
  */
 void copyCodeMirror(GrinderContext context) {
   // Copy codemirror.js.
@@ -91,9 +90,13 @@ String _concatenateModes(Directory dir) {
   // Add some likely addons.
   files.add(joinFile(dir, ['addon', 'edit', 'closebrackets.js']));
   files.add(joinFile(dir, ['addon', 'edit', 'matchbrackets.js']));
+
   files.add(joinFile(dir, ['addon', 'hint', 'show-hint.js']));
   files.add(joinFile(dir, ['addon', 'hint', 'css-hint.js']));
   files.add(joinFile(dir, ['addon', 'hint', 'html-hint.js']));
+
+  files.add(joinFile(dir, ['addon', 'lint', 'lint.js']));
+  files.add(joinFile(dir, ['addon', 'lint', 'css-lint.js']));
 
   // Read all the mode files.
   var modeFiles = joinDir(dir, ['mode'])

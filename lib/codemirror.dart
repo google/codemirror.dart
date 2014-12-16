@@ -12,7 +12,7 @@ import 'src/js_utils.dart';
 
 // TODO: code completion (hint/show-hint.js)
 
-// TODO: displaying errors (see lint/lint.js addon)
+// TODO: displaying errors
 
 // TODO: find, replace
 
@@ -82,6 +82,31 @@ class CodeMirror extends ProxyHolder {
 
   static ModeInfo findModeByName(String name)
       => new ModeInfo(_cm.callMethod('findModeByName', [name]));
+
+  /**
+   * Registers a helper value with the given name in the given namespace (type).
+   * This is used to define functionality that may be looked up by mode. Will
+   * create (if it doesn't already exist) a property on the CodeMirror object
+   * for the given type, pointing to an object that maps names to values. I.e.
+   * after doing CodeMirror.registerHelper("hint", "foo", myFoo), the value
+   * CodeMirror.hint.foo will point to myFoo.
+   */
+  static void registerHelper(String type, String name, dynamic value) {
+    // TODO: value may be a Function? always a function?
+    _cm.callMethod('registerHelper', [type, name, value]);
+  }
+
+//  /**
+//   * Acts like registerHelper, but also registers this helper as 'global',
+//   * meaning that it will be included by getHelpers whenever the given predicate
+//   * returns true when called with the local mode and editor.
+//   */
+//  static void registerGlobalHelper(String type, String name, Function predicate,
+//      dynamic value) {
+//    // predicate: fn(mode, CodeMirror)
+//    // TODO: value may be a Function? always a function?
+//
+//  }
 
   static JsObject _createFromElement(Element element, Map options) {
     if (options == null) {
@@ -271,7 +296,56 @@ class CodeMirror extends ProxyHolder {
       callback(this);
     };
   }
+
+  /**
+   * Sets the gutter marker for the given gutter (identified by its CSS class,
+   * see the gutters option) to the given value. Value can be either null, to
+   * clear the marker, or a DOM element, to set it. The DOM element will be
+   * shown in the specified gutter next to the specified line.
+   */
+  void setGutterMarker(int line, String gutterID, Element value) {
+    callArgs('setGutterMarker', [line, gutterID, value]);
+  }
+
+  /**
+   * Remove all gutter markers in the gutter with the given ID.
+   */
+  void clearGutter(String gutterID) {
+    callArg('clearGutter', gutterID);
+  }
+
+  /**
+   * Puts node, which should be an absolutely positioned DOM node, into the
+   * editor, positioned right below the given {line, ch} position. When
+   * scrollIntoView is true, the editor will ensure that the entire node is
+   * visible (if possible). To remove the widget again, simply use DOM methods
+   * (move it somewhere else, or call removeChild on its parent).
+   */
+  void addWidget(Position pos, Element node, [bool scrollIntoView = false]) {
+    callArgs('addWidget', [pos.toProxy(), node, scrollIntoView]);
+  }
+
+  /**
+   * Adds a line widget, an element shown below a line, spanning the whole of the
+   * editor's width, and moving the lines below it downwards. line should be
+   * either an integer or a line handle, and node should be a DOM node, which will
+   * be displayed below the given line. options, when given, should be an object
+   * that configures the behavior of the widget.
+   */
+  LineWidget addLineWidget(int line, Element node) {
+    return new LineWidget(callArgs('addLineWidget', [line, node]));
+  }
 }
+
+// TODO: Doc.markText
+
+// TODO: Doc.setBookmark
+
+// TODO: Doc.findMarks
+
+// TODO: Doc.findMarksAt
+
+// TODO: Doc.getAllMarks
 
 /**
  * Each editor is associated with an instance of [Doc], its document. A document
@@ -331,6 +405,31 @@ class Doc extends ProxyHolder {
   String getSelection([String lineSep]) => callArg('getSelection', lineSep);
 
   /**
+   * Set a single selection range. anchor and head should be {line, ch} objects.
+   * head defaults to anchor when not given. These options are supported:
+   *
+   * `scroll`: determines whether the selection head should be scrolled into
+   * view. Defaults to true.
+   *
+   * `origin`: detemines whether the selection history event may be merged with
+   * the previous one. When an origin starts with the character +, and the last
+   * recorded selection had the same origin and was similar (close in time, both
+   * collapsed or both non-collapsed), the new one will replace the old one.
+   * When it starts with *, it will always replace the previous event (if that
+   * had the same origin). Built-in motion uses the "+move" origin.
+   *
+   * `bias`: determine the direction into which the selection endpoints should
+   * be adjusted when they fall inside an atomic range. Can be either -1
+   * (backward) or 1 (forward). When not given, the bias will be based on the
+   * relative position of the old selection—the editor will try to move further
+   * away from that, to prevent getting stuck.
+   */
+  void setSelection(Position anchor, {Position head, Map options}) {
+    callArgs('setSelection',
+        [anchor.toProxy(), head == null ? null : head.toProxy(), options]);
+  }
+
+  /**
    * Set the editor content as 'clean', a flag that it will retain until it is
    * edited, and which will be set again when such an edit is undone again.
    * Useful to track whether the content needs to be saved. This function is
@@ -342,7 +441,7 @@ class Doc extends ProxyHolder {
   /**
    * Returns a number that can later be passed to [isClean] to test whether any
    * edits were made (and not undone) in the meantime. If closeEvent is true,
-   * the current history event will be ‘closed’, meaning it can't be combined
+   * the current history event will be 'closed', meaning it can't be combined
    * with further changes (rapid typing or deleting events are typically
    * combined).
    */
@@ -352,7 +451,7 @@ class Doc extends ProxyHolder {
   }
 
   /**
-   * Returns whether the document is currently clean — not modified since
+   * Returns whether the document is currently clean, not modified since
    * initialization or the last call to [markClean] if no argument is passed, or
    * since the matching call to [changeGeneration] if a generation value is
    * given.
@@ -370,6 +469,16 @@ class Doc extends ProxyHolder {
    */
   Position getCursor([String start]) => new Position.fromProxy(
         start == null ? call('getCursor') : callArg('getCursor', start));
+
+  /**
+   * Set the cursor position. You can either pass a single {line, ch} object, or
+   * the line and the character as two separate parameters. Will replace all
+   * selections with a single, empty selection at the given position. The
+   * supported options are the same as for setSelection.
+   */
+  void setCursor(Position pos, {Map options}) {
+    callArgs('setCursor', [pos.toProxy(), options]);
+  }
 
   /**
    * Get the text between the given points in the editor, which should be
@@ -450,6 +559,51 @@ class Span {
       head == other.head && anchor == other.anchor;
 
   String toString() => '${head}=>${anchor}]';
+}
+
+/**
+ * An object that represents a marker.
+ */
+class TextMarker extends ProxyHolder {
+  TextMarker(JsObject jsProxy): super(jsProxy);
+
+  /**
+   * Removes the mark.
+   */
+  void clear() => call('clear');
+
+  /**
+   * Returns a {from, to} object (both holding document positions), indicating
+   * the current position of the marked range, or undefined if the marker is no
+   * longer in the document.
+   */
+  dynamic find() => call('find');
+
+  /**
+   * Call if you've done something that might change the size of the marker (for
+   * example changing the content of a replacedWith node), and want to cheaply
+   * update the display.
+   */
+  void changed() => call('changed');
+}
+
+/**
+ * See [CodeMirror.addLineWidget].
+ */
+class LineWidget extends ProxyHolder {
+  LineWidget(JsObject jsProxy): super(jsProxy);
+
+  /**
+   * Removes the widget.
+   */
+  void clear() => call('clear');
+
+  /**
+   * Call this if you made some change to the widget's DOM node that might
+   * affect its height. It'll force CodeMirror to update the height of the line
+   * that contains the widget.
+   */
+  void changed() => call('changed');
 }
 
 /**

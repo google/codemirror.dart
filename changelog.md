@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.0.11
+- expose some gutter, widget, and marker manipulation methods
+- some support for the lint addon
+
 # 0.0.10
 - included the addon/ directory in the package
 - concatentated likely addons to the codemirror.js script

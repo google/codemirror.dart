@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.0.12
+- added a `CodeMirror.fromJsObject` constructor
+- added `CodeMirror.getLine`
+
 # 0.0.11
 - expose some gutter, widget, and marker manipulation methods
 - some support for the lint addon

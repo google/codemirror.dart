@@ -124,6 +124,11 @@ class CodeMirror extends ProxyHolder {
    */
   CodeMirror.fromElement(Element element, {Map options}) :
       super(_createFromElement(element, options));
+      
+  /**
+   * Create a new CodeMirror editor from the given JsObject.
+   */
+  CodeMirror.fromJsObject(JsObject object) : super(object);
 
   /**
    * Fires every time the content of the editor is changed.

@@ -25,11 +25,12 @@ void main() {
 
   document.body.children.add(editorHost);
 
-  group('simple', _simpleTests);
-  group('CodeMirror', _codeMirrorTests);
+  group('simple', createSimpleTests);
+  group('CodeMirror', createCodeMirrorTests);
+  group('Doc', createDocTests);
 }
 
-_simpleTests() {
+createSimpleTests() {
   test('create works', () {
     CodeMirror editor = new CodeMirror.fromElement(editorHost);
     expect(editor, isNotNull);
@@ -39,7 +40,7 @@ _simpleTests() {
   });
 }
 
-_codeMirrorTests() {
+createCodeMirrorTests() {
   CodeMirror editor;
 
   setUp(() {
@@ -56,16 +57,37 @@ _codeMirrorTests() {
     expect(editorHost.parent, isNotNull);
   });
 
-  test('set / get', () {
+  test('getOption / setOption', () {
+    expect(editor.getOption('lineWrapping'), false);
+    editor.setOption('lineWrapping', true);
+    expect(editor.getOption('lineWrapping'), true);
+  });
+}
+
+createDocTests() {
+  CodeMirror editor;
+
+  setUp(() {
+    editor = new CodeMirror.fromElement(editorHost);
+  });
+
+  tearDown(() {
+    editor.dispose();
+    editorHost.children.clear();
+  });
+
+  test('getValue / getValue', () {
     Doc doc = editor.getDoc();
     expect(doc.getValue(), '');
     doc.setValue('foo bar');
     expect(doc.getValue(), 'foo bar');
   });
 
-  test('getOption / setOption', () {
-    expect(editor.getOption('lineWrapping'), false);
-    editor.setOption('lineWrapping', true);
-    expect(editor.getOption('lineWrapping'), true);
+  test('getLine', () {
+    Doc doc = editor.getDoc();
+    doc.setValue('one\ntwo\nthree');
+    expect(doc.getLine(0), 'one');
+    expect(doc.getLine(1), 'two');
+    expect(doc.getLine(2), 'three');
   });
 }

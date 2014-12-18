@@ -212,6 +212,11 @@ class CodeMirror extends ProxyHolder {
    * Whether to show line numbers to the left of the editor.
    */
   void setLineNumbers(bool value) => setOption('lineNumbers', value);
+  
+  /**
+   * Get the content of line n.
+   */
+  String getLine(int n) => callArg('getLine', n);
 
   /**
    * Whether, when indenting, the first N*tabSize spaces should be replaced by N

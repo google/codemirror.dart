@@ -25,7 +25,7 @@ typedef void CommandHandler(CodeMirror editor);
  * A wrapper around the CodeMirror editor.
  */
 class CodeMirror extends ProxyHolder {
-  static List<String> THEMES = [
+  static final List<String> THEMES = const [
     '3024-day',
     '3024-night',
     'ambiance-mobile',
@@ -58,10 +58,10 @@ class CodeMirror extends ProxyHolder {
     'xq-light',
   ];
 
-  static List<String> KEY_MAPS = [
+  static final List<String> KEY_MAPS = const [
     'default',
     'emacs',
-    'sublime'
+    'sublime',
     'vim',
   ];
 
@@ -124,7 +124,7 @@ class CodeMirror extends ProxyHolder {
    */
   CodeMirror.fromElement(Element element, {Map options}) :
       super(_createFromElement(element, options));
-      
+
   /**
    * Create a new CodeMirror editor from the given JsObject.
    */
@@ -212,7 +212,7 @@ class CodeMirror extends ProxyHolder {
    * Whether to show line numbers to the left of the editor.
    */
   void setLineNumbers(bool value) => setOption('lineNumbers', value);
-  
+
   /**
    * Get the content of line n.
    */

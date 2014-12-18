@@ -14,8 +14,6 @@ import 'package:unittest/unittest.dart';
 
 // TODO: test double click
 
-// TODO: test mode types
-
 // TODO: document mutation
 
 final Element editorHost = new DivElement();
@@ -27,16 +25,39 @@ void main() {
 
   group('simple', createSimpleTests);
   group('CodeMirror', createCodeMirrorTests);
+  group('CodeMirror (static) ', createCodeMirrorStaticTests);
   group('Doc', createDocTests);
 }
 
 createSimpleTests() {
-  test('create works', () {
+  test('create', () {
     CodeMirror editor = new CodeMirror.fromElement(editorHost);
     expect(editor, isNotNull);
     expect(editorHost.parent, isNotNull);
     editor.dispose();
     editorHost.children.clear();
+  });
+}
+
+createCodeMirrorStaticTests() {
+  test('modes', () {
+    expect(CodeMirror.MODES.length, greaterThanOrEqualTo(10));
+  });
+
+  test('mime modes', () {
+    expect(CodeMirror.MIME_MODES.length, greaterThanOrEqualTo(10));
+  });
+
+  test('commands', () {
+    expect(CodeMirror.COMMANDS.length, greaterThanOrEqualTo(10));
+  });
+
+  test('key map', () {
+    expect(CodeMirror.KEY_MAPS.length, 4);
+  });
+
+  test('themes', () {
+    expect(CodeMirror.THEMES.length, greaterThanOrEqualTo(10));
   });
 }
 
@@ -61,6 +82,14 @@ createCodeMirrorTests() {
     expect(editor.getOption('lineWrapping'), false);
     editor.setOption('lineWrapping', true);
     expect(editor.getOption('lineWrapping'), true);
+  });
+
+  test('getLine', () {
+    Doc doc = editor.getDoc();
+    doc.setValue('one\ntwo\nthree');
+    expect(editor.getLine(0), 'one');
+    expect(editor.getLine(1), 'two');
+    expect(editor.getLine(2), 'three');
   });
 }
 

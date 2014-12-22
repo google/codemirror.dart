@@ -500,6 +500,20 @@ class Doc extends ProxyHolder {
   }
 
   /**
+   * Calculates and returns a `Position` object for a zero-based index who's
+   * value is relative to the start of the editor's text. If the index is out of
+   * range of the text then the returned object is clipped to start or end of
+   * the text respectively.
+   */
+  Position posFromIndex(int index) =>
+      new Position.fromProxy(callArg('posFromIndex', index));
+
+  /**
+   * The reverse of [posFromIndex].
+   */
+  int indexFromPos(Position pos) => callArg('indexFromPos', pos.toProxy());
+
+  /**
    * Fired whenever a change occurs to the document. `changeObj` has a similar
    * type as the object passed to the editor's "change" event.
    */

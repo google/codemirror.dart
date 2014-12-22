@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.0.13
+- added `posFromIndex` and `indexFromPos`
+
 # 0.0.12
 - added a `CodeMirror.fromJsObject` constructor
 - added `CodeMirror.getLine`

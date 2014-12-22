@@ -63,7 +63,8 @@ func main() {
   // Status line.
   editor.onCursorActivity.listen((_) {
     Position pos = editor.getCursor();
-    writeFooter('line ${pos.line} column ${pos.ch}'
+    int off = editor.getDoc().indexFromPos(pos);
+    writeFooter('line ${pos.line} column ${pos.ch} [offset ${off}]'
         + (editor.getDoc().isClean() ? '' : ' (dirty)'));
   });
 

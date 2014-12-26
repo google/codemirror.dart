@@ -51,11 +51,13 @@ class CodeMirror extends ProxyHolder {
     'rubyblue',
     'solarized',
     'the-matrix',
+    'tomorrow-night-bright',
     'tomorrow-night-eighties',
     'twilight',
     'vibrant-ink',
     'xq-dark',
     'xq-light',
+    'zenburn'
   ];
 
   static final List<String> KEY_MAPS = const [

@@ -9,26 +9,21 @@ import 'dart:html';
 import 'package:codemirror/codemirror.dart';
 
 void main() {
-  Map options = { 'theme': "3024-day" };
-  String text = """\n// You can edit this code! Click here and start typing.
-
-package main
-
-import "fmt"
-
-func main() {
-  fmt.Println("Hello, 世界")
-}\n""";
+  Map options = { 'theme': 'zenburn' };
+  String text = _sampleText;
 
   CodeMirror editor = new CodeMirror.fromElement(
       querySelector('#textContainer'), options: options);
-  Doc doc = new Doc(text, 'go');
+  Doc doc = new Doc(text, 'dart');
   editor.swapDoc(doc);
 
   // Theme control.
   SelectElement themeSelect = querySelector('#theme');
   for (String theme in CodeMirror.THEMES) {
     themeSelect.children.add(new OptionElement(value: theme)..text = theme);
+    if (theme == editor.getTheme()) {
+      themeSelect.selectedIndex = themeSelect.length - 1;
+    }
   }
   themeSelect.onChange.listen((e) {
     String themeName = themeSelect.options[themeSelect.selectedIndex].value;
@@ -39,7 +34,7 @@ func main() {
   SelectElement modeSelect = querySelector('#mode');
   for (String mode in CodeMirror.MODES) {
     modeSelect.children.add(new OptionElement(value: mode)..text = mode);
-    if (mode == 'go') {
+    if (mode == editor.getMode()) {
       modeSelect.selectedIndex = modeSelect.length - 1;
     }
   }
@@ -61,12 +56,8 @@ func main() {
   });
 
   // Status line.
-  editor.onCursorActivity.listen((_) {
-    Position pos = editor.getCursor();
-    int off = editor.getDoc().indexFromPos(pos);
-    writeFooter('line ${pos.line} column ${pos.ch} [offset ${off}]'
-        + (editor.getDoc().isClean() ? '' : ' (dirty)'));
-  });
+  _updateFooter(editor);
+  editor.onCursorActivity.listen((_) => _updateFooter(editor));
 
   editor.refresh();
   editor.focus();
@@ -85,6 +76,45 @@ func main() {
   });
 }
 
-void writeFooter(var obj) {
-  querySelector('#footer').text = '${obj}';
+void _updateFooter(CodeMirror editor) {
+  Position pos = editor.getCursor();
+  int off = editor.getDoc().indexFromPos(pos);
+  String str = 'line ${pos.line} • column ${pos.ch} • offset ${off}'
+      + (editor.getDoc().isClean() ? '' : ' • (modified)');
+  querySelector('#footer').text = str;
 }
+
+final String _sampleText = r'''
+import 'dart:math' show Random;
+
+void main() {
+  print(new Die(n: 12).roll());
+}
+
+// Define a class.
+class Die {
+  // Define a class variable.
+  static Random shaker = new Random();
+
+  // Define instance variables.
+  int sides, value;
+
+  // Define a method using shorthand syntax.
+  String toString() => '$value';
+
+  // Define a constructor.
+  Die({int n: 6}) {
+    if (4 <= n && n <= 20) {
+      sides = n;
+    } else {
+      // Support for errors and exceptions.
+      throw new ArgumentError(/* */);
+    }
+  }
+
+  // Define an instance method.
+  int roll() {
+    return value = shaker.nextInt(sides) + 1;
+  }
+}
+''';

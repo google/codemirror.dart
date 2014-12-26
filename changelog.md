@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.1.0
+- upgrade to codemirror 4.9.0
+- a Dart mode is now available (http://codemirror.net/mode/dart/index.html)
+- rev'd to the first stable release version
+
 # 0.0.13
 - added `posFromIndex` and `indexFromPos`
 
@@ -13,7 +18,7 @@
 
 # 0.0.10
 - included the addon/ directory in the package
-- concatentated likely addons to the codemirror.js script
+- concatenated likely addons to the codemirror.js script
 
 # 0.0.9
 - upgrade to codemirror 4.8.0

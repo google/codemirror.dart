@@ -59,6 +59,10 @@ createCodeMirrorStaticTests() {
   test('themes', () {
     expect(CodeMirror.THEMES.length, greaterThanOrEqualTo(10));
   });
+
+  test('version', () {
+    expect(CodeMirror.version.length, greaterThanOrEqualTo(3));
+  });
 }
 
 createCodeMirrorTests() {

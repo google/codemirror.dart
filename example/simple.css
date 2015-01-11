@@ -10,6 +10,10 @@ body {
   font-family: sans-serif;
 }
 
+h2 {
+	margin-bottom: 0;
+}
+
 #controls {
   margin-bottom: 1em;
 }

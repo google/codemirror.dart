@@ -1,5 +1,8 @@
 # Changelog
 
+# TODO:
+- upgrade to codemirror 4.11.0
+
 # 0.1.0
 - upgrade to codemirror 4.9.0
 - a Dart mode is now available (http://codemirror.net/mode/dart/index.html)

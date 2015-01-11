@@ -17,6 +17,8 @@ void main() {
   Doc doc = new Doc(text, 'dart');
   editor.swapDoc(doc);
 
+  querySelector('#version').text = "CodeMirror version ${CodeMirror.version}";
+
   // Theme control.
   SelectElement themeSelect = querySelector('#theme');
   for (String theme in CodeMirror.THEMES) {

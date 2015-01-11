@@ -12,8 +12,6 @@ import 'src/js_utils.dart';
 
 // TODO: code completion (hint/show-hint.js)
 
-// TODO: displaying errors
-
 // TODO: find, replace
 
 /**
@@ -345,26 +343,44 @@ class CodeMirror extends ProxyHolder {
   }
 
   /**
-   * Adds a line widget, an element shown below a line, spanning the whole of the
-   * editor's width, and moving the lines below it downwards. line should be
-   * either an integer or a line handle, and node should be a DOM node, which will
-   * be displayed below the given line. options, when given, should be an object
-   * that configures the behavior of the widget.
+   * Adds a line widget, an element shown below a line, spanning the whole of
+   * the editor's width, and moving the lines below it downwards. line should be
+   * either an integer or a line handle, and node should be a DOM node, which
+   * will be displayed below the given line.
+   *
+   * [coverGutter]: whether the widget should cover the gutter.
+   * [noHScroll]: whether the widget should stay fixed in the face of horizontal
+   * scrolling.
+   * [above]: causes the widget to be placed above instead of below the text of
+   * the line.
+   * [handleMouseEvents]: determines whether the editor will capture mouse and
+   * drag events occurring in this widget. Default is false—the events will be
+   * left alone for the default browser handler, or specific handlers on the
+   * widget, to capture.
+   * [insertAt]: by default, the widget is added below other widgets for the
+   * line. This option can be used to place it at a different position (zero for
+   * the top, N to put it after the Nth other widget). Note that this only has
+   * effect once, when the widget is created.
    */
-  LineWidget addLineWidget(int line, Element node) {
-    return new LineWidget(callArgs('addLineWidget', [line, node]));
+  LineWidget addLineWidget(int line, Element node, {
+    bool coverGutter,
+    bool noHScroll,
+    bool above,
+    bool handleMouseEvents,
+    int insertAt
+  }) {
+    Map options = {};
+
+    if (coverGutter != null) options['coverGutter'] = coverGutter;
+    if (noHScroll != null) options['noHScroll'] = noHScroll;
+    if (above != null) options['above'] = above;
+    if (handleMouseEvents != null) options['handleMouseEvents'] = handleMouseEvents;
+    if (insertAt != null) options['insertAt'] = insertAt;
+
+    return new LineWidget(
+        callArgs('addLineWidget', [line, node, jsify(options)]));
   }
 }
-
-// TODO: Doc.markText
-
-// TODO: Doc.setBookmark
-
-// TODO: Doc.findMarks
-
-// TODO: Doc.findMarksAt
-
-// TODO: Doc.getAllMarks
 
 /**
  * Each editor is associated with an instance of [Doc], its document. A document
@@ -380,7 +396,8 @@ class Doc extends ProxyHolder {
     if (firstLineNumber == null) {
       return new JsObject(context['CodeMirror']['Doc'], [text, mode]);
     } else {
-      return new JsObject(context['CodeMirror']['Doc'], [text, mode, firstLineNumber]);
+      return new JsObject(
+          context['CodeMirror']['Doc'], [text, mode, firstLineNumber]);
     }
   }
 
@@ -523,6 +540,149 @@ class Doc extends ProxyHolder {
   int indexFromPos(Position pos) => callArg('indexFromPos', pos.toProxy());
 
   /**
+   * Can be used to mark a range of text with a specific CSS class name.
+   *
+   * [className]: assigns a CSS class to the marked stretch of text.
+   * [inclusiveLeft]: determines whether text inserted on the left of the marker
+   * will end up inside or outside of it.
+   * [inclusiveRight]: like inclusiveLeft, but for the right side.
+   * [atomic]: atomic ranges act as a single unit when cursor movement is
+   * concerned — i.e. it is impossible to place the cursor inside of them. In
+   * atomic ranges, inclusiveLeft and inclusiveRight have a different meaning —
+   * they will prevent the cursor from being placed respectively directly before
+   * and directly after the range.
+   * [collapsed]: collapsed ranges do not show up in the display. Setting a
+   * range to be collapsed will automatically make it atomic.
+   * [clearOnEnter]: when enabled, will cause the mark to clear itself whenever
+   * the cursor enters its range. This is mostly useful for text - replacement
+   * widgets that need to 'snap open' when the user tries to edit them. The
+   * "clear" event fired on the range handle can be used to be notified when
+   * this happens.
+   * [clearWhenEmpty]: determines whether the mark is automatically cleared when
+   * it becomes empty. Default is true.
+   * [replacedWith]: use a given node to display this range. Implies both
+   * collapsed and atomic. The given DOM node must be an inline element (as
+   * opposed to a block element).
+   * [handleMouseEvents]: when replacedWith is given, this determines whether
+   * the editor will capture mouse and drag events occurring in this widget.
+   * Default is false—the events will be left alone for the default browser
+   * handler, or specific handlers on the widget, to capture.
+   * [readOnly]: a read-only span can, as long as it is not cleared, not be
+   * modified except by calling setValue to reset the whole document. Note:
+   * adding a read-only span currently clears the undo history of the editor,
+   * because existing undo events being partially nullified by read-only spans
+   * would corrupt the history (in the current implementation).
+   * [addToHistory]: when set to true (default is false), adding this marker
+   * will create an event in the undo history that can be individually undone
+   * (clearing the marker).
+   * [startStyle]: can be used to specify an extra CSS class to be applied to
+   * the leftmost span that is part of the marker.
+   * [endStyle]: equivalent to startStyle, but for the rightmost span.
+   * [css] a string of CSS to be applied to the covered text. For example
+   * "color: #fe3".
+   * [title]: when given, will give the nodes created for this span a HTML title
+   * attribute with the given value.
+   * [shared]: when the target document is linked to other documents, you can
+   * set shared to true to make the marker appear in all documents. By default,
+   * a marker appears only in its target document.
+   */
+  TextMarker markText(Position from, Position to, {
+    String className,
+    bool inclusiveLeft,
+    bool inclusiveRight,
+    bool atomic,
+    bool collapsed,
+    bool clearOnEnter,
+    bool clearWhenEmpty,
+    Element replacedWith,
+    bool handleMouseEvents,
+    bool readOnly,
+    bool addToHistory,
+    String startStyle,
+    String endStyle,
+    String css,
+    String title,
+    bool shared
+  }) {
+    Map options = {};
+
+    if (className != null) options['className'] = className;
+    if (inclusiveLeft != null) options['inclusiveLeft'] = inclusiveLeft;
+    if (inclusiveRight != null) options['inclusiveRight'] = inclusiveRight;
+    if (atomic != null) options['atomic'] = atomic;
+    if (collapsed != null) options['collapsed'] = collapsed;
+    if (clearOnEnter != null) options['clearOnEnter'] = clearOnEnter;
+    if (clearWhenEmpty != null) options['clearWhenEmpty'] = clearWhenEmpty;
+    if (replacedWith != null) options['replacedWith'] = replacedWith;
+    if (handleMouseEvents != null) options['handleMouseEvents'] = handleMouseEvents;
+    if (readOnly != null) options['readOnly'] = readOnly;
+    if (addToHistory != null) options['addToHistory'] = addToHistory;
+    if (startStyle != null) options['startStyle'] = startStyle;
+    if (endStyle != null) options['endStyle'] = endStyle;
+    if (css != null) options['css'] = css;
+    if (title != null) options['title'] = title;
+    if (shared != null) options['shared'] = shared;
+
+    return new TextMarker(
+        callArgs('markText', [from.toProxy(), to.toProxy(), jsify(options)]));
+  }
+
+  /**
+   * Inserts a bookmark, a handle that follows the text around it as it is being
+   * edited, at the given position. A bookmark has two methods find() and
+   * clear(). The first returns the current position of the bookmark, if it is
+   * still in the document, and the second explicitly removes the bookmark.
+   *
+   * [widget] can be used to display a DOM node at the current location of the
+   * bookmark (analogous to the replacedWith option to markText). [insertLeft]:
+   * by default, text typed when the cursor is on top of the bookmark will end
+   * up to the right of the bookmark. Set this option to true to make it go to
+   * the left instead. [shared]: when the target document is linked to other
+   * documents, you can set shared to true to make the marker appear in all
+   * documents. By default, a marker appears only in its target document.
+   */
+  TextMarker setBookmark(Position pos,
+      {Element widget, bool insertLeft, bool shared}) {
+    Map options = {};
+
+    if (widget != null) options['widget'] = widget;
+    if (insertLeft != null) options['insertLeft'] = insertLeft;
+    if (shared != null) options['shared'] = shared;
+
+    return new TextMarker(
+        callArgs('setBookmark', [pos.toProxy(), jsify(options)]));
+  }
+
+  /**
+   * Returns an array of all the bookmarks and marked ranges found between the
+   * given positions.
+   */
+  List<TextMarker> findMarks(Position from, Position to) {
+    var result = callArgs('findMarks', [from.toProxy(), to.toProxy()]);
+    if (result is! List) return [];
+    return result.map((mark) => new TextMarker(mark)).toList();
+  }
+
+  /**
+   * Returns an array of all the bookmarks and marked ranges present at the
+   * given position.
+   */
+  List<TextMarker> findMarksAt(Position pos) {
+    var result = callArg('findMarksAt', pos.toProxy());
+    if (result is! List) return [];
+    return result.map((mark) => new TextMarker(mark)).toList();
+  }
+
+  /**
+   * Returns an array containing all marked ranges in the document.
+   */
+  List<TextMarker> getAllMarks() {
+    var result = call('getAllMarks');
+    if (result is! List) return [];
+    return result.map((mark) => new TextMarker(mark)).toList();
+  }
+
+  /**
    * Fired whenever a change occurs to the document. `changeObj` has a similar
    * type as the object passed to the editor's "change" event.
    */
@@ -607,10 +767,21 @@ class TextMarker extends ProxyHolder {
 
   /**
    * Returns a {from, to} object (both holding document positions), indicating
-   * the current position of the marked range, or undefined if the marker is no
+   * the current position of the marked range, or `null` if the marker is no
    * longer in the document.
    */
-  dynamic find() => call('find');
+  List<Position> find() {
+    var result = call('find');
+    if (result is! JsObject) return null;
+    try {
+      return [
+        new Position.fromProxy(result['from']),
+        new Position.fromProxy(result['to'])
+      ];
+    } catch (e) {
+      return null;
+    }
+  }
 
   /**
    * Call if you've done something that might change the size of the marker (for

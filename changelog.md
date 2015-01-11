@@ -1,6 +1,7 @@
 # Changelog
 
-# TODO:
+# 0.1.1
+- added the ability to create `TextMarker`s (see `Doc.markText` and associated methods)
 - upgrade to codemirror 4.11.0
 
 # 0.1.0

@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.1.2
+- added a missing hinter
+- removed all but a few modes from the defaults (codemirror.js went from 1.2MB to 520k)
+
 # 0.1.1
 - added the ability to create `TextMarker`s (see `Doc.markText` and associated methods)
 - upgrade to codemirror 4.11.0

@@ -94,17 +94,29 @@ String _concatenateModes(Directory dir) {
   files.add(joinFile(dir, ['addon', 'hint', 'show-hint.js']));
   files.add(joinFile(dir, ['addon', 'hint', 'css-hint.js']));
   files.add(joinFile(dir, ['addon', 'hint', 'html-hint.js']));
+  files.add(joinFile(dir, ['addon', 'hint', 'xml-hint.js']));
 
   files.add(joinFile(dir, ['addon', 'lint', 'lint.js']));
   files.add(joinFile(dir, ['addon', 'lint', 'css-lint.js']));
 
-  // Read all the mode files.
-  var modeFiles = joinDir(dir, ['mode'])
-    .listSync()
-    .where((dir) => dir is Directory)
-    .map((dir) => joinFile(dir, ['${fileName(dir)}.js']))
-    .where((f) => f.existsSync());
-  files.addAll(modeFiles);
+  // Read in selected mode files.
+  files.add(joinFile(dir, ['mode', 'clike', 'clike.js']));
+  files.add(joinFile(dir, ['mode', 'css', 'css.js']));
+  files.add(joinFile(dir, ['mode', 'dart', 'dart.js']));
+  files.add(joinFile(dir, ['mode', 'htmlmixed', 'htmlmixed.js']));
+  files.add(joinFile(dir, ['mode', 'javascript', 'javascript.js']));
+  files.add(joinFile(dir, ['mode', 'markdown', 'markdown.js']));
+  files.add(joinFile(dir, ['mode', 'properties', 'properties.js']));
+  files.add(joinFile(dir, ['mode', 'shell', 'shell.js']));
+  files.add(joinFile(dir, ['mode', 'xml', 'xml.js']));
+  files.add(joinFile(dir, ['mode', 'yaml', 'yaml.js']));
+
+//  var modeFiles = joinDir(dir, ['mode'])
+//    .listSync()
+//    .where((dir) => dir is Directory)
+//    .map((dir) => joinFile(dir, ['${fileName(dir)}.js']))
+//    .where((f) => f.existsSync());
+//  files.addAll(modeFiles);
 
   return files.map((File file) {
     String header = "// ${fileName(file)}\n\n";

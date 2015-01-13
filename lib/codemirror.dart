@@ -98,9 +98,9 @@ class CodeMirror extends ProxyHolder {
    * after doing CodeMirror.registerHelper("hint", "foo", myFoo), the value
    * CodeMirror.hint.foo will point to myFoo.
    */
-  static void registerHelper(String type, String name, dynamic value) {
+  static void registerHelper(String type, String mode, dynamic value) {
     // TODO: value may be a Function? always a function?
-    _cm.callMethod('registerHelper', [type, name, value]);
+    _cm.callMethod('registerHelper', [type, mode, value]);
   }
 
 //  /**
@@ -108,7 +108,7 @@ class CodeMirror extends ProxyHolder {
 //   * meaning that it will be included by getHelpers whenever the given predicate
 //   * returns true when called with the local mode and editor.
 //   */
-//  static void registerGlobalHelper(String type, String name, Function predicate,
+//  static void registerGlobalHelper(String type, String mode, Function predicate,
 //      dynamic value) {
 //    // predicate: fn(mode, CodeMirror)
 //    // TODO: value may be a Function? always a function?
@@ -380,6 +380,46 @@ class CodeMirror extends ProxyHolder {
     return new LineWidget(
         callArgs('addLineWidget', [line, node, jsify(options)]));
   }
+
+  /**
+   * Retrieves information about the token the current mode found before the
+   * given position.
+   *
+   * If [precise] is true, the token will be guaranteed to be accurate based on
+   * recent edits. If false or not specified, the token will use cached state
+   * information, which will be faster but might not be accurate if edits were
+   * recently made and highlighting has not yet completed.
+   */
+  Token getTokenAt(Position pos, [bool precise]) {
+    var r = precise == null
+        ? callArg('getTokenAt', pos.toProxy())
+        : callArgs('getTokenAt', [pos.toProxy(), precise]);
+    return new Token.fromProxy(r);
+  }
+
+  /**
+   * This is similar to getTokenAt, but collects all tokens for a given line
+   * into an array. It is much cheaper than repeatedly calling getTokenAt,
+   * which re-parses the part of the line before the token for every call.
+   */
+  List<Token> getLineTokens(int line, [bool precise]) {
+    var result = precise != null
+        ? callArgs('getLineTokens', [line, precise])
+        : callArg('getLineTokens', line);
+    if (result is List) {
+      return result.map((t) => new Token.fromProxy(t)).toList();
+    } else {
+      return [];
+    }
+  }
+
+  /**
+   * This is a (much) cheaper version of getTokenAt useful for when you just
+   * need the type of the token at a given position, and no other information.
+   * Will return null for unstyled tokens, and a string, potentially containing
+   * multiple space-separated style names, otherwise.
+   */
+  String getTokenTypeAt(Position pos) => callArg('getTokenTypeAt', pos);
 }
 
 /**
@@ -420,13 +460,13 @@ class Doc extends ProxyHolder {
    * sub-views, or documents instantiated with a non-zero first line, it might
    * return other values.
    */
-  int firstCount() => call('firstCount');
+  int firstLine() => call('firstLine');
 
   /**
    * Get the last line of the editor. This will usually be doc.lineCount() - 1,
    * but for linked sub-views, it might return other values.
    */
-  int lastCount() => call('lastCount');
+  int lastLine() => call('lastLine');
 
   /**
    * Get the content of line n.
@@ -683,6 +723,24 @@ class Doc extends ProxyHolder {
   }
 
   /**
+   * Gets the (outer) mode object for the editor. Note that this is distinct
+   * from getOption("mode"), which gives you the mode specification, rather than
+   * the resolved, instantiated mode object.
+   *
+   * The returned mode is a `JsObject`.
+   */
+  dynamic getMode() => call('getMode');
+
+  /**
+   * Gets the inner mode at a given position. This will return the same as
+   * getMode for simple modes, but will return an inner mode for nesting modes
+   * (such as htmlmixed).
+   *
+   * The returned mode is a `JsObject`.
+   */
+  dynamic getModeAt(Position pos) => callArg('getMode', pos.toProxy());
+
+  /**
    * Fired whenever a change occurs to the document. `changeObj` has a similar
    * type as the object passed to the editor's "change" event.
    */
@@ -808,6 +866,24 @@ class LineWidget extends ProxyHolder {
    * that contains the widget.
    */
   void changed() => call('changed');
+}
+
+class Token {
+  /// The character (on the given line) at which the token starts.
+  final int start;
+  /// The character at which the token ends.
+  final int end;
+  /// The token's string.
+  final String string;
+  /// The token type the mode assigned to the token, such as "keyword" or
+  /// "comment" (may also be null).
+  final String type;
+  /// The mode's state at the end of this token.
+  final JsObject state;
+
+  Token.fromProxy(var obj) :
+    start = obj['start'], end = obj['end'], string = obj['string'],
+    type = obj['type'], state = obj['state'];
 }
 
 /**

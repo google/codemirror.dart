@@ -81,12 +81,6 @@ String _concatenateModes(Directory dir) {
   // Read lib/codemirror.js.
   files.add(joinFile(dir, ['lib', 'codemirror.js']));
 
-  // Read mode/meta.js.
-  files.add(joinFile(dir, ['mode', 'meta.js']));
-
-  // Read addon/mode/simple.js - required by some modes.
-  files.add(joinFile(dir, ['addon', 'mode', 'simple.js']));
-
   // Add some likely addons.
   files.add(joinFile(dir, ['addon', 'edit', 'closebrackets.js']));
   files.add(joinFile(dir, ['addon', 'edit', 'matchbrackets.js']));
@@ -98,6 +92,24 @@ String _concatenateModes(Directory dir) {
 
   files.add(joinFile(dir, ['addon', 'lint', 'lint.js']));
   files.add(joinFile(dir, ['addon', 'lint', 'css-lint.js']));
+
+  // TODO: edit/closetag.js
+
+  // TODO: comment/comment.js
+
+  // TODO: comment/continuecomment.js
+
+  // TODO: display/panel.js - add an api to add a panel above / below the editor
+
+  // TODO: Add search addons.
+  //files.add(joinFile(dir, ['addon', 'search', 'search.js']));
+  //files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
+
+  // Read addon/mode/simple.js - required by some modes.
+  files.add(joinFile(dir, ['addon', 'mode', 'simple.js']));
+
+  // Read mode/meta.js.
+  files.add(joinFile(dir, ['mode', 'meta.js']));
 
   // Read in selected mode files.
   files.add(joinFile(dir, ['mode', 'clike', 'clike.js']));

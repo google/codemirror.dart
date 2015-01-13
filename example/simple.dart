@@ -4,12 +4,17 @@
 
 library example.simple;
 
+import 'dart:async';
 import 'dart:html';
 
 import 'package:codemirror/codemirror.dart';
+import 'package:codemirror/hints.dart';
 
 void main() {
-  Map options = { 'theme': 'zenburn' };
+  Map options = {
+    'theme': 'zenburn',
+    'extraKeys': {'Ctrl-Space': 'autocomplete'}
+  };
   String text = _sampleText;
 
   CodeMirror editor = new CodeMirror.fromElement(
@@ -18,6 +23,9 @@ void main() {
   editor.swapDoc(doc);
 
   querySelector('#version').text = "CodeMirror version ${CodeMirror.version}";
+
+  //Hints.registerHintsHelper('dart', _dartCompleter);
+  Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
 
   // Theme control.
   SelectElement themeSelect = querySelector('#theme');
@@ -84,6 +92,27 @@ void _updateFooter(CodeMirror editor) {
   String str = 'line ${pos.line} • column ${pos.ch} • offset ${off}'
       + (editor.getDoc().isClean() ? '' : ' • (modified)');
   querySelector('#footer').text = str;
+}
+
+HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
+  Position cur = editor.getCursor();
+  String curLine = editor.getLine(cur.line);
+  List list = ['one', 'two', 'three'];
+
+  return new HintResults.fromStrings(list,
+      new Position(cur.line, cur.ch), new Position(cur.line, cur.ch + 2));
+}
+
+Future<HintResults> _dartCompleterAsync(CodeMirror editor,
+    [HintsOptions options]) {
+  Position cur = editor.getCursor();
+  String curLine = editor.getLine(cur.line);
+  List list = ['one', 'two', 'three'];
+
+  return new Future.delayed(new Duration(milliseconds: 500), () {
+    return new HintResults.fromStrings(list,
+        new Position(cur.line, cur.ch), new Position(cur.line, cur.ch + 2));
+  });
 }
 
 final String _sampleText = r'''

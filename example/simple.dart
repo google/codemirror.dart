@@ -7,9 +7,15 @@ library example.simple;
 import 'dart:html';
 
 import 'package:codemirror/codemirror.dart';
+//import 'package:codemirror/panel.dart';
 
 void main() {
-  Map options = { 'theme': 'zenburn' };
+  Map options = {
+    'theme': 'zenburn',
+    'continueComments': {'continueLineComment': false},
+    'autoCloseTags': true,
+    'extraKeys': {'Ctrl-/': 'toggleComment'}
+  };
   String text = _sampleText;
 
   CodeMirror editor = new CodeMirror.fromElement(
@@ -76,6 +82,11 @@ void main() {
     Doc doc = editor.getDoc();
     print('[${doc.getLine(doc.getCursor().line).trim()}]');
   });
+
+//  Element e = new ParagraphElement();
+//  e.text = 'Lorem Ipsum.';
+//  PanelContainer container = Panel.addPanel(editor, e, below: true);
+//  e.onClick.listen((_) => container.clear());
 }
 
 void _updateFooter(CodeMirror editor) {

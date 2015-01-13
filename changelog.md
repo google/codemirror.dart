@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.1.3
+- expose additional codemirror addons (comment editing, tag closing, element
+  insertion)
+- expose additional codemirror APIs, esp. around Tokens and modes
+
 # 0.1.2
 - added a missing hinter
 - removed all but a few modes from the defaults (codemirror.js went from 1.2MB to 520k)

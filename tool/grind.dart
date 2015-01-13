@@ -82,8 +82,12 @@ String _concatenateModes(Directory dir) {
   files.add(joinFile(dir, ['lib', 'codemirror.js']));
 
   // Add some likely addons.
+  files.add(joinFile(dir, ['addon', 'comment', 'comment.js']));
+  files.add(joinFile(dir, ['addon', 'comment', 'continuecomment.js']));
+
   files.add(joinFile(dir, ['addon', 'edit', 'closebrackets.js']));
   files.add(joinFile(dir, ['addon', 'edit', 'matchbrackets.js']));
+  files.add(joinFile(dir, ['addon', 'edit', 'closetag.js']));
 
   files.add(joinFile(dir, ['addon', 'hint', 'show-hint.js']));
   files.add(joinFile(dir, ['addon', 'hint', 'css-hint.js']));
@@ -93,19 +97,15 @@ String _concatenateModes(Directory dir) {
   files.add(joinFile(dir, ['addon', 'lint', 'lint.js']));
   files.add(joinFile(dir, ['addon', 'lint', 'css-lint.js']));
 
-  // TODO: edit/closetag.js
+  // Add an API to add a panel above or below the editor.
+  files.add(joinFile(dir, ['addon', 'display', 'panel.js']));
 
-  // TODO: comment/comment.js
+//  // Add search addons.
+//  files.add(joinFile(dir, ['addon', 'search', 'search.js']));
+//  files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
 
-  // TODO: comment/continuecomment.js
-
-  // TODO: display/panel.js - add an api to add a panel above / below the editor
-
-  // TODO: Add search addons.
-  //files.add(joinFile(dir, ['addon', 'search', 'search.js']));
-  //files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
-
-  // Read addon/mode/simple.js - required by some modes.
+  // Required by some modes.
+  files.add(joinFile(dir, ['addon', 'mode', 'overlay.js']));
   files.add(joinFile(dir, ['addon', 'mode', 'simple.js']));
 
   // Read mode/meta.js.

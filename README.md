@@ -67,7 +67,7 @@ This is generally done by passing values into the options of the CodeMirror
 constructor.
 
 Some addons are exposed through the main Dart interface. Some are exposed via
-sidecar Dart libraries available in the main
+side-car Dart libraries available in the main
 [package](https://github.com/google/codemirror.dart/tree/master/lib), and some
 have yet to be exposed. Pull requests welcome :)
 

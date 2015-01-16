@@ -48,7 +48,7 @@ This Dart package ships with several language modes built in. CodeMirror itself
 supports over 100 modes; the modes built into the Dart package include the
 usual suspects for web development - `css`, `html`, `dart` and `javascript` as
 well as a few
-[others](https://github.com/google/codemirror.dart/blob/master/tool/grind.dart#L115).
+[others](https://github.com/google/codemirror.dart/blob/master/tool/grind.dart#L122).
 In order to add additional modes, you'll need to reference the mode file from
 your html entry-point. So,
 

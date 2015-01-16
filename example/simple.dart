@@ -9,11 +9,18 @@ import 'dart:html';
 
 import 'package:codemirror/codemirror.dart';
 import 'package:codemirror/hints.dart';
+//import 'package:codemirror/panel.dart';
 
 void main() {
   Map options = {
     'theme': 'zenburn',
-    'extraKeys': {'Ctrl-Space': 'autocomplete'}
+    'continueComments': {'continueLineComment': false},
+    'autoCloseTags': true,
+    'extraKeys': {
+      'Ctrl-Space': 'autocomplete',
+      'Cmd-/': 'toggleComment',
+      'Ctrl-/': 'toggleComment'
+    }
   };
   String text = _sampleText;
 
@@ -24,8 +31,8 @@ void main() {
 
   querySelector('#version').text = "CodeMirror version ${CodeMirror.version}";
 
-  //Hints.registerHintsHelper('dart', _dartCompleter);
-  Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
+  Hints.registerHintsHelper('dart', _dartCompleter);
+  //Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
 
   // Theme control.
   SelectElement themeSelect = querySelector('#theme');
@@ -84,6 +91,11 @@ void main() {
     Doc doc = editor.getDoc();
     print('[${doc.getLine(doc.getCursor().line).trim()}]');
   });
+
+//  Element e = new ParagraphElement();
+//  e.text = 'Lorem Ipsum.';
+//  PanelContainer container = Panel.addPanel(editor, e, below: true);
+//  e.onClick.listen((_) => container.clear());
 }
 
 void _updateFooter(CodeMirror editor) {
@@ -100,7 +112,7 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
   List list = ['one', 'two', 'three'];
 
   return new HintResults.fromStrings(list,
-      new Position(cur.line, cur.ch), new Position(cur.line, cur.ch + 2));
+      new Position(cur.line, cur.ch), new Position(cur.line, cur.ch));
 }
 
 Future<HintResults> _dartCompleterAsync(CodeMirror editor,
@@ -111,7 +123,7 @@ Future<HintResults> _dartCompleterAsync(CodeMirror editor,
 
   return new Future.delayed(new Duration(milliseconds: 500), () {
     return new HintResults.fromStrings(list,
-        new Position(cur.line, cur.ch), new Position(cur.line, cur.ch + 2));
+        new Position(cur.line, cur.ch), new Position(cur.line, cur.ch));
   });
 }
 

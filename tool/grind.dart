@@ -12,8 +12,8 @@ final Directory destDir = new Directory('lib');
 void main([List<String> args]) {
   task('init', init);
   task('install', install, ['init']);
-  task('copy-codemirror', copyCodeMirror, ['init']);
-  task('test', test, ['copy-codemirror']);
+  task('build', build, ['init']);
+  task('test', test, ['build']);
   task('clean', clean);
 
   startGrinder(args);
@@ -39,7 +39,7 @@ void install(GrinderContext context) {
 /**
  * Copy the codemirror files from third_party/ into lib/.
  */
-void copyCodeMirror(GrinderContext context) {
+void build(GrinderContext context) {
   // Copy codemirror.js.
   String jsSource = _concatenateModes(srcDir);
   joinFile(destDir, ['codemirror.js']).writeAsStringSync(jsSource);
@@ -49,13 +49,21 @@ void copyCodeMirror(GrinderContext context) {
   copyFile(joinFile(srcDir, ['lib', 'codemirror.css']),
       joinDir(destDir, ['css']), context);
 
-  // Copy the themes.
-  copyDirectory(joinDir(srcDir, ['theme']), joinDir(destDir, ['theme']),
-      context);
-
   // Copy the addons.
-  copyDirectory(joinDir(srcDir, ['addon']), joinDir(destDir, ['addon']),
-      context);
+  copyDirectory(
+      joinDir(srcDir, ['addon']), joinDir(destDir, ['addon']), context);
+
+  // Copy the keymaps.
+  copyDirectory(
+      joinDir(srcDir, ['keymap']), joinDir(destDir, ['keymap']), context);
+
+  // Copy the modes.
+  copyDirectory(
+      joinDir(srcDir, ['mode']), joinDir(destDir, ['mode']), context);
+
+  // Copy the themes.
+  copyDirectory(
+      joinDir(srcDir, ['theme']), joinDir(destDir, ['theme']), context);
 }
 
 /**
@@ -81,15 +89,13 @@ String _concatenateModes(Directory dir) {
   // Read lib/codemirror.js.
   files.add(joinFile(dir, ['lib', 'codemirror.js']));
 
-  // Read mode/meta.js.
-  files.add(joinFile(dir, ['mode', 'meta.js']));
-
-  // Read addon/mode/simple.js - required by some modes.
-  files.add(joinFile(dir, ['addon', 'mode', 'simple.js']));
-
   // Add some likely addons.
+  files.add(joinFile(dir, ['addon', 'comment', 'comment.js']));
+  files.add(joinFile(dir, ['addon', 'comment', 'continuecomment.js']));
+
   files.add(joinFile(dir, ['addon', 'edit', 'closebrackets.js']));
   files.add(joinFile(dir, ['addon', 'edit', 'matchbrackets.js']));
+  files.add(joinFile(dir, ['addon', 'edit', 'closetag.js']));
 
   files.add(joinFile(dir, ['addon', 'hint', 'show-hint.js']));
   files.add(joinFile(dir, ['addon', 'hint', 'css-hint.js']));
@@ -98,6 +104,20 @@ String _concatenateModes(Directory dir) {
 
   files.add(joinFile(dir, ['addon', 'lint', 'lint.js']));
   files.add(joinFile(dir, ['addon', 'lint', 'css-lint.js']));
+
+  // Add an API to add a panel above or below the editor.
+  files.add(joinFile(dir, ['addon', 'display', 'panel.js']));
+
+//  // Add search addons.
+//  files.add(joinFile(dir, ['addon', 'search', 'search.js']));
+//  files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
+
+  // Required by some modes.
+  files.add(joinFile(dir, ['addon', 'mode', 'overlay.js']));
+  files.add(joinFile(dir, ['addon', 'mode', 'simple.js']));
+
+  // Read mode/meta.js.
+  files.add(joinFile(dir, ['mode', 'meta.js']));
 
   // Read in selected mode files.
   files.add(joinFile(dir, ['mode', 'clike', 'clike.js']));

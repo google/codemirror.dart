@@ -779,6 +779,8 @@ class Position {
   operator==(other) => other is Position &&
       line == other.line && ch == other.ch;
 
+  int get hashCode => (line << 8 | ch).hashCode;
+
   String toString() => '[${line}:${ch}]';
 }
 

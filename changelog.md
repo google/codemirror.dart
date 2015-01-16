@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.1.4
+- include additional (optional) modes and addons
+
 # 0.1.3
 - expose additional codemirror addons (comment editing, tag closing, element
   insertion)

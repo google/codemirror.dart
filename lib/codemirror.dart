@@ -420,6 +420,20 @@ class CodeMirror extends ProxyHolder {
    * multiple space-separated style names, otherwise.
    */
   String getTokenTypeAt(Position pos) => callArg('getTokenTypeAt', pos);
+
+  /**
+   * Programatically set the size of the editor (overriding the applicable CSS
+   * rules). [width] and [height] can be either numbers (interpreted as pixels)
+   * or CSS units ("100%", for example). You can pass `null` for either of them
+   * to indicate that that dimension should not be changed.
+   */
+  void setSize(width, height) => callArgs('setSize', [width, height]);
+
+  /**
+   * Scroll the editor to a given (pixel) position. Both arguments may be left
+   * as null or undefined to have no effect.
+   */
+  void scrollTo(int x, int y) => callArgs('scrollTo', [x, y]);
 }
 
 /**

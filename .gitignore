@@ -16,4 +16,6 @@ pubspec.lock
 lib/addon/
 lib/codemirror.js
 lib/css/
+lib/keymap/
+lib/mode/
 lib/theme/

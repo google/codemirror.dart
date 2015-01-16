@@ -12,8 +12,8 @@ final Directory destDir = new Directory('lib');
 void main([List<String> args]) {
   task('init', init);
   task('install', install, ['init']);
-  task('copy-codemirror', copyCodeMirror, ['init']);
-  task('test', test, ['copy-codemirror']);
+  task('build', build, ['init']);
+  task('test', test, ['build']);
   task('clean', clean);
 
   startGrinder(args);
@@ -39,7 +39,7 @@ void install(GrinderContext context) {
 /**
  * Copy the codemirror files from third_party/ into lib/.
  */
-void copyCodeMirror(GrinderContext context) {
+void build(GrinderContext context) {
   // Copy codemirror.js.
   String jsSource = _concatenateModes(srcDir);
   joinFile(destDir, ['codemirror.js']).writeAsStringSync(jsSource);
@@ -49,13 +49,21 @@ void copyCodeMirror(GrinderContext context) {
   copyFile(joinFile(srcDir, ['lib', 'codemirror.css']),
       joinDir(destDir, ['css']), context);
 
-  // Copy the themes.
-  copyDirectory(joinDir(srcDir, ['theme']), joinDir(destDir, ['theme']),
-      context);
-
   // Copy the addons.
-  copyDirectory(joinDir(srcDir, ['addon']), joinDir(destDir, ['addon']),
-      context);
+  copyDirectory(
+      joinDir(srcDir, ['addon']), joinDir(destDir, ['addon']), context);
+
+  // Copy the keymaps.
+  copyDirectory(
+      joinDir(srcDir, ['keymap']), joinDir(destDir, ['keymap']), context);
+
+  // Copy the modes.
+  copyDirectory(
+      joinDir(srcDir, ['mode']), joinDir(destDir, ['mode']), context);
+
+  // Copy the themes.
+  copyDirectory(
+      joinDir(srcDir, ['theme']), joinDir(destDir, ['theme']), context);
 }
 
 /**

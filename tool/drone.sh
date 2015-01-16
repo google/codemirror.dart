@@ -19,7 +19,7 @@ dart --version
 pub get
 
 # Copy codemirror from third_party.
-./grind copy-codemirror
+./grind build
 
 # Verify that the libraries are error free.
 dartanalyzer --package-root packages/ --fatal-warnings \

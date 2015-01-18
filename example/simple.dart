@@ -9,25 +9,22 @@ import 'dart:html';
 
 import 'package:codemirror/codemirror.dart';
 import 'package:codemirror/hints.dart';
-//import 'package:codemirror/panel.dart';
 
 void main() {
   Map options = {
     'theme': 'zenburn',
     'continueComments': {'continueLineComment': false},
     'autoCloseTags': true,
+    'mode': 'dart',
     'extraKeys': {
       'Ctrl-Space': 'autocomplete',
       'Cmd-/': 'toggleComment',
       'Ctrl-/': 'toggleComment'
     }
   };
-  String text = _sampleText;
 
-  CodeMirror editor = new CodeMirror.fromElement(
+  CodeMirror editor = new CodeMirror.fromTextArea(
       querySelector('#textContainer'), options: options);
-  Doc doc = new Doc(text, 'dart');
-  editor.swapDoc(doc);
 
   querySelector('#version').text = "CodeMirror version ${CodeMirror.version}";
 
@@ -108,56 +105,47 @@ void _updateFooter(CodeMirror editor) {
 
 HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
   Position cur = editor.getCursor();
-  String curLine = editor.getLine(cur.line);
-  List list = ['one', 'two', 'three'];
+  String word = _getCurrentWord(editor).toLowerCase();
+  List list = _numbers
+      .where((s) => s.startsWith(word))
+      .map((s) => new HintResult(s))
+      .toList();
 
   return new HintResults.fromStrings(list,
-      new Position(cur.line, cur.ch), new Position(cur.line, cur.ch));
+      new Position(cur.line, cur.ch - word.length), new Position(cur.line, cur.ch));
 }
 
 Future<HintResults> _dartCompleterAsync(CodeMirror editor,
     [HintsOptions options]) {
   Position cur = editor.getCursor();
-  String curLine = editor.getLine(cur.line);
-  List list = ['one', 'two', 'three'];
+  String word = _getCurrentWord(editor).toLowerCase();
+  List list = _numbers.where((s) => s.startsWith(word)).toList();
 
-  return new Future.delayed(new Duration(milliseconds: 500), () {
+  return new Future.delayed(new Duration(milliseconds: 200), () {
     return new HintResults.fromStrings(list,
-        new Position(cur.line, cur.ch), new Position(cur.line, cur.ch));
+        new Position(cur.line, cur.ch - word.length), new Position(cur.line, cur.ch));
   });
 }
 
-final String _sampleText = r'''
-import 'dart:math' show Random;
+final List _numbers = [
+  'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'
+];
 
-void main() {
-  print(new Die(n: 12).roll());
-}
+final RegExp _ids = new RegExp(r'[a-zA-Z_0-9]');
 
-// Define a class.
-class Die {
-  // Define a class variable.
-  static Random shaker = new Random();
+String _getCurrentWord(CodeMirror editor) {
+  Position cur = editor.getCursor();
+  String line = editor.getLine(cur.line);
+  StringBuffer buf = new StringBuffer();
 
-  // Define instance variables.
-  int sides, value;
-
-  // Define a method using shorthand syntax.
-  String toString() => '$value';
-
-  // Define a constructor.
-  Die({int n: 6}) {
-    if (4 <= n && n <= 20) {
-      sides = n;
+  for (int i = cur.ch - 1; i >= 0; i--) {
+    String c = line[i];
+    if (_ids.hasMatch(c)) {
+      buf.write(c);
     } else {
-      // Support for errors and exceptions.
-      throw new ArgumentError(/* */);
+      break;
     }
   }
 
-  // Define an instance method.
-  int roll() {
-    return value = shaker.nextInt(sides) + 1;
-  }
+  return new String.fromCharCodes(buf.toString().codeUnits.reversed);
 }
-''';

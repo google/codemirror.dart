@@ -10,8 +10,6 @@ import 'dart:js';
 
 import 'src/js_utils.dart';
 
-// TODO: code completion (hint/show-hint.js)
-
 // TODO: find, replace
 
 /**
@@ -98,21 +96,19 @@ class CodeMirror extends ProxyHolder {
    * after doing CodeMirror.registerHelper("hint", "foo", myFoo), the value
    * CodeMirror.hint.foo will point to myFoo.
    */
-  static void registerHelper(String type, String mode, dynamic value) {
-    // TODO: value may be a Function? always a function?
-    _cm.callMethod('registerHelper', [type, mode, value]);
+  static void registerHelper(String type, String mode, dynamic helper) {
+    _cm.callMethod('registerHelper', [type, mode, helper]);
   }
 
 //  /**
 //   * Acts like registerHelper, but also registers this helper as 'global',
-//   * meaning that it will be included by getHelpers whenever the given predicate
-//   * returns true when called with the local mode and editor.
+//   * meaning that it will be included by getHelpers whenever the given
+//   * predicate returns true when called with the local mode and editor.
 //   */
-//  static void registerGlobalHelper(String type, String mode, Function predicate,
-//      dynamic value) {
+//  static void registerGlobalHelper(String type, String mode,
+//      Function predicate, dynamic helper) {
 //    // predicate: fn(mode, CodeMirror)
 //    // TODO: value may be a Function? always a function?
-//
 //  }
 
   static JsObject _createFromElement(Element element, Map options) {
@@ -121,6 +117,12 @@ class CodeMirror extends ProxyHolder {
     } else {
       return new JsObject(_cm, [element, jsify(options)]);
     }
+  }
+
+  static JsObject _createFromTextArea(TextAreaElement textArea, Map options) {
+    List args = [textArea];
+    if (options != null) args.add(jsify(options));
+    return _cm.callMethod('fromTextArea', args);
   }
 
   Doc _doc;
@@ -136,6 +138,18 @@ class CodeMirror extends ProxyHolder {
    * Create a new CodeMirror editor from the given JsObject.
    */
   CodeMirror.fromJsObject(JsObject object) : super(object);
+
+  /**
+   * The method provides another way to initialize an editor. It takes a
+   * textarea DOM node as first argument and an optional configuration object as
+   * second. It will replace the textarea with a CodeMirror instance, and wire
+   * up the form of that textarea (if any) to make sure the editor contents are
+   * put into the textarea when the form is submitted. The text in the textarea
+   * will provide the content for the editor. A CodeMirror instance created this
+   * way has three additional methods: `save`, `toTextArea`, and `getTextArea`.
+   */
+  CodeMirror.fromTextArea(TextAreaElement textArea, {Map options}) :
+      super(_createFromTextArea(textArea, options));
 
   /**
    * Fires every time the content of the editor is changed.
@@ -434,6 +448,62 @@ class CodeMirror extends ProxyHolder {
    * as null or undefined to have no effect.
    */
   void scrollTo(int x, int y) => callArgs('scrollTo', [x, y]);
+
+  /**
+   * Fetch the set of applicable helper values for the given position. Helpers
+   * provide a way to look up functionality appropriate for a mode. The type
+   * argument provides the helper namespace (see registerHelper), in which the
+   * values will be looked up. When the mode itself has a property that
+   * corresponds to the type, that directly determines the keys that are used to
+   * look up the helper values (it may be either a single string, or an array of
+   * strings). Failing that, the mode's helperType property and finally the
+   * mode's name are used.
+   *
+   * For example, the JavaScript mode has a property fold containing "brace".
+   * When the brace-fold addon is loaded, that defines a helper named brace in
+   * the fold namespace. This is then used by the foldcode addon to figure out
+   * that it can use that folding function to fold JavaScript code.
+   *
+   * When any 'global' helpers are defined for the given namespace, their
+   * predicates are called on the current mode and editor, and all those that
+   * declare they are applicable will also be added to the array that is
+   * returned.
+   */
+  List<JsObject> getHelpers(Position pos, String type) {
+    return callArgs('getHelpers', [pos.toProxy(), type]);
+  }
+
+  /**
+   * Returns the first applicable helper value.
+   */
+  JsObject getHelper(Position pos, String type) {
+    return callArgs('getHelper', [pos.toProxy(), type]);
+  }
+
+  /**
+   * Copy the content of the editor into the textarea.
+   *
+   * Only available if the CodeMirror instance was created using the
+   * `CodeMirror.fromTextArea` constructor.
+   */
+  void save() => call('save');
+
+  /**
+   * Remove the editor, and restore the original textarea (with the editor's
+   * current content).
+   *
+   * Only available if the CodeMirror instance was created using the
+   * `CodeMirror.fromTextArea` constructor.
+   */
+  void toTextArea() => call('toTextArea');
+
+  /**
+   * Returns the textarea that the instance was based on.
+   *
+   * Only available if the CodeMirror instance was created using the
+   * `CodeMirror.fromTextArea` constructor.
+   */
+  TextAreaElement getTextArea() => call('getTextArea');
 }
 
 /**
@@ -900,6 +970,8 @@ class Token {
   Token.fromProxy(var obj) :
     start = obj['start'], end = obj['end'], string = obj['string'],
     type = obj['type'], state = obj['state'];
+
+  String toString() => string;
 }
 
 /**

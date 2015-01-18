@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.1.5
+- expose the `hints` (code completion) addon
+
 # 0.1.4
 - include additional (optional) modes and addons
 

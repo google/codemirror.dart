@@ -4,26 +4,32 @@
 
 library example.simple;
 
+import 'dart:async';
 import 'dart:html';
 
 import 'package:codemirror/codemirror.dart';
-//import 'package:codemirror/panel.dart';
+import 'package:codemirror/hints.dart';
 
 void main() {
   Map options = {
     'theme': 'zenburn',
     'continueComments': {'continueLineComment': false},
     'autoCloseTags': true,
-    'extraKeys': {'Ctrl-/': 'toggleComment'}
+    'mode': 'dart',
+    'extraKeys': {
+      'Ctrl-Space': 'autocomplete',
+      'Cmd-/': 'toggleComment',
+      'Ctrl-/': 'toggleComment'
+    }
   };
-  String text = _sampleText;
 
-  CodeMirror editor = new CodeMirror.fromElement(
+  CodeMirror editor = new CodeMirror.fromTextArea(
       querySelector('#textContainer'), options: options);
-  Doc doc = new Doc(text, 'dart');
-  editor.swapDoc(doc);
 
   querySelector('#version').text = "CodeMirror version ${CodeMirror.version}";
+
+  Hints.registerHintsHelper('dart', _dartCompleter);
+  //Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
 
   // Theme control.
   SelectElement themeSelect = querySelector('#theme');
@@ -97,37 +103,49 @@ void _updateFooter(CodeMirror editor) {
   querySelector('#footer').text = str;
 }
 
-final String _sampleText = r'''
-import 'dart:math' show Random;
+HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
+  Position cur = editor.getCursor();
+  String word = _getCurrentWord(editor).toLowerCase();
+  List list = _numbers
+      .where((s) => s.startsWith(word))
+      .map((s) => new HintResult(s))
+      .toList();
 
-void main() {
-  print(new Die(n: 12).roll());
+  return new HintResults.fromStrings(list,
+      new Position(cur.line, cur.ch - word.length), new Position(cur.line, cur.ch));
 }
 
-// Define a class.
-class Die {
-  // Define a class variable.
-  static Random shaker = new Random();
+Future<HintResults> _dartCompleterAsync(CodeMirror editor,
+    [HintsOptions options]) {
+  Position cur = editor.getCursor();
+  String word = _getCurrentWord(editor).toLowerCase();
+  List list = _numbers.where((s) => s.startsWith(word)).toList();
 
-  // Define instance variables.
-  int sides, value;
+  return new Future.delayed(new Duration(milliseconds: 200), () {
+    return new HintResults.fromStrings(list,
+        new Position(cur.line, cur.ch - word.length), new Position(cur.line, cur.ch));
+  });
+}
 
-  // Define a method using shorthand syntax.
-  String toString() => '$value';
+final List _numbers = [
+  'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'
+];
 
-  // Define a constructor.
-  Die({int n: 6}) {
-    if (4 <= n && n <= 20) {
-      sides = n;
+final RegExp _ids = new RegExp(r'[a-zA-Z_0-9]');
+
+String _getCurrentWord(CodeMirror editor) {
+  Position cur = editor.getCursor();
+  String line = editor.getLine(cur.line);
+  StringBuffer buf = new StringBuffer();
+
+  for (int i = cur.ch - 1; i >= 0; i--) {
+    String c = line[i];
+    if (_ids.hasMatch(c)) {
+      buf.write(c);
     } else {
-      // Support for errors and exceptions.
-      throw new ArgumentError(/* */);
+      break;
     }
   }
 
-  // Define an instance method.
-  int roll() {
-    return value = shaker.nextInt(sides) + 1;
-  }
+  return new String.fromCharCodes(buf.toString().codeUnits.reversed);
 }
-''';

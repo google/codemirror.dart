@@ -590,6 +590,19 @@ class Doc extends ProxyHolder {
   }
 
   /**
+   * Replace the part of the document between from and to with the given string. 
+   * from and to must be {line, ch} objects. 
+   * to can be left off to simply insert the string at position from. 
+   * 
+   * When origin is given, it will be passed on to "change" events, and its first letter will be used to determine 
+   * whether this change can be merged with previous history events, in the way described for selection origins. 
+   */ 
+  void replaceRange(String replacement, Position from, Position to, [String origin]) {
+    callArgs('replaceRange', 
+      origin!=null?[replacement, from.toProxy(), to.toProxy(), origin]:[replacement, from.toProxy(), to.toProxy()]);
+  }
+
+  /**
    * Set the editor content as 'clean', a flag that it will retain until it is
    * edited, and which will be set again when such an edit is undone again.
    * Useful to track whether the content needs to be saved. This function is

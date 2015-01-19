@@ -588,29 +588,33 @@ class Doc extends ProxyHolder {
     callArgs('setSelection',
         [anchor.toProxy(), head == null ? null : head.toProxy(), options]);
   }
-  
+
   /**
-   * Replace the selection(s) with the given string. 
-   * By default, the new selection ends up after the inserted text. 
-   * The optional select argument can be used to change this passing: 
-   * `around`: will cause the new text to be selected;
-   * `start`: will collapse the selection to the start of the inserted text.
+   * Replace the selection(s) with the given string. By default, the new
+   * selection ends up after the inserted text. The optional select argument can
+   * be used to change this. Passing `around`: will cause the new text to be
+   * selected; `start`: will collapse the selection to the start of the inserted
+   * text.
    */
   void replaceSelection(String replacement, [String select]) {
-    callArgs('replaceSelection', select!=null ? [replacement, select]:[replacement]);
+    callArgs('replaceSelection',
+        select != null ? [replacement, select] : [replacement]);
   }
 
   /**
-   * Replace the part of the document between from and to with the given string. 
-   * from and to must be {line, ch} objects. 
-   * to can be left off to simply insert the string at position from. 
-   * 
-   * When origin is given, it will be passed on to "change" events, and its first letter will be used to determine 
-   * whether this change can be merged with previous history events, in the way described for selection origins. 
-   */ 
-  void replaceRange(String replacement, Position from, Position to, [String origin]) {
-    callArgs('replaceRange', 
-      origin!=null?[replacement, from.toProxy(), to.toProxy(), origin]:[replacement, from.toProxy(), to.toProxy()]);
+   * Replace the part of the document between [from] and [to] with the given
+   * string. [to] can be left off to simply insert the string at position
+   * [from].
+   *
+   * When origin is given, it will be passed on to "change" events, and its
+   * first letter will be used to determine whether this change can be merged
+   * with previous history events, in the way described for selection origins.
+   */
+  void replaceRange(String replacement, Position from, Position to,
+      [String origin]) {
+    callArgs('replaceRange', origin != null
+        ? [replacement, from.toProxy(), to.toProxy(), origin]
+        : [replacement, from.toProxy(), to == null ? null : to.toProxy()]);
   }
 
   /**

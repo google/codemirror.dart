@@ -17,6 +17,22 @@ typedef HintResults HintsHelper(CodeMirror editor, [HintsOptions options]);
 
 typedef Future<HintResults> HintsHelperAsync(CodeMirror editor, [HintsOptions options]);
 
+/**
+ * To use codemirror hints (aka code completion), register either a synchronous
+ * or aynchronous hints helper for a given mode (see [Hints.registerHintsHelper]
+ * and [Hints.registerHintsHelperAsync]). The second helper type returns a
+ * `Future` with the completion results.
+ *
+ * In addition, you need to tie the `autocomplete` command to a key-binding.
+ * When creating a CodeMirror instance, pass
+ * `'extraKeys': { 'Ctrl-Space': 'autocomplete' }` into the options object.
+ * Then, include the hints css in your entrypoint html file:
+ * `<link href="packages/codemirror/addon/hint/show-hint.css" rel="stylesheet">`.
+ *
+ * See the CodeMirror
+ * [sample](https://github.com/google/codemirror.dart/tree/master/example) for a
+ * working example of using the hints API.
+ */
 class Hints {
   static bool _inited = false;
 

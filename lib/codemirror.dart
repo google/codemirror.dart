@@ -588,6 +588,17 @@ class Doc extends ProxyHolder {
     callArgs('setSelection',
         [anchor.toProxy(), head == null ? null : head.toProxy(), options]);
   }
+  
+  /**
+   * Replace the selection(s) with the given string. 
+   * By default, the new selection ends up after the inserted text. 
+   * The optional select argument can be used to change this passing: 
+   * `around`: will cause the new text to be selected;
+   * `start`: will collapse the selection to the start of the inserted text.
+   */
+  void replaceSelection(String replacement, [String select]) {
+    callArgs('replaceSelection', select!=null ? [replacement, select]:[replacement]);
+  }
 
   /**
    * Set the editor content as 'clean', a flag that it will retain until it is

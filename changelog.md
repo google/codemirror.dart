@@ -1,5 +1,10 @@
 # Changelog
 
+# 0.1.6
+- upgrade to CodeMirror 4.12.0
+- added `CodeMirror.findModeByFileName`
+- expose more API (LineHandle, ...)
+
 # 0.1.5
 - expose the `hints` (code completion) addon
 
@@ -7,9 +12,9 @@
 - include additional (optional) modes and addons
 
 # 0.1.3
-- expose additional codemirror addons (comment editing, tag closing, element
+- expose additional CodeMirror addons (comment editing, tag closing, element
   insertion)
-- expose additional codemirror APIs, esp. around Tokens and modes
+- expose additional CodeMirror APIs, esp. around Tokens and modes
 
 # 0.1.2
 - added a missing hinter
@@ -17,10 +22,10 @@
 
 # 0.1.1
 - added the ability to create `TextMarker`s (see `Doc.markText` and associated methods)
-- upgrade to codemirror 4.11.0
+- upgrade to CodeMirror 4.11.0
 
 # 0.1.0
-- upgrade to codemirror 4.9.0
+- upgrade to CodeMirror 4.9.0
 - a Dart mode is now available (http://codemirror.net/mode/dart/index.html)
 - rev'd to the first stable release version
 
@@ -40,12 +45,12 @@
 - concatenated likely addons to the codemirror.js script
 
 # 0.0.9
-- upgrade to codemirror 4.8.0
+- upgrade to CodeMirror 4.8.0
 - expose `CodeMirror.findModeByExtension`, `CodeMirror.findModeByMime`,
   and `CodeMirror.findModeByName`
 
 # 0.0.8
-- upgrade to codemirror 4.7.0
+- upgrade to CodeMirror 4.7.0
 
 # 0.0.7
 - fixed a bug in `Doc.onChange`
@@ -65,8 +70,8 @@
 - republished to capture files omitted due to the .gitignore pub behavior
 
 # 0.0.2
-- changed to consuming codemirror from bower
+- changed to consuming CodeMirror from bower
 - we now concatenate all modes into the main codemirror.js file
 
 # 0.0.1
-- Using codemirror 4.4.0 (http://codemirror.net/doc/compress.html)
+- Using CodeMirror 4.4.0 (http://codemirror.net/doc/compress.html)

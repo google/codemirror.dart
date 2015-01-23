@@ -85,6 +85,9 @@ class CodeMirror extends ProxyHolder {
   static ModeInfo findModeByMime(String mime)
       => new ModeInfo(_cm.callMethod('findModeByMIME', [mime]));
 
+  static ModeInfo findModeByFileName(String name)
+        => new ModeInfo(_cm.callMethod('findModeByFileName', [name]));
+
   static ModeInfo findModeByName(String name)
       => new ModeInfo(_cm.callMethod('findModeByName', [name]));
 

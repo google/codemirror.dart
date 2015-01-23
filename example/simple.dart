@@ -77,6 +77,8 @@ void main() {
   editor.focus();
 
   editor.addCommand('find', (foo) {
+    LineHandle handle = editor.getDoc().getLineHandle(editor.getCursor().line);
+
     print('todo: handle find');
   });
 

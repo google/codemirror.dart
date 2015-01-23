@@ -358,9 +358,9 @@ class CodeMirror extends ProxyHolder {
 
   /**
    * Adds a line widget, an element shown below a line, spanning the whole of
-   * the editor's width, and moving the lines below it downwards. line should be
-   * either an integer or a line handle, and node should be a DOM node, which
-   * will be displayed below the given line.
+   * the editor's width, and moving the lines below it downwards. [line] should
+   * be either an integer or a [LineHandle], and node should be a DOM node,
+   * which will be displayed below the given line.
    *
    * [coverGutter]: whether the widget should cover the gutter.
    * [noHScroll]: whether the widget should stay fixed in the face of horizontal
@@ -368,7 +368,7 @@ class CodeMirror extends ProxyHolder {
    * [above]: causes the widget to be placed above instead of below the text of
    * the line.
    * [handleMouseEvents]: determines whether the editor will capture mouse and
-   * drag events occurring in this widget. Default is false—the events will be
+   * drag events occurring in this widget. Default is false — the events will be
    * left alone for the default browser handler, or specific handlers on the
    * widget, to capture.
    * [insertAt]: by default, the widget is added below other widgets for the
@@ -376,7 +376,7 @@ class CodeMirror extends ProxyHolder {
    * the top, N to put it after the Nth other widget). Note that this only has
    * effect once, when the widget is created.
    */
-  LineWidget addLineWidget(int line, Element node, {
+  LineWidget addLineWidget(dynamic line, Element node, {
     bool coverGutter,
     bool noHScroll,
     bool above,
@@ -391,8 +391,33 @@ class CodeMirror extends ProxyHolder {
     if (handleMouseEvents != null) options['handleMouseEvents'] = handleMouseEvents;
     if (insertAt != null) options['insertAt'] = insertAt;
 
-    return new LineWidget(
-        callArgs('addLineWidget', [line, node, jsify(options)]));
+    var l = line is LineHandle ? line.jsProxy : line;
+    return new LineWidget(callArgs('addLineWidget', [l, node, jsify(options)]));
+  }
+
+  /**
+   * Set a CSS class name for the given line. [line] can be a number or a
+   * [LineHandle]. [where] determines to which element this class should be
+   * applied, can can be one of "text" (the text element, which lies in front of
+   * the selection), "background" (a background element that will be behind the
+   * selection), "gutter" (the line's gutter space), or "wrap" (the wrapper node
+   * that wraps all of the line's elements, including gutter elements).
+   * [cssClass] should be the name of the class to apply.
+   */
+  LineHandle addLineClass(dynamic line, String where, String cssClass) {
+    var l = line is LineHandle ? line.jsProxy : line;
+    return new LineHandle(callArgs('addLineClass', [l, where, cssClass]));
+  }
+
+  /**
+   * Remove a CSS class from a line. [line] can be a [LineHandle] or number.
+   * [where] should be one of "text", "background", or "wrap" (see
+   * [addLineClass]). [cssClass] can be left off to remove all classes for the
+   * specified node, or be a string to remove only a specific class.
+   */
+  LineHandle removeLineClass(dynamic line, String where, String cssClass) {
+    var l = line is LineHandle ? line.jsProxy : line;
+    return new LineHandle(callArgs('addLineClass', [l, where, cssClass]));
   }
 
   /**
@@ -525,10 +550,19 @@ class Doc extends ProxyHolder {
     }
   }
 
+  CodeMirror _editor;
+
   Doc(String text, [String mode, int firstLineNumber]) :
     super(_create(text, mode, firstLineNumber));
 
   Doc.fromProxy(JsObject proxy) : super(proxy);
+
+  CodeMirror getEditor() {
+    if (_editor == null) {
+      _editor = new CodeMirror.fromJsObject(call('getEditor'));
+    }
+    return _editor;
+  }
 
   String getValue() => call('getValue');
 
@@ -717,7 +751,7 @@ class Doc extends ProxyHolder {
    * opposed to a block element).
    * [handleMouseEvents]: when replacedWith is given, this determines whether
    * the editor will capture mouse and drag events occurring in this widget.
-   * Default is false—the events will be left alone for the default browser
+   * Default is false — the events will be left alone for the default browser
    * handler, or specific handlers on the widget, to capture.
    * [readOnly]: a read-only span can, as long as it is not cleared, not be
    * modified except by calling setValue to reset the whole document. Note:
@@ -853,6 +887,21 @@ class Doc extends ProxyHolder {
   dynamic getModeAt(Position pos) => callArg('getMode', pos.toProxy());
 
   /**
+   * Fetches the line handle for the given line number.
+   */
+  LineHandle getLineHandle(int line) {
+    return new LineHandle(callArg('getLineHandle', line));
+  }
+
+  /**
+   * Given a line handle, returns the current position of that line (or `null`
+   * when it is no longer in the document).
+   */
+  int getLineNumber(LineHandle handle) {
+    return callArg('getLineNumber', handle.jsProxy);
+  }
+
+  /**
    * Fired whenever a change occurs to the document. `changeObj` has a similar
    * type as the object passed to the editor's "change" event.
    */
@@ -969,6 +1018,8 @@ class TextMarker extends ProxyHolder {
 class LineWidget extends ProxyHolder {
   LineWidget(JsObject jsProxy): super(jsProxy);
 
+  // TODO: add `line` property
+
   /**
    * Removes the widget.
    */
@@ -980,6 +1031,14 @@ class LineWidget extends ProxyHolder {
    * that contains the widget.
    */
   void changed() => call('changed');
+}
+
+class LineHandle extends ProxyHolder {
+  LineHandle(JsObject jsProxy): super(jsProxy);
+
+  num get height => jsProxy['height'];
+
+  String get text => jsProxy['text'];
 }
 
 class Token {

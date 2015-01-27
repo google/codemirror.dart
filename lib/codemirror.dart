@@ -647,8 +647,8 @@ class Doc extends ProxyHolder {
    * first letter will be used to determine whether this change can be merged
    * with previous history events, in the way described for selection origins.
    */
-  void replaceRange(String replacement, Position from, Position to,
-      [String origin]) {
+  void replaceRange(String replacement, Position from,
+      [Position to, String origin]) {
     callArgs('replaceRange', origin != null
         ? [replacement, from.toProxy(), to.toProxy(), origin]
         : [replacement, from.toProxy(), to == null ? null : to.toProxy()]);
@@ -685,6 +685,60 @@ class Doc extends ProxyHolder {
     return generation == null ? call('isClean') : callArg('isClean', generation);
   }
 
+  /* History-related methods. */
+
+  /**
+   * Undo one edit (if any undo events are stored).
+   */
+  void undo() => call('undo');
+
+  /**
+   * Redo one undone edit.
+   */
+  void redo() => call('redo');
+
+  /**
+   * Undo one edit or selection change.
+   */
+  void undoSelection() => call('undoSelection');
+
+  /**
+   * Redo one undone edit or selection change.
+   */
+  void redoSelection() => call('redoSelection');
+
+  /**
+   * Returns an object with `{'undo': int, 'redo': int}` properties, both of
+   * which hold integers, indicating the amount of stored undo and redo
+   * operations.
+   */
+  Map<String, int> historySize() {
+    JsObject result = call('historySize');
+
+    return {
+      'undo': result['undo'],
+      'redo': result['redo'],
+    };
+  }
+
+  /**
+   * Clears the editor's undo history.
+   */
+  void clearHistory() => call('clearHistory');
+
+  /**
+   * Get a (JSON-serializeable) representation of the undo history.
+   */
+  JsObject getHistory() => call('getHistory');
+
+  /**
+   * Replace the editor's undo history with the one provided, which must be a
+   * value as returned by [getHistory]. Note that this will have entirely
+   * undefined results if the editor content isn't also the same as it was when
+   * [getHistory] was called.
+   */
+  void setHistory(JsObject history) => callArg('setHistory', history);
+
   /**
    * Retrieve one end of the primary selection. start is a an optional string
    * indicating which end of the selection to return. It may be "from", "to",
@@ -706,9 +760,9 @@ class Doc extends ProxyHolder {
   }
 
   /**
-   * Get the text between the given points in the editor, which should be
-   * {line, ch} objects. An optional third argument can be given to indicate the
-   * line separator string to use (defaults to "\n").
+   * Get the text between the given points in the editor. An optional third
+   * argument can be given to indicate the line separator string to use
+   * (defaults to "\n").
    */
   String getRange(Position from, Position to) {
     return callArgs('getRange', [from.toProxy(), to.toProxy()]);

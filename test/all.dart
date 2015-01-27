@@ -27,6 +27,7 @@ void main() {
   group('CodeMirror', createCodeMirrorTests);
   group('CodeMirror (static) ', createCodeMirrorStaticTests);
   group('Doc', createDocTests);
+  group('history', createHistoryTests);
 }
 
 createSimpleTests() {
@@ -123,4 +124,48 @@ createDocTests() {
     expect(doc.getLine(1), 'two');
     expect(doc.getLine(2), 'three');
   });
+}
+
+createHistoryTests() {
+  CodeMirror editor;
+
+  setUp(() {
+    editor = new CodeMirror.fromElement(editorHost);
+  });
+
+  tearDown(() {
+    editor.dispose();
+    editorHost.children.clear();
+  });
+
+  test('undo / redo', () {
+    Doc doc = editor.getDoc();
+    _expectHistory(doc, 0, 0);
+    doc.replaceRange('foo', doc.getCursor());
+    _expectHistory(doc, 1, 0);
+    doc.undo();
+    _expectHistory(doc, 0, 1);
+    doc.redo();
+    _expectHistory(doc, 1, 0);
+  });
+
+  test('clearHistory', () {
+    Doc doc = editor.getDoc();
+    doc.replaceRange('foo', doc.getCursor());
+    _expectHistory(doc, 1, 0);
+    doc.clearHistory();
+    _expectHistory(doc, 0, 0);
+  });
+
+  test('getHistory', () {
+    Doc doc = editor.getDoc();
+    doc.setValue('one\ntwo\nthree');
+    expect(doc.getHistory(), isNotNull);
+  });
+}
+
+void _expectHistory(Doc doc, int undo, int redo) {
+  Map m = doc.historySize();
+  expect(m['undo'], undo);
+  expect(m['redo'], redo);
 }

@@ -7,13 +7,14 @@
 # Fast fail the script on failures.
 set -e
 
-# Get the Dart SDK.
-DART_DIST=dartsdk-linux-x64-release.zip
-curl http://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/$DART_DIST > $DART_DIST
-unzip $DART_DIST > /dev/null
-rm $DART_DIST
-export DART_SDK="$PWD/dart-sdk"
-export PATH="$DART_SDK/bin:$PATH"
+# Copy codemirror from third_party.
+dart tools/grind.dart build
 
-# Invoke the drone.sh script.
-./tool/drone.sh
+# Verify that the libraries are error free.
+dartanalyzer --package-root packages/ --fatal-warnings \
+  example/simple.dart \
+  lib/codemirror.dart \
+  test/all.dart
+
+# Run the tests.
+#dart test/all.dart

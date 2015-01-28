@@ -108,7 +108,7 @@ void _updateFooter(CodeMirror editor) {
 HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
   Position cur = editor.getCursor();
   String word = _getCurrentWord(editor).toLowerCase();
-  List list = _numbers
+  List<HintResult> list = _numbers
       .where((s) => s.startsWith(word))
       .map((s) => new HintResult(s))
       .toList();
@@ -121,7 +121,7 @@ Future<HintResults> _dartCompleterAsync(CodeMirror editor,
     [HintsOptions options]) {
   Position cur = editor.getCursor();
   String word = _getCurrentWord(editor).toLowerCase();
-  List list = _numbers.where((s) => s.startsWith(word)).toList();
+  List<String> list = _numbers.where((s) => s.startsWith(word)).toList();
 
   return new Future.delayed(new Duration(milliseconds: 200), () {
     return new HintResults.fromHints(list,

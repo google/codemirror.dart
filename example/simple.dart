@@ -113,8 +113,10 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
       .map((s) => new HintResult(s))
       .toList();
 
-  return new HintResults.fromHints(list,
-      new Position(cur.line, cur.ch - word.length), new Position(cur.line, cur.ch));
+  return new HintResults.fromHints(
+      list,
+      new Position(cur.line, cur.ch - word.length),
+      new Position(cur.line, cur.ch));
 }
 
 Future<HintResults> _dartCompleterAsync(CodeMirror editor,
@@ -124,8 +126,10 @@ Future<HintResults> _dartCompleterAsync(CodeMirror editor,
   List<String> list = _numbers.where((s) => s.startsWith(word)).toList();
 
   return new Future.delayed(new Duration(milliseconds: 200), () {
-    return new HintResults.fromHints(list,
-        new Position(cur.line, cur.ch - word.length), new Position(cur.line, cur.ch));
+    return new HintResults.fromStrings(
+        list,
+        new Position(cur.line, cur.ch - word.length),
+        new Position(cur.line, cur.ch));
   });
 }
 

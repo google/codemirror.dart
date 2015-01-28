@@ -8,7 +8,7 @@
 set -e
 
 # Copy codemirror from third_party.
-dart tools/grind.dart build
+dart tool/grind.dart build
 
 # Verify that the libraries are error free.
 dartanalyzer --package-root packages/ --fatal-warnings \

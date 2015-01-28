@@ -11,10 +11,8 @@ set -e
 dart tool/grind.dart build
 
 # Verify that the libraries are error free.
-dartanalyzer --package-root packages/ --fatal-warnings \
-  example/simple.dart \
-  lib/codemirror.dart \
-  test/all.dart
+pub global activate tuneup
+pub global run tuneup check
 
 # Run the tests.
 #dart test/all.dart

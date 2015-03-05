@@ -13,7 +13,7 @@ modes and addons that implement more advanced editing functionality.
 
 ## An example
 
-```
+```dart
 Map options = {
   'mode':  'javascript',
   'theme': 'monokai'
@@ -90,7 +90,7 @@ The Polymer transfomer will inline our theme css references incorrectly.
 Currently, to use the `codemirror` package with Polymer, you'll need to add the
 following lines to your `pubspec.yaml` file.
 
-```
+```yaml
 - polymer:
     entry_points: web/foo_bar.html
     inline_stylesheets:

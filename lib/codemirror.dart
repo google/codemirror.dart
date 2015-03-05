@@ -313,6 +313,12 @@ class CodeMirror extends ProxyHolder {
   void focus() => call('focus');
 
   /**
+   * Returns the input field for the editor. Will be a textarea or an editable
+   * div, depending on the value of the inputStyle option.
+   */
+  Element getInputField() => call('getInputField');
+
+  /**
    * Retrieve one end of the primary selection. [start] is a an optional string
    * indicating which end of the selection to return. It may be "from", "to",
    * "head" (the side of the selection that moves when you press shift+arrow),

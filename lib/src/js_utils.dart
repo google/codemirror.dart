@@ -66,7 +66,8 @@ class JsEventListener {
         onCancel: () {
           _proxy.callMethod('off', [_name, _callback]);
           _callback = null;
-        }
+        },
+        sync: true
       );
     }
     return _controller.stream;

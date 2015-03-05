@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.2.0
+- upgrade to CodeMirror 5.0.0
+- exposed `CodeMirror.getInputField`
+
 # 0.1.6
 - upgrade to CodeMirror 4.12.0
 - added `CodeMirror.findModeByFileName`

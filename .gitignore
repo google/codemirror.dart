@@ -13,9 +13,9 @@ pubspec.lock
 .settings/
 
 # Ignore the codemirror copied resources.
-lib/addon/
-lib/codemirror.js
-lib/css/
-lib/keymap/
-lib/mode/
-lib/theme/
+#lib/addon/
+#lib/codemirror.js
+#lib/css/
+#lib/keymap/
+#lib/mode/
+#lib/theme/

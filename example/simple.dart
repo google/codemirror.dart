@@ -4,7 +4,6 @@
 
 library example.simple;
 
-import 'dart:async';
 import 'dart:html';
 
 import 'package:codemirror/codemirror.dart';
@@ -77,7 +76,7 @@ void main() {
   editor.focus();
 
   editor.addCommand('find', (foo) {
-    LineHandle handle = editor.getDoc().getLineHandle(editor.getCursor().line);
+    /*LineHandle handle =*/ editor.getDoc().getLineHandle(editor.getCursor().line);
 
     print('todo: handle find');
   });
@@ -119,19 +118,19 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
       new Position(cur.line, cur.ch));
 }
 
-Future<HintResults> _dartCompleterAsync(CodeMirror editor,
-    [HintsOptions options]) {
-  Position cur = editor.getCursor();
-  String word = _getCurrentWord(editor).toLowerCase();
-  List<String> list = _numbers.where((s) => s.startsWith(word)).toList();
-
-  return new Future.delayed(new Duration(milliseconds: 200), () {
-    return new HintResults.fromStrings(
-        list,
-        new Position(cur.line, cur.ch - word.length),
-        new Position(cur.line, cur.ch));
-  });
-}
+//Future<HintResults> _dartCompleterAsync(CodeMirror editor,
+//    [HintsOptions options]) {
+//  Position cur = editor.getCursor();
+//  String word = _getCurrentWord(editor).toLowerCase();
+//  List<String> list = _numbers.where((s) => s.startsWith(word)).toList();
+//
+//  return new Future.delayed(new Duration(milliseconds: 200), () {
+//    return new HintResults.fromStrings(
+//        list,
+//        new Position(cur.line, cur.ch - word.length),
+//        new Position(cur.line, cur.ch));
+//  });
+//}
 
 final List _numbers = [
   'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'

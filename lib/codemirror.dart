@@ -337,6 +337,10 @@ class CodeMirror extends ProxyHolder {
     };
   }
 
+  void execCommand(String name) {
+    callArg('execCommand', name);
+  }
+
   /**
    * Sets the gutter marker for the given gutter (identified by its CSS class,
    * see the gutters option) to the given value. Value can be either null, to

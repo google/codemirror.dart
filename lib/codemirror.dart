@@ -337,6 +337,9 @@ class CodeMirror extends ProxyHolder {
     };
   }
 
+  /**
+   * Runs the command with the given name on the editor.
+   */
   void execCommand(String name) {
     callArg('execCommand', name);
   }

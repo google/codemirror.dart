@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.2.1
+- exposed `execCommand`
+
 # 0.2.0
 - upgrade to CodeMirror 5.0.0
 - exposed `CodeMirror.getInputField`

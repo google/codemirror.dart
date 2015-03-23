@@ -96,3 +96,7 @@ following lines to your `pubspec.yaml` file.
     inline_stylesheets:
       packages/codemirror/codemirror.css: false
 ```          
+
+## Disclaimer
+
+This is not an official Google product.

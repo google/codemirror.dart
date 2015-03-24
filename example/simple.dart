@@ -118,9 +118,9 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
       new Position(cur.line, cur.ch));
 }
 
-void _hintRenderer(Element element, HintResult hint) {
-  element.children.add(new DivElement()..text = hint.text);
-}
+//void _hintRenderer(Element element, HintResult hint) {
+//  element.children.add(new DivElement()..text = hint.text);
+//}
 
 void _hintApplier(CodeMirror editor, HintResult hint, Position from, Position to) {
   editor.getDoc().replaceRange(hint.text + "_foo_", from, to);

@@ -198,17 +198,15 @@ class HintResult {
     if (to != null) m['to'] = to.toProxy();
 
     if (hintApplier != null) {
-      // hint: fn(CodeMirror, self, data)
-      m['hint'] = (cm, self, data) {
-        Position from = new Position.fromProxy(self['from']);
-        Position to = new Position.fromProxy(self['to']);
+      m['hint'] = (cm, data, completion) {
+        Position from = new Position.fromProxy(data['from']);
+        Position to = new Position.fromProxy(data['to']);
         hintApplier(new CodeMirror.fromJsObject(cm), this, from, to);
       };
     }
 
     if (hintRenderer != null) {
-      // render: fn(Element, self, data)
-      m['render'] = (element, self, data) {
+      m['render'] = (element, data, completion) {
         hintRenderer(element, this);
       };
     }

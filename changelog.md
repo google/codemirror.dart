@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.2.2
+- upgrade to CodeMirror 5.1.0
+- expose more functionality from the hint addon
+
 # 0.2.1
 - exposed `execCommand`
 

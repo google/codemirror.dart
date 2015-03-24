@@ -109,13 +109,21 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
   String word = _getCurrentWord(editor).toLowerCase();
   List<HintResult> list = _numbers
       .where((s) => s.startsWith(word))
-      .map((s) => new HintResult(s))
+      .map((s) => new HintResult(s, hintApplier: _hintApplier))
       .toList();
 
   return new HintResults.fromHints(
       list,
       new Position(cur.line, cur.ch - word.length),
       new Position(cur.line, cur.ch));
+}
+
+//void _hintRenderer(Element element, HintResult hint) {
+//  element.children.add(new DivElement()..text = hint.text);
+//}
+
+void _hintApplier(CodeMirror editor, HintResult hint, Position from, Position to) {
+  editor.getDoc().replaceRange(hint.text + "_foo_", from, to);
 }
 
 //Future<HintResults> _dartCompleterAsync(CodeMirror editor,

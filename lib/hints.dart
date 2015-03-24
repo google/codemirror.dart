@@ -8,6 +8,7 @@
 library codemirror.hints;
 
 import 'dart:async';
+import 'dart:html' show Element;
 import 'dart:js';
 
 import 'codemirror.dart';
@@ -155,6 +156,10 @@ class HintResults {
   }
 }
 
+typedef HintRenderer(Element element, HintResult hint);
+
+typedef HintApplier(CodeMirror editor, HintResult hint, Position from, Position to);
+
 class HintResult {
   /// The completion text. This is the only required property.
   final String text;
@@ -165,14 +170,6 @@ class HintResult {
   /// A CSS class name to apply to the completion's line in the menu.
   final String className;
 
-  /// A method used to create the DOM structure for showing the completion by
-  /// appending it to its first argument.
-  //render: fn(Element, self, data)
-
-  /// A method used to actually apply the completion, instead of the default
-  /// behavior.
-  //hint: fn(CodeMirror, self, data)
-
   /// Optional from position that will be used by pick() instead of the global
   /// one passed with the full list of completions.
   final Position from;
@@ -181,7 +178,17 @@ class HintResult {
   /// passed with the full list of completions.
   final Position to;
 
-  HintResult(this.text, {this.displayText, this.className, this.from, this.to});
+  /// A method used to create the DOM structure for showing the completion by
+  /// appending it to its first argument. This cooresponds to the JS codemirror
+  /// `render` function.
+  final HintRenderer hintRenderer;
+
+  /// A method used to actually apply the completion, instead of the default
+  /// behavior. This cooresponds to the JS codemirror `hint` function.
+  final HintApplier hintApplier;
+
+  HintResult(this.text, {this.displayText, this.className, this.from, this.to,
+    this.hintRenderer, this.hintApplier});
 
   JsObject toProxy() {
     Map m = {'text': text};
@@ -189,6 +196,25 @@ class HintResult {
     if (className != null) m['className'] = className;
     if (from != null) m['from'] = from.toProxy();
     if (to != null) m['to'] = to.toProxy();
+
+    if (hintApplier != null) {
+      // hint: fn(CodeMirror, self, data)
+      m['hint'] = (cm, self, data) {
+        Position from = new Position.fromProxy(self['from']);
+        Position to = new Position.fromProxy(self['to']);
+        hintApplier(new CodeMirror.fromJsObject(cm), this, from, to);
+      };
+    }
+
+    if (hintRenderer != null) {
+      // render: fn(Element, self, data)
+      m['render'] = (element, self, data) {
+        hintRenderer(element, this);
+      };
+    }
+
     return jsify(m);
   }
+
+  String toString() => '[${text}]';
 }

@@ -155,6 +155,8 @@ class HintResults {
   }
 }
 
+typedef void Hint(CodeMirror cm, HintResult self, Map data);
+
 class HintResult {
   /// The completion text. This is the only required property.
   final String text;
@@ -172,6 +174,15 @@ class HintResult {
   /// A method used to actually apply the completion, instead of the default
   /// behavior.
   //hint: fn(CodeMirror, self, data)
+  final Hint hint;
+
+  /// The default hint behavior, used when hint is not defined.
+  final Hint defaultHint = (CodeMirror cm, HintResult self, Map data) {
+    String replacement = self.text;
+    Position from = self.from != null ? new Position.fromProxy(self.from) : new Position.fromProxy(data["from"]);
+    Position to = self.to != null ? new Position.fromProxy(self.to) : new Position.fromProxy(data["to"]);
+    cm.getDoc().replaceRange(replacement, from, to, "completion");
+  };
 
   /// Optional from position that will be used by pick() instead of the global
   /// one passed with the full list of completions.
@@ -181,7 +192,7 @@ class HintResult {
   /// passed with the full list of completions.
   final Position to;
 
-  HintResult(this.text, {this.displayText, this.className, this.from, this.to});
+  HintResult(this.text, {this.displayText, this.className, this.from, this.to, this.hint});
 
   JsObject toProxy() {
     Map m = {'text': text};
@@ -189,6 +200,15 @@ class HintResult {
     if (className != null) m['className'] = className;
     if (from != null) m['from'] = from.toProxy();
     if (to != null) m['to'] = to.toProxy();
+    m['hint'] = (JsObject a, JsObject b, JsObject c) {
+      CodeMirror cm = new CodeMirror.fromJsObject(a);
+      Map data = mapify(b);
+      if (hint == null) {
+        defaultHint(cm, this, data);
+      } else {
+        hint(cm, this, data);
+      }
+    };
     return jsify(m);
   }
 }

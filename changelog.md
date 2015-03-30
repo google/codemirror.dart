@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.2.3
+- patch in a fix for the code completion popup
+
 # 0.2.2
 - upgrade to CodeMirror 5.1.0
 - expose more functionality from the hint addon

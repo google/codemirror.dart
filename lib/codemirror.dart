@@ -65,6 +65,8 @@ class CodeMirror extends ProxyHolder {
 
   static JsObject get _cm => context['CodeMirror'];
 
+  static Map<JsObject, CodeMirror> _instances = {};
+
   static List<String> get MODES => keys(_cm['modes'])
       .where((modeName) => modeName != 'null').toList();
 
@@ -135,12 +137,26 @@ class CodeMirror extends ProxyHolder {
    * http://codemirror.net/doc/manual.html#config for valid options values.
    */
   CodeMirror.fromElement(Element element, {Map options}) :
-      super(_createFromElement(element, options));
+      super(_createFromElement(element, options)) {
+    _instances[jsProxy] = this;
+  }
 
   /**
-   * Create a new CodeMirror editor from the given JsObject.
+   * Create a new CodeMirror editor from the given JsObject. This will return an
+   * existing Dart `CodeMirror` object if there is already one for the given
+   * JavaScript proxy.
    */
-  CodeMirror.fromJsObject(JsObject object) : super(object);
+  factory CodeMirror.fromJsObject(JsObject object) {
+    if (_instances.containsKey(object)) {
+      return _instances[object];
+    } else {
+      return new CodeMirror._fromJsObject(object);
+    }
+  }
+
+  CodeMirror._fromJsObject(JsObject object) : super(object) {
+    _instances[jsProxy] = this;
+  }
 
   /**
    * The method provides another way to initialize an editor. It takes a
@@ -152,7 +168,9 @@ class CodeMirror extends ProxyHolder {
    * way has three additional methods: `save`, `toTextArea`, and `getTextArea`.
    */
   CodeMirror.fromTextArea(TextAreaElement textArea, {Map options}) :
-      super(_createFromTextArea(textArea, options));
+      super(_createFromTextArea(textArea, options)) {
+    _instances[jsProxy] = this;
+  }
 
   /**
    * Fires every time the content of the editor is changed.
@@ -545,6 +563,15 @@ class CodeMirror extends ProxyHolder {
    * `CodeMirror.fromTextArea` constructor.
    */
   TextAreaElement getTextArea() => call('getTextArea');
+
+  /// If you create and discard a large number of `CodeMirror` instances, you
+  /// should call [dispose] after finishing with each one.
+  void dispose() {
+    super.dispose();
+
+    // Remove registrations from the map.
+    _instances.remove(jsProxy);
+  }
 }
 
 /**
@@ -1159,10 +1186,12 @@ abstract class ProxyHolder {
     return _events[eventName].stream;
   }
 
-  /**
-   * This method should be called if any events listeners were added to the
-   * object.
-   */
+  int get hashCode => jsProxy.hashCode;
+
+  operator==(other) => other is ProxyHolder && jsProxy == other.jsProxy;
+
+  /// This method should be called if any events listeners were added to the
+  /// object.
   void dispose() {
     if (_events.isNotEmpty) {
       for (JsEventListener event in _events.values) {

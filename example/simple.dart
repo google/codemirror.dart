@@ -112,10 +112,13 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
       .map((s) => new HintResult(s))
       .toList();
 
-  return new HintResults.fromHints(
+  HintResults results = new HintResults.fromHints(
       list,
       new Position(cur.line, cur.ch - word.length),
       new Position(cur.line, cur.ch));
+  results.registerOnShown(() => print('hints popup shown'));
+  results.registerOnClose(() => print('hints popup hidden'));
+  return results;
 }
 
 //void _hintRenderer(Element element, HintResult hint) {

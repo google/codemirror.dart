@@ -140,19 +140,22 @@ class HintResults {
 
   final Position from;
   final Position to;
+  Function onShown;
 
-  HintResults.fromStrings(List<String> results, this.from, this.to) :
+  HintResults.fromStrings(List<String> results, this.from, this.to, {this.onShown}) :
       this._results = results;
 
-  HintResults.fromHints(List<HintResult> results, this.from, this.to) :
+  HintResults.fromHints(List<HintResult> results, this.from, this.to, {this.onShown}) :
       this._results = results;
 
   JsObject toProxy() {
-    return jsify({
+    var jsObject = jsify({
       'list': _results.map((r) => r is HintResult ? r.toProxy() : r).toList(),
       'from': from.toProxy(),
       'to': to.toProxy()
     });
+    context['CodeMirror'].callMethod("on", [jsObject, "shown", () => onShown()]);
+    return jsObject;
   }
 }
 

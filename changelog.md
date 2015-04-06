@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.2.4
+- expose the hints panel `shown` and `close` events (`HintResults.registerOnShown`)
+
 # 0.2.3
 - patch in a fix for the code completion popup
 

@@ -135,27 +135,42 @@ class HintsOptions extends ProxyHolder {
   }
 }
 
+/// The return value from a hints (code completion) operation.
 class HintResults {
   final List _results;
-
   final Position from;
   final Position to;
-  Function onShown;
 
-  HintResults.fromStrings(List<String> results, this.from, this.to, {this.onShown}) :
+  JsObject _obj;
+
+  HintResults.fromStrings(List<String> results, this.from, this.to) :
       this._results = results;
 
-  HintResults.fromHints(List<HintResult> results, this.from, this.to, {this.onShown}) :
+  HintResults.fromHints(List<HintResult> results, this.from, this.to) :
       this._results = results;
+
+  /// The list of code completion results. This list is either a list of
+  /// strings or a list of [HintResult]s.
+  List get results => _results;
+
+  void registerOnShown(Function onShown) {
+    Hints._cm.callMethod("on", [toProxy(), "shown", onShown]);
+  }
+
+  void registerOnClose(Function onShown) {
+    Hints._cm.callMethod("on", [toProxy(), "close", onShown]);
+  }
 
   JsObject toProxy() {
-    var jsObject = jsify({
-      'list': _results.map((r) => r is HintResult ? r.toProxy() : r).toList(),
-      'from': from.toProxy(),
-      'to': to.toProxy()
-    });
-    context['CodeMirror'].callMethod("on", [jsObject, "shown", () => onShown()]);
-    return jsObject;
+    if (_obj == null) {
+      _obj = jsify({
+        'list': _results.map((r) => r is HintResult ? r.toProxy() : r).toList(),
+        'from': from.toProxy(),
+        'to': to.toProxy()
+      });
+    }
+
+    return _obj;
   }
 }
 

@@ -161,6 +161,15 @@ class HintResults {
     Hints._cm.callMethod("on", [toProxy(), "close", onShown]);
   }
 
+  void registerOnPick(Function onPick) {
+    Hints._cm.callMethod("on", [toProxy(), "pick", (completion) => onPick()]);
+  }
+
+  void registerOnUpdate(Function onUpdate) {
+    Hints._cm.callMethod("on", [toProxy(), "update", onUpdate]);
+  }
+
+
   JsObject toProxy() {
     if (_obj == null) {
       _obj = jsify({

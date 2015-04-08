@@ -162,7 +162,8 @@ class HintResults {
   }
 
   void registerOnPick(Function onPick) {
-    Hints._cm.callMethod("on", [toProxy(), "pick", (completion) => onPick(new HintResult.fromProxy(completion))]);
+    Hints._cm.callMethod("on", [toProxy(), "pick", (completion)
+        => onPick(new HintResult.fromProxy(completion))]);
   }
 
   void registerOnUpdate(Function onUpdate) {
@@ -170,7 +171,8 @@ class HintResults {
   }
 
   void registerOnSelect(Function onSelect) {
-    Hints._cm.callMethod("on", [toProxy(), "select", (completion, element) => onSelect(new HintResult.fromProxy(completion), element)]);
+    Hints._cm.callMethod("on", [toProxy(), "select", (completion, element)
+        => onSelect(new HintResult.fromProxy(completion), element)]);
   }
 
 

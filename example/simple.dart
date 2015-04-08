@@ -119,7 +119,9 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
   results.registerOnShown(() => print('hints popup shown'));
   results.registerOnClose(() => print('hints popup hidden'));
   results.registerOnUpdate(() => print('hints popup update'));
-  results.registerOnPick(() => print('hints popup pick'));
+  results.registerOnPick((completion) => print(['hints popup pick','${completion}']));
+  results.registerOnSelect((completion,element) => print(['hint popup select','${completion}','${element}']));
+
   return results;
 }
 

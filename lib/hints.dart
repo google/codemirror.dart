@@ -161,6 +161,21 @@ class HintResults {
     Hints._cm.callMethod("on", [toProxy(), "close", onShown]);
   }
 
+  void registerOnPick(Function onPick) {
+    Hints._cm.callMethod("on", [toProxy(), "pick", (completion)
+        => onPick(new HintResult.fromProxy(completion))]);
+  }
+
+  void registerOnUpdate(Function onUpdate) {
+    Hints._cm.callMethod("on", [toProxy(), "update", onUpdate]);
+  }
+
+  void registerOnSelect(Function onSelect) {
+    Hints._cm.callMethod("on", [toProxy(), "select", (completion, element)
+        => onSelect(new HintResult.fromProxy(completion), element)]);
+  }
+
+
   JsObject toProxy() {
     if (_obj == null) {
       _obj = jsify({
@@ -207,6 +222,19 @@ class HintResult {
 
   HintResult(this.text, {this.displayText, this.className, this.from, this.to,
     this.hintRenderer, this.hintApplier});
+
+  HintResult.fromProxy(JsObject m) :
+    this.text = m['text'],
+    this.displayText = m['displayText'],
+    this.className = m['className'],
+    this.from = m['from'],
+    this.to = m['to'],
+    this.hintApplier = ((CodeMirror editor, HintResult hint, Position from, Position to) {
+      m['hint'](editor.jsProxy, null, hint.toProxy());
+    }),
+    this.hintRenderer = ((Element element, HintResult hint) {
+      m['render'](element, null, hint.toProxy());
+    });
 
   JsObject toProxy() {
     Map m = {'text': text};

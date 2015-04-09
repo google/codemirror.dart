@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.2.5
+- expose the hints panel `select`, `pick`, and `update` events
+
 # 0.2.4
 - expose the hints panel `shown` and `close` events (`HintResults.registerOnShown`)
 

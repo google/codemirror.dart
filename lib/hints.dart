@@ -18,6 +18,10 @@ typedef HintResults HintsHelper(CodeMirror editor, [HintsOptions options]);
 
 typedef Future<HintResults> HintsHelperAsync(CodeMirror editor, [HintsOptions options]);
 
+typedef void HintsResultsSelectCallback(HintResult completion, Element element);
+
+typedef void HintsResultsPickCallback(HintResult completion);
+
 /**
  * To use codemirror hints (aka code completion), register either a synchronous
  * or aynchronous hints helper for a given mode (see [Hints.registerHintsHelper]
@@ -153,28 +157,48 @@ class HintResults {
   /// strings or a list of [HintResult]s.
   List get results => _results;
 
+  /// Fired when the pop-up is shown.
   void registerOnShown(Function onShown) {
     Hints._cm.callMethod("on", [toProxy(), "shown", onShown]);
   }
 
-  void registerOnClose(Function onShown) {
-    Hints._cm.callMethod("on", [toProxy(), "close", onShown]);
+  /// Fired when a completion is selected. Passed the completion value and the
+  /// DOM node that represents it in the menu.
+  ///
+  /// The completion [HintResult] is not guaranteed to be the same object
+  /// instance as the one provided by the `HintResults`.
+  void registerOnSelect(HintsResultsSelectCallback onSelect) {
+    Hints._cm.callMethod("on", [toProxy(), "select", (completion, element) {
+      if (completion is String) {
+        onSelect(new HintResult(completion), element);
+      } else {
+        onSelect(new HintResult.fromProxy(completion), element);
+      }
+    }]);
   }
 
-  void registerOnPick(Function onPick) {
-    Hints._cm.callMethod("on", [toProxy(), "pick", (completion)
-        => onPick(new HintResult.fromProxy(completion))]);
+  /// Fired when a completion is picked. Passed the completion value.
+  ///
+  /// The completion [HintResult] is not guaranteed to be the same object
+  /// instance as the one provided by the `HintResults`.
+  void registerOnPick(HintsResultsPickCallback onPick) {
+    Hints._cm.callMethod("on", [toProxy(), "pick", (completion) {
+      if (completion is String) {
+        onPick(new HintResult(completion));
+      } else {
+        onPick(new HintResult.fromProxy(completion));
+      }
+    }]);
+  }
+
+  /// Fired when the completion is finished.
+  void registerOnClose(Function onShown) {
+    Hints._cm.callMethod("on", [toProxy(), "close", onShown]);
   }
 
   void registerOnUpdate(Function onUpdate) {
     Hints._cm.callMethod("on", [toProxy(), "update", onUpdate]);
   }
-
-  void registerOnSelect(Function onSelect) {
-    Hints._cm.callMethod("on", [toProxy(), "select", (completion, element)
-        => onSelect(new HintResult.fromProxy(completion), element)]);
-  }
-
 
   JsObject toProxy() {
     if (_obj == null) {
@@ -224,17 +248,13 @@ class HintResult {
     this.hintRenderer, this.hintApplier});
 
   HintResult.fromProxy(JsObject m) :
-    this.text = m['text'],
-    this.displayText = m['displayText'],
-    this.className = m['className'],
-    this.from = m['from'],
-    this.to = m['to'],
-    this.hintApplier = ((CodeMirror editor, HintResult hint, Position from, Position to) {
-      m['hint'](editor.jsProxy, null, hint.toProxy());
-    }),
-    this.hintRenderer = ((Element element, HintResult hint) {
-      m['render'](element, null, hint.toProxy());
-    });
+    text = m['text'],
+    displayText = m['displayText'],
+    className = m['className'],
+    from = _createPos(m['from']),
+    to = _createPos(m['to']),
+    hintRenderer = null,
+    hintApplier = null;
 
   JsObject toProxy() {
     Map m = {'text': text};
@@ -245,8 +265,8 @@ class HintResult {
 
     if (hintApplier != null) {
       m['hint'] = (cm, data, completion) {
-        Position from = new Position.fromProxy(data['from']);
-        Position to = new Position.fromProxy(data['to']);
+        Position from = _createPos(data['from']);
+        Position to = _createPos(data['to']);
         hintApplier(new CodeMirror.fromJsObject(cm), this, from, to);
       };
     }
@@ -261,4 +281,8 @@ class HintResult {
   }
 
   String toString() => '[${text}]';
+
+  static Position _createPos(JsObject obj) {
+    return obj == null ? null : new Position.fromProxy(obj);
+  }
 }

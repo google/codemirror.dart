@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.2.6
+- patch in a completion fix for https://github.com/codemirror/CodeMirror/issues/3189
+
 # 0.2.5
 - expose the hints panel `select`, `pick`, and `update` events
 

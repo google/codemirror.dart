@@ -1,8 +1,8 @@
 # Changelog
 
 # 0.2.7
-- bug to to `Doc.getModeAt`
-- wrap the results of `Doc.getMode` and `Doc.getModeAt` in a Dart `Mode` object
+- bug fix to `Doc.getModeAt`
+- added `Doc.getModeName()` and `Doc.getModeNameAt()` methods
 
 # 0.2.6
 - patch in a completion fix for https://github.com/codemirror/CodeMirror/issues/3189

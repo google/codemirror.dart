@@ -969,16 +969,25 @@ class Doc extends ProxyHolder {
    * Gets the (outer) mode object for the editor. Note that this is distinct
    * from getOption("mode"), which gives you the mode specification, rather than
    * the resolved, instantiated mode object.
+   *
+   * The returned mode is a `JsObject`.
    */
-  Mode getMode() => new Mode(call('getMode'));
+  dynamic getMode() => call('getMode');
+
+  /// Return the name of the current mode.
+  String getModeName() => getMode()['name'];
 
   /**
    * Gets the inner mode at a given position. This will return the same as
    * getMode for simple modes, but will return an inner mode for nesting modes
    * (such as htmlmixed).
+   *
+   * The returned mode is a `JsObject`.
    */
-  Mode getModeAt(Position pos) =>
-      new Mode(getEditor().callArg('getModeAt', pos.toProxy()));
+  dynamic getModeAt(Position pos) => getEditor().callArg('getModeAt', pos.toProxy());
+
+  /// Return the name of the mode at the given position.
+  String getModeNameAt(Position pos) => getModeAt(pos)['name'];
 
   /**
    * Fetches the line handle for the given line number.
@@ -1153,26 +1162,6 @@ class Token {
     type = obj['type'], state = obj['state'];
 
   String toString() => string;
-}
-
-/// A simple wrapper around a CodeMirror mode object.
-class Mode {
-  /// The actual CodeMirror JavaScript mode object.
-  final JsObject mode;
-
-  Mode(this.mode);
-
-  String get name => mode['name'];
-
-  String get electricChars => mode['electricChars'];
-
-  String get fold => mode['fold'];
-
-  String get blockCommentStart => mode['blockCommentStart'];
-  String get blockCommentContinue => mode['blockCommentContinue'];
-  String get blockCommentEnd => mode['blockCommentEnd'];
-
-  String toString() => name;
 }
 
 /**

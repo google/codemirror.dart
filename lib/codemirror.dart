@@ -981,7 +981,7 @@ class Doc extends ProxyHolder {
    *
    * The returned mode is a `JsObject`.
    */
-  dynamic getModeAt(Position pos) => callArg('getMode', pos.toProxy());
+  dynamic getModeAt(Position pos) => getEditor().callArg('getModeAt', pos.toProxy());
 
   /**
    * Fetches the line handle for the given line number.

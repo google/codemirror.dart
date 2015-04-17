@@ -974,6 +974,9 @@ class Doc extends ProxyHolder {
    */
   dynamic getMode() => call('getMode');
 
+  /// Return the name of the current mode.
+  String getModeName() => getMode()['name'];
+
   /**
    * Gets the inner mode at a given position. This will return the same as
    * getMode for simple modes, but will return an inner mode for nesting modes
@@ -982,6 +985,9 @@ class Doc extends ProxyHolder {
    * The returned mode is a `JsObject`.
    */
   dynamic getModeAt(Position pos) => getEditor().callArg('getModeAt', pos.toProxy());
+
+  /// Return the name of the mode at the given position.
+  String getModeNameAt(Position pos) => getModeAt(pos)['name'];
 
   /**
    * Fetches the line handle for the given line number.

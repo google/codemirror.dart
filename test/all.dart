@@ -5,7 +5,6 @@
 library codemirror.tests;
 
 import 'dart:html';
-import 'dart:js';
 
 import 'package:codemirror/codemirror.dart';
 import 'package:unittest/html_config.dart';
@@ -105,6 +104,7 @@ createDocTests() {
 
   setUp(() {
     editor = new CodeMirror.fromElement(editorHost);
+    editor.setMode('clike');
   });
 
   tearDown(() {
@@ -126,6 +126,12 @@ createDocTests() {
     expect(doc.getLine(1), 'two');
     expect(doc.getLine(2), 'three');
   });
+
+  test('getMode', () {
+    Doc doc = editor.getDoc();
+    expect(doc.getMode()['name'], 'clike');
+    expect(doc.getModeName(), 'clike');
+  });
 }
 
 createHtmlDocTests() {
@@ -143,8 +149,9 @@ createHtmlDocTests() {
   test('getModeAt', () {
     Doc doc = editor.getDoc();
     doc.setValue('<style>\np {color: black;}\n</style>');
-    JsObject mode = doc.getModeAt(new Position(2,0));
+    var mode = doc.getModeAt(new Position(2, 0));
     expect(mode['name'], 'css');
+    expect(doc.getModeNameAt(new Position(2, 0)), 'css');
   });
 }
 

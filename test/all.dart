@@ -143,8 +143,8 @@ createHtmlDocTests() {
   test('getModeAt', () {
     Doc doc = editor.getDoc();
     doc.setValue('<style>\np {color: black;}\n</style>');
-    JsObject mode = doc.getModeAt(new Position(2,0));
-    expect(mode['name'], 'css');
+    Mode mode = doc.getModeAt(new Position(2, 0));
+    expect(mode.name, 'css');
   });
 }
 

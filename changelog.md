@@ -1,6 +1,7 @@
 # Changelog
 
 # 0.2.7
+- updated to CodeMirror 5.2.0
 - bug fix to `Doc.getModeAt`
 - added `Doc.getModeName()` and `Doc.getModeNameAt()` methods
 

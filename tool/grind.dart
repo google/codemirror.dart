@@ -22,8 +22,7 @@ build() {
   //copy(joinFile(srcDir, ['lib', 'codemirror.js']), destDir);
 
   // Copy codemirror.css.
-  copy(joinFile(srcDir, ['lib', 'codemirror.css']),
-      joinDir(destDir, ['css']));
+  copy(joinFile(srcDir, ['lib', 'codemirror.css']), joinDir(destDir, ['css']));
 
   // Copy the addons.
   copy(joinDir(srcDir, ['addon']), joinDir(destDir, ['addon']));

@@ -11,6 +11,7 @@ pubspec.lock
 *.js.map
 
 .settings/
+/.DS_Store
 
 # Ignore the codemirror copied resources.
 lib/addon/

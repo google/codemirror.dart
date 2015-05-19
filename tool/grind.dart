@@ -9,78 +9,47 @@ import 'package:grinder/grinder.dart';
 final Directory srcDir = new Directory('third_party/codemirror');
 final Directory destDir = new Directory('lib');
 
-void main([List<String> args]) {
-  task('init', init);
-  task('install', install, ['init']);
-  task('build', build, ['init']);
-  task('test', test, ['build']);
-  task('clean', clean);
+main(List<String> args) => grind(args);
 
-  startGrinder(args);
-}
+@Task('Update / install a new version of the codemirror library')
+install() => run('bower', arguments: ['install']);
 
-/**
- * Do any necessary build set up.
- */
-void init(GrinderContext context) {
-  // Verify we're running in the project root.
-  if (!getDir('lib').existsSync() || !getFile('pubspec.yaml').existsSync()) {
-    context.fail('This script must be run from the project root.');
-  }
-}
-
-/**
- * Update / install a new version of the codemirror library.
- */
-void install(GrinderContext context) {
-  runProcess(context, 'bower', arguments: ['install']);
-}
-
-/**
- * Copy the codemirror files from third_party/ into lib/.
- */
-void build(GrinderContext context) {
+@Task('Copy the codemirror files from third_party/ into lib/')
+build() {
   // Copy codemirror.js.
   String jsSource = _concatenateModes(srcDir);
   joinFile(destDir, ['codemirror.js']).writeAsStringSync(jsSource);
-  //copyFile(joinFile(srcDir, ['lib', 'codemirror.js']), destDir, context);
+  //copy(joinFile(srcDir, ['lib', 'codemirror.js']), destDir);
 
   // Copy codemirror.css.
-  copyFile(joinFile(srcDir, ['lib', 'codemirror.css']),
-      joinDir(destDir, ['css']), context);
+  copy(joinFile(srcDir, ['lib', 'codemirror.css']),
+      joinDir(destDir, ['css']));
 
   // Copy the addons.
-  copyDirectory(
-      joinDir(srcDir, ['addon']), joinDir(destDir, ['addon']), context);
+  copy(joinDir(srcDir, ['addon']), joinDir(destDir, ['addon']));
 
   // Copy the keymaps.
-  copyDirectory(
-      joinDir(srcDir, ['keymap']), joinDir(destDir, ['keymap']), context);
+  copy(joinDir(srcDir, ['keymap']), joinDir(destDir, ['keymap']));
 
   // Copy the modes.
-  copyDirectory(
-      joinDir(srcDir, ['mode']), joinDir(destDir, ['mode']), context);
+  copy(joinDir(srcDir, ['mode']), joinDir(destDir, ['mode']));
 
   // Copy the themes.
-  copyDirectory(
-      joinDir(srcDir, ['theme']), joinDir(destDir, ['theme']), context);
+  copy(joinDir(srcDir, ['theme']), joinDir(destDir, ['theme']));
 }
 
-/**
- * Run the tests.
- */
-void test(GrinderContext context) {
+@Task('Run the tests')
+test() {
   // TODO(devoncarew): Run browser tests.
-  //Tests.runCliTests(context);
+	// pub run test:test --platform=chrome
+	// pub run test:test --platform=dartium
 }
 
-/**
- * Delete all generated artifacts.
- */
-void clean(GrinderContext context) {
-  deleteEntity(joinFile(destDir, ['codemirror.js']), context);
-  deleteEntity(joinFile(destDir, ['css', 'codemirror.css']), context);
-  deleteEntity(joinFile(destDir, ['theme']), context);
+@Task('Delete all generated artifacts')
+clean() {
+  delete(joinFile(destDir, ['codemirror.js']));
+  delete(joinFile(destDir, ['css', 'codemirror.css']));
+  delete(joinFile(destDir, ['theme']));
 }
 
 String _concatenateModes(Directory dir) {
@@ -108,9 +77,9 @@ String _concatenateModes(Directory dir) {
   // Add an API to add a panel above or below the editor.
   files.add(joinFile(dir, ['addon', 'display', 'panel.js']));
 
-//  // Add search addons.
-//  files.add(joinFile(dir, ['addon', 'search', 'search.js']));
-//  files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
+  // Add search addons.
+  files.add(joinFile(dir, ['addon', 'search', 'search.js']));
+  files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
 
   // Required by some modes.
   files.add(joinFile(dir, ['addon', 'mode', 'overlay.js']));

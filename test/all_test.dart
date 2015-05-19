@@ -2,15 +2,13 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+@TestOn('browser')
 library codemirror.tests;
 
 import 'dart:html';
 
 import 'package:codemirror/codemirror.dart';
-import 'package:unittest/html_config.dart';
-import 'package:unittest/unittest.dart';
-
-// TODO: get the tests running in content_shell
+import 'package:test/test.dart';
 
 // TODO: test double click
 
@@ -19,8 +17,6 @@ import 'package:unittest/unittest.dart';
 final Element editorHost = new DivElement();
 
 void main() {
-  useHtmlConfiguration();
-
   document.body.children.add(editorHost);
 
   group('simple', createSimpleTests);

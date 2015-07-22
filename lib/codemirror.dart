@@ -94,6 +94,23 @@ class CodeMirror extends ProxyHolder {
       => new ModeInfo(_cm.callMethod('findModeByName', [name]));
 
   /**
+   * If you want to define extra methods in terms of the CodeMirror API, it is
+   * possible to use defineExtension. This will cause the given value (usually a
+   * method) to be added to all CodeMirror instances created from then on.
+   */
+  static void defineExtension(String name, dynamic value) {
+    _cm.callMethod('defineExtension', [name, value]);
+  }
+
+  /**
+   * Like defineExtension, but the method will be added to the interface for Doc
+   * objects instead.
+   */
+  static void defineDocExtension(String name, dynamic value) {
+    _cm.callMethod('defineDocExtension', [name, value]);
+  }
+
+  /**
    * Registers a helper value with the given name in the given namespace (type).
    * This is used to define functionality that may be looked up by mode. Will
    * create (if it doesn't already exist) a property on the CodeMirror object

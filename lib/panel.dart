@@ -16,9 +16,7 @@ import 'src/js_utils.dart';
 class Panel {
   /**
    * Places a DOM node above or below an editor, and shrinks the editor to make
-   * room for the node. The method takes as first argument as DOM node, and as
-   * second an optional options object. By default, the panel ends up above the
-   * editor.
+   * room for the node. By default, the panel ends up above the editor.
    */
   static PanelContainer addPanel(CodeMirror editor, Element element,
       {bool below}) {

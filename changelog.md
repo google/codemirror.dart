@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.9
+- made ddc (strong mode) compliant
+- fixed an issues returning the TextMarker positions of bookmarks
+
 ## 0.2.8
 - updated to CodeMirror 5.5.0
 - expose `defineExtension` and `defineDocExtension`

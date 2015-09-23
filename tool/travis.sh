@@ -14,5 +14,10 @@ dart tool/grind.dart build
 pub global activate tuneup
 pub global run tuneup check
 
+# And that DDC is happy with it.
+pub global activate dev_compiler
+pub global run dev_compiler lib/codemirror.dart
+pub global run dev_compiler lib/hints.dart
+
 # Run the tests.
 #dart test/all.dart

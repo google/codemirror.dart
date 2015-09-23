@@ -65,7 +65,7 @@ class Hints {
     _init();
 
     JsFunction function = new JsFunction.withThis((win, editor, showHints, [options]) {
-      var results = helper(new CodeMirror.fromJsObject(editor),
+      dynamic results = helper(new CodeMirror.fromJsObject(editor),
           new HintsOptions.fromProxy(options));
 
       if (results is Future) {

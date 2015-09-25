@@ -1,6 +1,7 @@
 # codemirror.dart
 
 [![Build Status](https://travis-ci.org/google/codemirror.dart.svg?branch=master)](https://travis-ci.org/google/codemirror.dart)
+[https://img.shields.io/badge/Dart-strong%20mode-blue.svg](https://github.com/dart-lang/dev_compiler/blob/master/STRONG_MODE.md)
 
 ## What is it?
 

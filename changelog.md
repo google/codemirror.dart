@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+- updated to CodeMirror 5.7.0
+- more strong mode fixes
+
 ## 0.2.9
 - made ddc (strong mode) compliant
 - fixed an issues returning the TextMarker positions of bookmarks

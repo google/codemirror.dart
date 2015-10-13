@@ -1,0 +1,9 @@
+.packages
+.pub/
+.settings/
+example/
+lib/
+packages/
+pubspec.lock
+test/
+tool/

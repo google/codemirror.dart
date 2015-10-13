@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Codemirror.dart by google</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Codemirror.dart</h1>
+        <p>A Dart wrapper around the CodeMirror text editor.</p>
+
+        <p class="view"><a href="https://github.com/google/codemirror.dart">View the Project on GitHub <small>google/codemirror.dart</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/google/codemirror.dart/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/google/codemirror.dart/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/google/codemirror.dart">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="codemirrordart" class="anchor" href="#codemirrordart" aria-hidden="true"><span class="octicon octicon-link"></span></a>codemirror.dart</h1>
+
+<p><a href="https://travis-ci.org/google/codemirror.dart"><img src="https://travis-ci.org/google/codemirror.dart.svg?branch=master" alt="Build Status"></a>
+<a href="https://github.com/dart-lang/dev_compiler/blob/master/STRONG_MODE.md"><img src="https://img.shields.io/badge/dart-strong%20mode-blue.svg" alt="Dart strong mode"></a></p>
+
+<h2>
+<a id="what-is-it" class="anchor" href="#what-is-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is it?</h2>
+
+<p>A Dart wrapper around the CodeMirror text editor. From 
+<a href="http://codemirror.net/">codemirror.net</a>:</p>
+
+<blockquote>
+<p>CodeMirror is a versatile text editor implemented in JavaScript for the
+browser. It is specialized for editing code, and comes with a number of language
+modes and addons that implement more advanced editing functionality.</p>
+</blockquote>
+
+<h2>
+<a id="an-example" class="anchor" href="#an-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>An example</h2>
+
+<div class="highlight highlight-source-dart"><pre><span class="pl-k">Map</span> options <span class="pl-k">=</span> {
+  <span class="pl-s">'mode'</span>:  <span class="pl-s">'javascript'</span>,
+  <span class="pl-s">'theme'</span>: <span class="pl-s">'monokai'</span>
+};
+
+CodeMirror editor <span class="pl-k">=</span> <span class="pl-k">new</span> CodeMirror.fromElement(
+    querySelector(<span class="pl-s">'#textContainer'</span>), options: options);
+editor.getDoc().setValue(<span class="pl-s">'foo.bar(1, 2, 3);'</span>);</pre></div>
+
+<p>See also our
+<a href="https://github.com/google/codemirror.dart/tree/master/example">example/</a>
+directory.</p>
+
+<h2>
+<a id="how-do-i-use-it" class="anchor" href="#how-do-i-use-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>How do I use it?</h2>
+
+<p>In your main html file, link to the style sheet:</p>
+
+<pre><code>&lt;link href="packages/codemirror/codemirror.css" rel="stylesheet"&gt;
+</code></pre>
+
+<p>reference the CodeMirror JavaScript code:</p>
+
+<pre><code>&lt;script src="packages/codemirror/codemirror.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>and, in your Dart code, import the library:</p>
+
+<pre><code>import 'package:codemirror/codemirror.dart';
+</code></pre>
+
+<h2>
+<a id="what-about-modes-addons" class="anchor" href="#what-about-modes-addons" aria-hidden="true"><span class="octicon octicon-link"></span></a>What about modes? Addons?</h2>
+
+<p>This Dart package ships with several language modes built in. CodeMirror itself
+supports over 100 modes; the modes built into the Dart package include the
+usual suspects for web development - <code>css</code>, <code>html</code>, <code>dart</code> and <code>javascript</code> as
+well as a few
+<a href="https://github.com/google/codemirror.dart/blob/master/tool/grind.dart#L122">others</a>.
+In order to add additional modes, you'll need to reference the mode file from
+your html entry-point. So,</p>
+
+<pre><code>&lt;script src="packages/codemirror/mode/lua.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>will bring in support for Lua.</p>
+
+<p>Similarly with addons, we've included a few common ones, and have made the
+others available to import on a case-by-case basis. In order to use the
+<code>active-line</code> addon, import:</p>
+
+<pre><code>&lt;script src="packages/codemirror/addon/selection/active-line.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>Be aware that many addons need additional configuration in order to enable then.
+This is generally done by passing values into the options of the CodeMirror
+constructor.</p>
+
+<p>Some addons are exposed through the main Dart interface. Some are exposed via
+side-car Dart libraries available in the main
+<a href="https://github.com/google/codemirror.dart/tree/master/lib">package</a>, and some
+have yet to be exposed. Pull requests welcome :)</p>
+
+<h2>
+<a id="themes" class="anchor" href="#themes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Themes</h2>
+
+<p>By importing the codemirror.css file:</p>
+
+<pre><code>&lt;link href="packages/codemirror/codemirror.css" rel="stylesheet"&gt;
+</code></pre>
+
+<p>You get access to all the CodeMirror themes. If you only want a few, or don't
+want to pay the network roundtrip cost to load all the themes, you can import
+only the ones you're interested in:</p>
+
+<pre><code>&lt;link href="packages/codemirror/theme/monokai.css" rel="stylesheet"&gt;
+&lt;link href="packages/codemirror/theme/zenburn.css" rel="stylesheet"&gt;
+</code></pre>
+
+<h2>
+<a id="polymer-transformer" class="anchor" href="#polymer-transformer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Polymer transformer</h2>
+
+<p>The Polymer transfomer will inline our theme css references incorrectly.
+Currently, to use the <code>codemirror</code> package with Polymer, you'll need to add the
+following lines to your <code>pubspec.yaml</code> file.</p>
+
+<div class="highlight highlight-source-yaml"><pre><span class="pl-s">- <span class="pl-ent">polymer:</span></span>
+    <span class="pl-s"><span class="pl-ent">entry_points:</span> <span class="pl-s">web/foo_bar.html</span></span>
+    <span class="pl-s"><span class="pl-ent">inline_stylesheets:</span></span>
+      <span class="pl-s"><span class="pl-ent">packages/codemirror/codemirror.css:</span> <span class="pl-s">false</span></span></pre></div>
+
+<h2>
+<a id="disclaimer" class="anchor" href="#disclaimer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Disclaimer</h2>
+
+<p>This is not an official Google product.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/google">google</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>

@@ -2,6 +2,7 @@
 
 ## 0.3.1
 - strong mode fixes
+- fix an issue with the async code completer
 
 ## 0.3.0
 - updated to CodeMirror 5.7.0

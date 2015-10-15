@@ -4,6 +4,7 @@
 
 library example.simple;
 
+import 'dart:async';
 import 'dart:html';
 
 import 'package:codemirror/codemirror.dart';
@@ -28,7 +29,7 @@ void main() {
   querySelector('#version').text = "CodeMirror version ${CodeMirror.version}";
 
   Hints.registerHintsHelper('dart', _dartCompleter);
-  //Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
+  Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
 
   // Theme control.
   SelectElement themeSelect = querySelector('#theme');
@@ -137,19 +138,18 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
 //  editor.getDoc().replaceRange(hint.text + "_foo_", from, to);
 //}
 
-//Future<HintResults> _dartCompleterAsync(CodeMirror editor,
-//    [HintsOptions options]) {
-//  Position cur = editor.getCursor();
-//  String word = _getCurrentWord(editor).toLowerCase();
-//  List<String> list = _numbers.where((s) => s.startsWith(word)).toList();
-//
-//  return new Future.delayed(new Duration(milliseconds: 200), () {
-//    return new HintResults.fromStrings(
-//        list,
-//        new Position(cur.line, cur.ch - word.length),
-//        new Position(cur.line, cur.ch));
-//  });
-//}
+Future<HintResults> _dartCompleterAsync(CodeMirror editor, [HintsOptions options]) {
+  Position cur = editor.getCursor();
+  String word = _getCurrentWord(editor).toLowerCase();
+  List<String> list = new List.from(_numbers.where((s) => s.startsWith(word)));
+
+  return new Future.delayed(new Duration(milliseconds: 200), () {
+    return new HintResults.fromStrings(
+      list,
+      new Position(cur.line, cur.ch - word.length),
+      new Position(cur.line, cur.ch));
+  });
+}
 
 final List _numbers = [
   'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'

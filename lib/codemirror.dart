@@ -67,14 +67,12 @@ class CodeMirror extends ProxyHolder {
 
   static Map<JsObject, CodeMirror> _instances = {};
 
-  static List<String> get MODES => new List<String>.from(
+  static List<String> get MODES => new List.from(
       keys(_cm['modes']).where((modeName) => modeName != 'null'));
 
-  static List<String> get MIME_MODES =>
-      new List<String>.from(keys(_cm['mimeModes']));
+  static List<String> get MIME_MODES => new List.from(keys(_cm['mimeModes']));
 
-  static List<String> get COMMANDS =>
-      new List<String>.from(keys(_cm['commands']));
+  static List<String> get COMMANDS => new List.from(keys(_cm['commands']));
 
   /**
    * It contains a string that indicates the version of the library. This is a
@@ -499,8 +497,7 @@ class CodeMirror extends ProxyHolder {
         ? callArgs('getLineTokens', [line, precise])
         : callArg('getLineTokens', line);
     if (result is List) {
-      return new List<Token>.from(
-          result.map((t) => new Token.fromProxy(t)).toList());
+      return new List.from(result.map((t) => new Token.fromProxy(t)));
     } else {
       return [];
     }
@@ -549,8 +546,7 @@ class CodeMirror extends ProxyHolder {
    * returned.
    */
   List<JsObject> getHelpers(Position pos, String type) {
-    return new List<JsObject>.from(
-        callArgs('getHelpers', [pos.toProxy(), type]));
+    return new List.from(callArgs('getHelpers', [pos.toProxy(), type]));
   }
 
   /**
@@ -964,8 +960,7 @@ class Doc extends ProxyHolder {
   List<TextMarker> findMarks(Position from, Position to) {
     var result = callArgs('findMarks', [from.toProxy(), to.toProxy()]);
     if (result is! List) return [];
-    return new List<TextMarker>.from(
-        result.map((mark) => new TextMarker(mark)).toList());
+    return new List.from(result.map((mark) => new TextMarker(mark)));
   }
 
   /**
@@ -975,8 +970,7 @@ class Doc extends ProxyHolder {
   List<TextMarker> findMarksAt(Position pos) {
     var result = callArg('findMarksAt', pos.toProxy());
     if (result is! List) return [];
-    return new List<TextMarker>.from(
-        result.map((mark) => new TextMarker(mark)).toList());
+    return new List.from(result.map((mark) => new TextMarker(mark)));
   }
 
   /**
@@ -985,8 +979,7 @@ class Doc extends ProxyHolder {
   List<TextMarker> getAllMarks() {
     var result = call('getAllMarks');
     if (result is! List) return [];
-    return new List<TextMarker>.from(
-        result.map((mark) => new TextMarker(mark)).toList());
+    return new List.from(result.map((mark) => new TextMarker(mark)));
   }
 
   /**
@@ -1076,7 +1069,7 @@ class ModeInfo extends ProxyHolder {
   String get mode => jsProxy['mode'];
 
   /// The mode's file extension.
-  List<String> get ext => new List<String>.from(jsProxy['ext']);
+  List<String> get ext => new List.from(jsProxy['ext']);
 
   /// The mode's other file extensions.
   List<String> get alias =>

@@ -67,12 +67,12 @@ class CodeMirror extends ProxyHolder {
 
   static Map<JsObject, CodeMirror> _instances = {};
 
-  static List<String> get MODES => keys(_cm['modes'])
-      .where((modeName) => modeName != 'null').toList() as List<String>;
+  static List<String> get MODES => new List.from(
+      keys(_cm['modes']).where((modeName) => modeName != 'null'));
 
-  static List<String> get MIME_MODES => keys(_cm['mimeModes']) as List<String>;
+  static List<String> get MIME_MODES => new List.from(keys(_cm['mimeModes']));
 
-  static List<String> get COMMANDS => keys(_cm['commands']) as List<String>;
+  static List<String> get COMMANDS => new List.from(keys(_cm['commands']));
 
   /**
    * It contains a string that indicates the version of the library. This is a
@@ -204,13 +204,13 @@ class CodeMirror extends ProxyHolder {
    * Fired when a mouse is clicked. You can preventDefault the event to signal
    * that CodeMirror should do no further handling.
    */
-  Stream<MouseEvent> get onMouseDown => onEvent('mousedown', true) as Stream<MouseEvent>;
+  Stream<MouseEvent> get onMouseDown => onEvent('mousedown', true);
 
   /**
    * Fired when a mouse is double-clicked. You can preventDefault the event to
    * signal that CodeMirror should do no further handling.
    */
-  Stream<MouseEvent> get onDoubleClick => onEvent('dblclick', true) as Stream<MouseEvent>;
+  Stream<MouseEvent> get onDoubleClick => onEvent('dblclick', true);
 
   //Stream<MouseEvent> get onContextMenu => onEvent('contextmenu', true);
 
@@ -497,7 +497,7 @@ class CodeMirror extends ProxyHolder {
         ? callArgs('getLineTokens', [line, precise])
         : callArg('getLineTokens', line);
     if (result is List) {
-      return result.map((t) => new Token.fromProxy(t)).toList() as List<Token>;
+      return new List.from(result.map((t) => new Token.fromProxy(t)));
     } else {
       return [];
     }
@@ -546,7 +546,7 @@ class CodeMirror extends ProxyHolder {
    * returned.
    */
   List<JsObject> getHelpers(Position pos, String type) {
-    return callArgs('getHelpers', [pos.toProxy(), type]) as List<JsObject>;
+    return new List.from(callArgs('getHelpers', [pos.toProxy(), type]));
   }
 
   /**
@@ -960,7 +960,7 @@ class Doc extends ProxyHolder {
   List<TextMarker> findMarks(Position from, Position to) {
     var result = callArgs('findMarks', [from.toProxy(), to.toProxy()]);
     if (result is! List) return [];
-    return result.map((mark) => new TextMarker(mark)).toList() as List<TextMarker>;
+    return new List.from(result.map((mark) => new TextMarker(mark)));
   }
 
   /**
@@ -970,7 +970,7 @@ class Doc extends ProxyHolder {
   List<TextMarker> findMarksAt(Position pos) {
     var result = callArg('findMarksAt', pos.toProxy());
     if (result is! List) return [];
-    return result.map((mark) => new TextMarker(mark)).toList() as List<TextMarker>;
+    return new List.from(result.map((mark) => new TextMarker(mark)));
   }
 
   /**
@@ -979,7 +979,7 @@ class Doc extends ProxyHolder {
   List<TextMarker> getAllMarks() {
     var result = call('getAllMarks');
     if (result is! List) return [];
-    return result.map((mark) => new TextMarker(mark)).toList() as List<TextMarker>;
+    return new List.from(result.map((mark) => new TextMarker(mark)));
   }
 
   /**
@@ -1069,7 +1069,7 @@ class ModeInfo extends ProxyHolder {
   String get mode => jsProxy['mode'];
 
   /// The mode's file extension.
-  List<String> get ext => jsProxy['ext'] as List<String>;
+  List<String> get ext => new List.from(jsProxy['ext']);
 
   /// The mode's other file extensions.
   List<String> get alias =>

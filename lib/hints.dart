@@ -65,18 +65,12 @@ class Hints {
     _init();
 
     JsFunction function = new JsFunction.withThis((win, editor, showHints, [options]) {
-      dynamic results = helper(new CodeMirror.fromJsObject(editor),
+      Future<HintResults> results = helper(new CodeMirror.fromJsObject(editor),
           new HintsOptions.fromProxy(options));
 
-      if (results is Future) {
-        results.then((r) {
-          showHints.apply([results == null ? null : r.toProxy()]);
-        });
-      } else if (results is HintResults) {
-        return results == null ? null : results.toProxy();
-      } else {
-        return null;
-      }
+      results.then((HintResults r) {
+        showHints.apply([results == null ? null : r.toProxy()]);
+      });
     });
 
     function['async'] = true;

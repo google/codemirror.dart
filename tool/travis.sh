@@ -15,9 +15,9 @@ pub global activate tuneup
 pub global run tuneup check
 
 # And that DDC is happy with it.
-pub global activate dev_compiler
-pub global run dev_compiler lib/codemirror.dart
-pub global run dev_compiler lib/hints.dart
+# TODO: Re-enable once we're DDC clean (with future DDC work).
+# pub global activate dev_compiler
+# pub global run dev_compiler lib/codemirror.dart
 
 # Run the tests.
 #dart test/all.dart

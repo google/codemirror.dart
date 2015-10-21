@@ -1,9 +1,9 @@
 # Changelog
 
 ## 0.3.2
-- updated to CodeMirror 5.8.0:
-    - improved syntax highlighting for triple-quoted strings 
-    - added syntax highlighting support for string interpolation
+- updated to CodeMirror 5.8.0 (with improvements to the Dart mode)
+- Dart mode: improved syntax highlighting for triple-quoted strings
+- Dart mode: added syntax highlighting support for string interpolation
 
 ## 0.3.1
 - strong mode fixes

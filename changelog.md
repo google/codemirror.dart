@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2
+- updated to CodeMirror 5.8.0:
+    - improved syntax highlighting for triple-quoted strings 
+    - added syntax highlighting support for string interpolation
+
 ## 0.3.1
 - strong mode fixes
 - fix an issue with the async code completer

@@ -2,3 +2,4 @@ analyzer:
   exclude:
     - 'doc/api/**'
     - 'lib/mode/**'
+  strong-mode: true

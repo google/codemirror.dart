@@ -76,7 +76,7 @@ void main() {
   editor.refresh();
   editor.focus();
 
-  editor.addCommand('find', (foo) {
+  CodeMirror.addCommand('find', (foo) {
     /*LineHandle handle =*/ editor.getDoc().getLineHandle(editor.getCursor().line);
 
     print('todo: handle find');

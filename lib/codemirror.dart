@@ -367,8 +367,9 @@ class CodeMirror extends ProxyHolder {
    * Add a new custom command to CodeMirror.
    */
   void addCommand(String name, CommandHandler callback) {
-    _cm['commands'][name] = (_) {
-      callback(this);
+    _cm['commands'][name] = (JsObject obj) {
+      var editor = new CodeMirror.fromJsObject(obj);
+      callback(editor);
     };
   }
 

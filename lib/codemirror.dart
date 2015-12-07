@@ -708,6 +708,23 @@ class Doc extends ProxyHolder {
       callArg('getSelections', lineSep);
 
   /**
+   * Sets a new set of selections. There must be at least one selection in the
+   * given array. When [primary] is a number, it determines which selection is
+   * the primary one. When it is not given, the primary index is taken from
+   * the previous selection, or set to the last range if the previous
+   * selection had less ranges than the new one. Supports the same
+   * options as [setSelection].
+   */
+  void setSelections(Iterable<Span> ranges, {int primary, Map options}) {
+    callArgs('setSelections', [new JsArray.from(ranges.map((Span range) {
+      return new JsObject.jsify({
+        'anchor': range.anchor.toProxy(),
+        'head': range.head?.toProxy()
+      });
+    })), primary, options]);
+  }
+
+  /**
    * Replace the part of the document between [from] and [to] with the given
    * string. [to] can be left off to simply insert the string at position
    * [from].

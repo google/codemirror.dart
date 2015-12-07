@@ -736,6 +736,20 @@ class Doc extends ProxyHolder {
   }
 
   /**
+   * Retrieves a list of all current selections.
+   *
+   * These will always be sorted,
+   * and never overlap (overlapping selections are merged). Each object in the
+   * array contains `anchor` and `head` properties referring
+   * to `{line, ch}` objects.
+   */
+  Iterable<Span> listSelections() {
+    return call('listSelections').map((JsObject selection) {
+      return new Span.fromProxy(selection);
+    });
+  }
+
+  /**
    * Replace the part of the document between [from] and [to] with the given
    * string. [to] can be left off to simply insert the string at position
    * [from].

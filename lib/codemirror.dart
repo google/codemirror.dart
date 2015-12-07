@@ -701,6 +701,13 @@ class Doc extends ProxyHolder {
   }
 
   /**
+   * Returns an array containing a string for each selection, representing the
+   * content of the selections.
+   */
+  Iterable<String> getSelections([String lineSep]) =>
+      callArg('getSelections', lineSep);
+
+  /**
    * Replace the part of the document between [from] and [to] with the given
    * string. [to] can be left off to simply insert the string at position
    * [from].

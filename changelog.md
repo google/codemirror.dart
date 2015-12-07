@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.0
+- update the `CodeMirror.addCommand` to better support custom commands
+
 ## 0.3.2
 - updated to CodeMirror 5.8.0 (with improvements to the Dart mode)
 - Dart mode: improved syntax highlighting for triple-quoted strings

@@ -725,6 +725,17 @@ class Doc extends ProxyHolder {
   }
 
   /**
+   * The length of the given array should be the same as the number of active
+   * selections. Replaces the content of the selections with the strings in
+   * the array. The select argument works the same as in [replaceSelection].
+   */
+  void replaceSelections(Iterable<String> replacement, {String select}) {
+    callArgs('replaceSelections', select != null ?
+        [new JsObject.jsify(replacement), select] :
+        [new JsObject.jsify(replacement)]);
+  }
+
+  /**
    * Replace the part of the document between [from] and [to] with the given
    * string. [to] can be left off to simply insert the string at position
    * [from].

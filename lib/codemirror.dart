@@ -147,6 +147,16 @@ class CodeMirror extends ProxyHolder {
     return _cm.callMethod('fromTextArea', args);
   }
 
+  /**
+  * Add a new custom command to CodeMirror.
+  */
+  static void addCommand(String name, CommandHandler callback) {
+    _cm['commands'][name] = (JsObject obj) {
+      var editor = new CodeMirror.fromJsObject(obj);
+      callback(editor);
+    };
+  }
+
   Doc _doc;
 
   /**
@@ -362,15 +372,6 @@ class CodeMirror extends ProxyHolder {
    */
   Position getCursor([String start]) => new Position.fromProxy(
         start == null ? call('getCursor') : callArg('getCursor', start));
-
-  /**
-   * Add a new custom command to CodeMirror.
-   */
-  void addCommand(String name, CommandHandler callback) {
-    _cm['commands'][name] = (_) {
-      callback(this);
-    };
-  }
 
   /**
    * Runs the command with the given name on the editor.

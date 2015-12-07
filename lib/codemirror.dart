@@ -652,6 +652,11 @@ class Doc extends ProxyHolder {
   String getLine(int n) => callArg('getLine', n);
 
   /**
+   * Return `true` if any text is selected.
+   */
+  bool somethingSelected() => call('somethingSelected');
+
+  /**
    * Get the currently selected code. Optionally pass a line separator to put
    * between the lines in the output. When multiple selections are present, they
    * are concatenated with instances of [lineSep] in between.

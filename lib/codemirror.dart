@@ -653,6 +653,11 @@ class Doc extends ProxyHolder {
   String getLine(int n) => callArg('getLine', n);
 
   /**
+   * Return `true` if any text is selected.
+   */
+  bool somethingSelected() => call('somethingSelected');
+
+  /**
    * Get the currently selected code. Optionally pass a line separator to put
    * between the lines in the output. When multiple selections are present, they
    * are concatenated with instances of [lineSep] in between.
@@ -694,6 +699,55 @@ class Doc extends ProxyHolder {
   void replaceSelection(String replacement, [String select]) {
     callArgs('replaceSelection',
         select != null ? [replacement, select] : [replacement]);
+  }
+
+  /**
+   * Returns an array containing a string for each selection, representing the
+   * content of the selections.
+   */
+  Iterable<String> getSelections([String lineSep]) =>
+      callArg('getSelections', lineSep);
+
+  /**
+   * Sets a new set of selections. There must be at least one selection in the
+   * given array. When [primary] is a number, it determines which selection is
+   * the primary one. When it is not given, the primary index is taken from
+   * the previous selection, or set to the last range if the previous
+   * selection had less ranges than the new one. Supports the same
+   * options as [setSelection].
+   */
+  void setSelections(Iterable<Span> ranges, {int primary, Map options}) {
+    callArgs('setSelections', [new JsArray.from(ranges.map((Span range) {
+      return new JsObject.jsify({
+        'anchor': range.anchor.toProxy(),
+        'head': range.head?.toProxy()
+      });
+    })), primary, options]);
+  }
+
+  /**
+   * The length of the given array should be the same as the number of active
+   * selections. Replaces the content of the selections with the strings in
+   * the array. The select argument works the same as in [replaceSelection].
+   */
+  void replaceSelections(Iterable<String> replacement, {String select}) {
+    callArgs('replaceSelections', select != null ?
+        [new JsObject.jsify(replacement), select] :
+        [new JsObject.jsify(replacement)]);
+  }
+
+  /**
+   * Retrieves a list of all current selections.
+   *
+   * These will always be sorted,
+   * and never overlap (overlapping selections are merged). Each object in the
+   * array contains `anchor` and `head` properties referring
+   * to `{line, ch}` objects.
+   */
+  Iterable<Span> listSelections() {
+    return call('listSelections').map((JsObject selection) {
+      return new Span.fromProxy(selection);
+    });
   }
 
   /**

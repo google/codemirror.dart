@@ -1108,6 +1108,11 @@ class Position implements Comparable<Position> {
     return line - other.line;
   }
 
+  operator<(Position other) => compareTo(other) < 0;
+  operator<=(Position other) => compareTo(other) <= 0;
+  operator>=(Position other) => compareTo(other) >= 0;
+  operator>(Position other) => compareTo(other) > 0;
+
   String toString() => '[${line}:${ch}]';
 }
 

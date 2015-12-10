@@ -1088,7 +1088,7 @@ class Doc extends ProxyHolder {
  *
  * `{line, ch}`
  */
-class Position {
+class Position implements Comparable<Position> {
   final int line;
   final int ch;
 
@@ -1102,6 +1102,11 @@ class Position {
       line == other.line && ch == other.ch;
 
   int get hashCode => (line << 8 | ch).hashCode;
+
+  int compareTo(Position other) {
+    if (line == other.line) return ch - other.ch;
+    return line - other.line;
+  }
 
   String toString() => '[${line}:${ch}]';
 }

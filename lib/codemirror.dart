@@ -625,8 +625,15 @@ class Doc extends ProxyHolder {
     return _editor;
   }
 
-  String getValue() => call('getValue');
+  /**
+   * Get the current editor content. You can pass it an optional argument to
+   * specify the string to be used to separate lines (defaults to "\n").
+   */
+  String getValue([String separator = '\n']) => callArg('getValue', separator);
 
+  /**
+   * Set the editor content.
+   */
   void setValue(String value) => callArg('setValue', value);
 
   /**

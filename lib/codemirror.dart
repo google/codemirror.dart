@@ -1147,6 +1147,8 @@ class Span {
   operator==(other) => other is Span &&
       head == other.head && anchor == other.anchor;
 
+  int get hashCode => head.hashCode ^ anchor.hashCode;
+
   String toString() => '${head}=>${anchor}]';
 }
 

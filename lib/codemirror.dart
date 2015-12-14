@@ -737,12 +737,8 @@ class Doc extends ProxyHolder {
    * options as [setSelection].
    */
   void setSelections(Iterable<Span> ranges, {int primary, Map options}) {
-    callArgs('setSelections', [new JsArray.from(ranges.map((Span range) {
-      return new JsObject.jsify({
-        'anchor': range.anchor.toProxy(),
-        'head': range.head?.toProxy()
-      });
-    })), primary, options]);
+    callArgs('setSelections', [new JsArray.from(ranges.map((Span range) =>
+        range.toProxy())), primary, options]);
   }
 
   /**
@@ -752,8 +748,8 @@ class Doc extends ProxyHolder {
    */
   void replaceSelections(Iterable<String> replacement, {String select}) {
     callArgs('replaceSelections', select != null ?
-        [new JsObject.jsify(replacement), select] :
-        [new JsObject.jsify(replacement)]);
+        [jsify(replacement), select] :
+        [jsify(replacement)]);
   }
 
   /**
@@ -1204,6 +1200,9 @@ class Span {
   Span.fromProxy(var obj) :
       head = new Position.fromProxy(obj['head']),
       anchor = new Position.fromProxy(obj['anchor']);
+
+  JsObject toProxy() =>
+      jsify({'head': head.toProxy(), 'anchor': anchor.toProxy()});
 
   operator==(other) => other is Span &&
       head == other.head && anchor == other.anchor;

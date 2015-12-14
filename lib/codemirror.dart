@@ -876,8 +876,8 @@ class Doc extends ProxyHolder {
    * argument can be given to indicate the line separator string to use
    * (defaults to "\n").
    */
-  String getRange(Position from, Position to) {
-    return callArgs('getRange', [from.toProxy(), to.toProxy()]);
+  String getRange(Position from, Position to, [String separator = '\n']) {
+    return callArgs('getRange', [from.toProxy(), to.toProxy(), separator]);
   }
 
   /**

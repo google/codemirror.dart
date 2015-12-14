@@ -18,6 +18,11 @@ import 'src/js_utils.dart';
 typedef void CommandHandler(CodeMirror editor);
 
 /**
+ * A parameter type into the [Doc.eachLine] method.
+ */
+typedef void LineHandler(LineHandle line);
+
+/**
  * A wrapper around the CodeMirror editor.
  */
 class CodeMirror extends ProxyHolder {
@@ -651,6 +656,21 @@ class Doc extends ProxyHolder {
    * Get the content of line n.
    */
   String getLine(int n) => callArg('getLine', n);
+
+  /**
+   * Iterate over the whole document, or if [start] and [end] line numbers are
+   * given, the range from start up to (not including) end, and call f for each
+   * line, passing the line handle. This is a faster way to visit a range of
+   * line handlers than calling getLineHandle for each of them. Note that line
+   * handles have a text property containing the line's content (as a string).
+   */
+  void eachLine(LineHandler callback, {int start, int end}) {
+    start ??= firstLine();
+    end ??= lastLine() + 1;
+    callArgs('eachLine', [start, end, (JsObject line) {
+      callback(new LineHandle(line));
+    }]);
+  }
 
   /**
    * Return `true` if any text is selected.

@@ -757,6 +757,15 @@ class Doc extends ProxyHolder {
   }
 
   /**
+   * Adds a new selection to the existing set of selections, and makes it the
+   * primary selection.
+   */
+  void addSelection({Position anchor, Position head}) {
+    head ??= anchor;
+    callArgs('addSelection', [anchor.toProxy(), head.toProxy()]);
+  }
+
+  /**
    * Retrieves a list of all current selections.
    *
    * These will always be sorted,

@@ -779,6 +779,15 @@ class Doc extends ProxyHolder {
   }
 
   /**
+   * An equivalent of [extendSelection] that acts on all selections at once.
+   */
+  void extendSelections(List<Position> heads, [Map options]) {
+    callArgs('extendSelections', [
+        new JsArray.from(heads.map((Position head) => head.toProxy())),
+        options]);
+  }
+
+  /**
    * Retrieves a list of all current selections.
    *
    * These will always be sorted,

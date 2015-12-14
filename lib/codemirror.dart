@@ -766,6 +766,19 @@ class Doc extends ProxyHolder {
   }
 
   /**
+   * Similar to [setSelection], but will, if shift is held or the extending flag
+   * is set, move the head of the selection while leaving the anchor at its
+   * current place. [to] is optional, and can be passed to ensure a region (for
+   * example a word or paragraph) will end up selected (in addition to whatever
+   * lies between that region and the current anchor). When multiple selections
+   * are present, all but the primary selection will be dropped by this method.
+   * Supports the same options as [setSelection].
+   */
+  void extendSelection(Position from, [Position to, Map options]) {
+    callArgs('extendSelection', [from.toProxy(), to?.toProxy(), options]);
+  }
+
+  /**
    * Retrieves a list of all current selections.
    *
    * These will always be sorted,

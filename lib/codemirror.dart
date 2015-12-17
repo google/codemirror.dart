@@ -784,6 +784,20 @@ class Doc extends ProxyHolder {
   }
 
   /**
+   * Sets or clears the 'extending' flag, which acts similar to the shift key,
+   * in that it will cause cursor movement and calls to extendSelection to
+   * leave the selection anchor in place.
+   */
+  void setExtending(bool value) {
+    callArg('setExtending', value);
+  }
+
+  /**
+   * Get the value of the 'extending' flag.
+   */
+  bool getExtending() => call('getExtending');
+
+  /**
    * Retrieves a list of all current selections.
    *
    * These will always be sorted,

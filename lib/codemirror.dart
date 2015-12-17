@@ -23,6 +23,11 @@ typedef void CommandHandler(CodeMirror editor);
 typedef void LineHandler(LineHandle line);
 
 /**
+ * A parameter type into the [Doc.extendSelectionsBy] method.
+ */
+typedef Position SelectionExtender(Span range, int i);
+
+/**
  * A wrapper around the CodeMirror editor.
  */
 class CodeMirror extends ProxyHolder {
@@ -781,6 +786,16 @@ class Doc extends ProxyHolder {
     callArgs('extendSelections', [
         new JsArray.from(heads.map((Position head) => head.toProxy())),
         options]);
+  }
+
+  /**
+   * Applies the given function to all existing selections, and calls
+   * [extendSelections] on the result.
+   */
+  void extendSelectionsBy(SelectionExtender f, [Map options]) {
+    callArgs('extendSelectionsBy', [
+      (JsObject obj, int i) => f(new Span.fromProxy(obj), i).toProxy(),
+      options]);
   }
 
   /**

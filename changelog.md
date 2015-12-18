@@ -2,6 +2,11 @@
 
 ## unreleased
 - expose `Doc.eachLine`
+- expose `Doc.addSelection`
+- expose `Doc.extendSelection`
+- expose `Doc.extendSelections`
+- expose `Doc.extendSelectionsBy`
+- expose `Doc.setExtending` and `Doc.getExtending`
 
 ## 0.4.0
 - update the `CodeMirror.addCommand` to better support custom commands

@@ -141,6 +141,47 @@ createDocTests() {
     expect(lines[1], 'two');
     expect(lines[2], 'three');
   });
+
+  test('extendSelection', () {
+    Doc doc = editor.getDoc();
+    doc.setValue('foo bar');
+
+    // Extending flag is off.
+    doc.setSelection(new Position(0, 0));
+    doc.setExtending(false);
+    doc.extendSelection(new Position(0, 3));
+    expect(doc.getSelection(), '');
+
+    // Extending flag is on.
+    doc.setSelection(new Position(0, 0));
+    doc.setExtending(true);
+    doc.extendSelection(new Position(0, 3));
+    expect(doc.getSelection(), 'foo');
+  });
+
+  test('extendSelections', () {
+    Doc doc = editor.getDoc();
+    doc.setValue('foo bar');
+
+    doc.addSelection(anchor: new Position(0, 0));
+    doc.addSelection(anchor: new Position(0, 4));
+    doc.setExtending(true);
+    doc.extendSelections([new Position(0, 3), new Position(0, 7)]);
+    expect(doc.getSelections(), ['foo', 'bar']);
+  });
+
+  test('extendSelectionsBy', () {
+    Doc doc = editor.getDoc();
+    doc.setValue('foo bar');
+
+    doc.addSelection(anchor: new Position(0, 0));
+    doc.addSelection(anchor: new Position(0, 4));
+    doc.setExtending(true);
+    doc.extendSelectionsBy((Span range, int i) {
+      return new Position(range.head.line, range.head.ch + 3);
+    });
+    expect(doc.getSelections(), ['foo', 'bar']);
+  });
 }
 
 createHtmlDocTests() {

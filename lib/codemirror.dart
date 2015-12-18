@@ -23,6 +23,11 @@ typedef void CommandHandler(CodeMirror editor);
 typedef void LineHandler(LineHandle line);
 
 /**
+ * A parameter type into the [Doc.extendSelectionsBy] method.
+ */
+typedef Position SelectionExtender(Span range, int i);
+
+/**
  * A wrapper around the CodeMirror editor.
  */
 class CodeMirror extends ProxyHolder {
@@ -744,12 +749,8 @@ class Doc extends ProxyHolder {
    * options as [setSelection].
    */
   void setSelections(Iterable<Span> ranges, {int primary, Map options}) {
-    callArgs('setSelections', [new JsArray.from(ranges.map((Span range) {
-      return new JsObject.jsify({
-        'anchor': range.anchor.toProxy(),
-        'head': range.head?.toProxy()
-      });
-    })), primary, options]);
+    callArgs('setSelections', [new JsArray.from(ranges.map((Span range) =>
+        range.toProxy())), primary, options]);
   }
 
   /**
@@ -759,9 +760,64 @@ class Doc extends ProxyHolder {
    */
   void replaceSelections(Iterable<String> replacement, {String select}) {
     callArgs('replaceSelections', select != null ?
-        [new JsObject.jsify(replacement), select] :
-        [new JsObject.jsify(replacement)]);
+        [jsify(replacement), select] :
+        [jsify(replacement)]);
   }
+
+  /**
+   * Adds a new selection to the existing set of selections, and makes it the
+   * primary selection.
+   */
+  void addSelection({Position anchor, Position head}) {
+    head ??= anchor;
+    callArgs('addSelection', [anchor.toProxy(), head.toProxy()]);
+  }
+
+  /**
+   * Similar to [setSelection], but will, if shift is held or the extending flag
+   * is set, move the head of the selection while leaving the anchor at its
+   * current place. [to] is optional, and can be passed to ensure a region (for
+   * example a word or paragraph) will end up selected (in addition to whatever
+   * lies between that region and the current anchor). When multiple selections
+   * are present, all but the primary selection will be dropped by this method.
+   * Supports the same options as [setSelection].
+   */
+  void extendSelection(Position from, [Position to, Map options]) {
+    callArgs('extendSelection', [from.toProxy(), to?.toProxy(), options]);
+  }
+
+  /**
+   * An equivalent of [extendSelection] that acts on all selections at once.
+   */
+  void extendSelections(List<Position> heads, [Map options]) {
+    callArgs('extendSelections', [
+        new JsArray.from(heads.map((Position head) => head.toProxy())),
+        options]);
+  }
+
+  /**
+   * Applies the given function to all existing selections, and calls
+   * [extendSelections] on the result.
+   */
+  void extendSelectionsBy(SelectionExtender f, [Map options]) {
+    callArgs('extendSelectionsBy', [
+      (JsObject obj, int i) => f(new Span.fromProxy(obj), i).toProxy(),
+      options]);
+  }
+
+  /**
+   * Sets or clears the 'extending' flag, which acts similar to the shift key,
+   * in that it will cause cursor movement and calls to extendSelection to
+   * leave the selection anchor in place.
+   */
+  void setExtending(bool value) {
+    callArg('setExtending', value);
+  }
+
+  /**
+   * Get the value of the 'extending' flag.
+   */
+  bool getExtending() => call('getExtending');
 
   /**
    * Retrieves a list of all current selections.
@@ -1180,6 +1236,9 @@ class Span {
   Span.fromProxy(var obj) :
       head = new Position.fromProxy(obj['head']),
       anchor = new Position.fromProxy(obj['anchor']);
+
+  JsObject toProxy() =>
+      jsify({'head': head.toProxy(), 'anchor': anchor.toProxy()});
 
   operator==(other) => other is Span &&
       head == other.head && anchor == other.anchor;

@@ -1,5 +1,8 @@
 # Changelog
 
+## unreleased
+- expose `Doc.eachLine`
+
 ## 0.4.0
 - update the `CodeMirror.addCommand` to better support custom commands
 

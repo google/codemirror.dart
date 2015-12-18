@@ -128,6 +128,19 @@ createDocTests() {
     expect(doc.getMode()['name'], 'clike');
     expect(doc.getModeName(), 'clike');
   });
+
+  test('eachLine', () {
+    Doc doc = editor.getDoc();
+    doc.setValue('one\ntwo\nthree');
+    var lines = [];
+    doc.eachLine((LineHandle line) {
+      lines.add(line.text);
+    });
+    expect(lines.length, 3);
+    expect(lines[0], 'one');
+    expect(lines[1], 'two');
+    expect(lines[2], 'three');
+  });
 }
 
 createHtmlDocTests() {

@@ -1,6 +1,7 @@
 # Changelog
 
-## unreleased
+## 0.4.1
+- updated to CodeMirror 5.13.4
 - expose `Doc.eachLine`
 - expose `Doc.addSelection`
 - expose `Doc.extendSelection`

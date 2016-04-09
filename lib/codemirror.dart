@@ -152,7 +152,7 @@ class CodeMirror extends ProxyHolder {
   }
 
   static JsObject _createFromTextArea(TextAreaElement textArea, Map options) {
-    List args = [textArea];
+    List args = <dynamic>[textArea];
     if (options != null) args.add(jsify(options));
     return _cm.callMethod('fromTextArea', args);
   }
@@ -1211,7 +1211,7 @@ class ModeInfo extends ProxyHolder {
   String get mime => jsProxy['mime'];
 
   List<String> get mimes =>
-      jsProxy.hasProperty('mimes') ? jsProxy['mimes']: [mime];
+      jsProxy.hasProperty('mimes') ? jsProxy['mimes']: <String>[mime];
 
   /// The mode's id.
   String get mode => jsProxy['mode'];
@@ -1221,7 +1221,7 @@ class ModeInfo extends ProxyHolder {
 
   /// The mode's other file extensions.
   List<String> get alias =>
-      jsProxy.hasProperty('alias') ? jsProxy['alias']: [];
+      jsProxy.hasProperty('alias') ? jsProxy['alias']: <String>[];
 }
 
 /**

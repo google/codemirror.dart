@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2
+- strong mode fixes
+- remove the use of deprecated constants
+
 ## 0.4.1
 - updated to CodeMirror 5.13.4
 - expose `Doc.eachLine`

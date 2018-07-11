@@ -8,7 +8,7 @@
 library codemirror.js_utils;
 
 import 'dart:async';
-import 'dart:convert';
+import 'dart:convert' show jsonDecode;
 import 'dart:js';
 
 final JsObject _jsJSON = context['JSON'];
@@ -24,7 +24,7 @@ JsObject jsify(object) => new JsObject.jsify(object);
  */
 Map mapify(JsObject obj) {
   if (obj == null) return null;
-  return json.decode(_jsJSON.callMethod('stringify', [obj]));
+  return jsonDecode(_jsJSON.callMethod('stringify', [obj]));
 }
 
 /**

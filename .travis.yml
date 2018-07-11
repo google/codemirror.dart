@@ -5,3 +5,7 @@ script: ./tool/travis.sh
 sudo: required
 addons:
   chrome: stable
+
+branches:
+  only:
+    - master

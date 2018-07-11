@@ -2,4 +2,6 @@ language: dart
 dart:
   - "dev/raw/latest"
 script: ./tool/travis.sh
-sudo: false
+sudo: required
+addons:
+  chrome: stable

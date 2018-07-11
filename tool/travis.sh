@@ -10,6 +10,9 @@ set -e
 # Copy codemirror from third_party.
 dart tool/grind.dart build
 
+# Run tests
+dart tool/grind.dart test
+
 # Verify that the libraries are error free.
 pub global activate tuneup
 pub global run tuneup check

@@ -24,7 +24,7 @@ JsObject jsify(object) => new JsObject.jsify(object);
  */
 Map mapify(JsObject obj) {
   if (obj == null) return null;
-  return JSON.decode(_jsJSON.callMethod('stringify', [obj]));
+  return json.decode(_jsJSON.callMethod('stringify', [obj]));
 }
 
 /**
@@ -38,37 +38,43 @@ List keys(JsObject obj) => _Object.callMethod('keys', [obj]);
  * event parameters, and can optionally convert the event object into a
  * different object.
  */
-class JsEventListener {
+class JsEventListener<T> {
   final JsObject _proxy;
   final String _name;
   final Function cvtEvent;
   final bool twoArgs;
 
-  StreamController _controller;
+  StreamController<T> _controller;
   JsFunction _callback;
 
-  JsEventListener(this._proxy, this._name, {this.cvtEvent, this.twoArgs: false});
+  JsEventListener(this._proxy, this._name,
+      {this.cvtEvent, this.twoArgs: false});
 
-  Stream get stream {
+  Stream<T> get stream {
     if (_controller == null) {
       _controller = new StreamController.broadcast(
-        onListen: () {
-          if (twoArgs) {
-            _callback = _proxy.callMethod('on', [_name, (obj, e) {
-              _controller.add(cvtEvent == null ? null : cvtEvent(e));
-            }]);
-          } else {
-            _callback = _proxy.callMethod('on', [_name, (obj) {
-              _controller.add(cvtEvent == null ? null : cvtEvent(obj));
-            }]);
-          }
-        },
-        onCancel: () {
-          _proxy.callMethod('off', [_name, _callback]);
-          _callback = null;
-        },
-        sync: true
-      );
+          onListen: () {
+            if (twoArgs) {
+              _callback = _proxy.callMethod('on', [
+                _name,
+                (obj, e) {
+                  _controller.add(cvtEvent == null ? null : cvtEvent(e));
+                }
+              ]);
+            } else {
+              _callback = _proxy.callMethod('on', [
+                _name,
+                (obj) {
+                  _controller.add(cvtEvent == null ? null : cvtEvent(obj));
+                }
+              ]);
+            }
+          },
+          onCancel: () {
+            _proxy.callMethod('off', [_name, _callback]);
+            _callback = null;
+          },
+          sync: true);
     }
     return _controller.stream;
   }

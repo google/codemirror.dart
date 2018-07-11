@@ -24,7 +24,8 @@ void main() {
   };
 
   CodeMirror editor = new CodeMirror.fromTextArea(
-      querySelector('#textContainer'), options: options);
+      querySelector('#textContainer'),
+      options: options);
 
   querySelector('#version').text = "CodeMirror version ${CodeMirror.version}";
 
@@ -77,7 +78,9 @@ void main() {
   editor.focus();
 
   CodeMirror.addCommand('find', (foo) {
-    /*LineHandle handle =*/ editor.getDoc().getLineHandle(editor.getCursor().line);
+    /*LineHandle handle =*/ editor
+        .getDoc()
+        .getLineHandle(editor.getCursor().line);
 
     print('todo: handle find');
   });
@@ -100,8 +103,8 @@ void main() {
 void _updateFooter(CodeMirror editor) {
   Position pos = editor.getCursor();
   int off = editor.getDoc().indexFromPos(pos);
-  String str = 'line ${pos.line} • column ${pos.ch} • offset ${off}'
-      + (editor.getDoc().isClean() ? '' : ' • (modified)');
+  String str = 'line ${pos.line} • column ${pos.ch} • offset ${off}' +
+      (editor.getDoc().isClean() ? '' : ' • (modified)');
   querySelector('#footer').text = str;
 }
 
@@ -138,21 +141,31 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
 //  editor.getDoc().replaceRange(hint.text + "_foo_", from, to);
 //}
 
-Future<HintResults> _dartCompleterAsync(CodeMirror editor, [HintsOptions options]) {
+Future<HintResults> _dartCompleterAsync(CodeMirror editor,
+    [HintsOptions options]) {
   Position cur = editor.getCursor();
   String word = _getCurrentWord(editor).toLowerCase();
   List<String> list = new List.from(_numbers.where((s) => s.startsWith(word)));
 
   return new Future.delayed(new Duration(milliseconds: 200), () {
     return new HintResults.fromStrings(
-      list,
-      new Position(cur.line, cur.ch - word.length),
-      new Position(cur.line, cur.ch));
+        list,
+        new Position(cur.line, cur.ch - word.length),
+        new Position(cur.line, cur.ch));
   });
 }
 
 final List _numbers = [
-  'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine'
 ];
 
 final RegExp _ids = new RegExp(r'[a-zA-Z_0-9]');

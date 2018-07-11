@@ -15,7 +15,7 @@ dart tool/grind.dart test
 
 # Verify that the libraries are error free.
 pub global activate tuneup
-pub global run tuneup check --ignore-infos
+pub global run tuneup check
 
 # And that DDC is happy with it.
 # TODO: Re-enable once we're DDC clean (with future DDC work).

@@ -24,7 +24,7 @@ JsObject jsify(object) => new JsObject.jsify(object);
  */
 Map mapify(JsObject obj) {
   if (obj == null) return null;
-  return JSON.decode(_jsJSON.callMethod('stringify', [obj]));
+  return jsonDecode(_jsJSON.callMethod('stringify', [obj]));
 }
 
 /**

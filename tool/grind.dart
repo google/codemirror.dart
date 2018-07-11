@@ -52,7 +52,7 @@ clean() {
 }
 
 String _concatenateModes(Directory dir) {
-  List files = [];
+  List<File> files = [];
 
   // Read lib/codemirror.js.
   files.add(joinFile(dir, ['lib', 'codemirror.js']));

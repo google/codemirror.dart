@@ -44,7 +44,7 @@ class JsEventListener<T> {
   final Function cvtEvent;
   final bool twoArgs;
 
-  StreamController _controller;
+  StreamController<T> _controller;
   JsFunction _callback;
 
   JsEventListener(this._proxy, this._name,

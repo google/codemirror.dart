@@ -224,13 +224,13 @@ class CodeMirror extends ProxyHolder {
    * Fired when a mouse is clicked. You can preventDefault the event to signal
    * that CodeMirror should do no further handling.
    */
-  Stream<MouseEvent> get onMouseDown => onEvent('mousedown', true);
+  Stream<MouseEvent> get onMouseDown => onEvent('mousedown', true).cast<MouseEvent>();
 
   /**
    * Fired when a mouse is double-clicked. You can preventDefault the event to
    * signal that CodeMirror should do no further handling.
    */
-  Stream<MouseEvent> get onDoubleClick => onEvent('dblclick', true);
+  Stream<MouseEvent> get onDoubleClick => onEvent('dblclick', true).cast<MouseEvent>();
 
   //Stream<MouseEvent> get onContextMenu => onEvent('contextmenu', true);
 
@@ -738,7 +738,7 @@ class Doc extends ProxyHolder {
    * content of the selections.
    */
   Iterable<String> getSelections([String lineSep]) =>
-      callArg('getSelections', lineSep);
+      new List<String>.from(callArg('getSelections', lineSep));
 
   /**
    * Sets a new set of selections. There must be at least one selection in the

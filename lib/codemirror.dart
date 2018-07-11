@@ -744,7 +744,7 @@ class Doc extends ProxyHolder {
    * content of the selections.
    */
   Iterable<String> getSelections([String lineSep]) =>
-      new List<String>.from(callArg('getSelections', lineSep));
+      callArg('getSelections', lineSep).cast<String>();
 
   /**
    * Sets a new set of selections. There must be at least one selection in the

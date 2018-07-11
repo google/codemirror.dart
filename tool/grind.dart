@@ -39,9 +39,7 @@ build() {
 
 @Task('Run the tests')
 test() {
-  // TODO(devoncarew): Run browser tests.
-	// pub run test:test --platform=chrome
-	// pub run test:test --platform=dartium
+  run('pub', arguments: ['run', 'test:test', '--platform=chrome']);
 }
 
 @Task('Delete all generated artifacts')

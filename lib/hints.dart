@@ -16,7 +16,8 @@ import 'src/js_utils.dart';
 
 typedef HintResults HintsHelper(CodeMirror editor, [HintsOptions options]);
 
-typedef Future<HintResults> HintsHelperAsync(CodeMirror editor, [HintsOptions options]);
+typedef Future<HintResults> HintsHelperAsync(CodeMirror editor,
+    [HintsOptions options]);
 
 typedef void HintsResultsSelectCallback(HintResult completion, Element element);
 
@@ -64,7 +65,8 @@ class Hints {
   static void registerHintsHelperAsync(String mode, HintsHelperAsync helper) {
     _init();
 
-    JsFunction function = new JsFunction.withThis((win, editor, showHints, [options]) {
+    JsFunction function =
+        new JsFunction.withThis((win, editor, showHints, [options]) {
       Future<HintResults> results = helper(new CodeMirror.fromJsObject(editor),
           new HintsOptions.fromProxy(options));
 
@@ -141,11 +143,11 @@ class HintResults {
 
   JsObject _obj;
 
-  HintResults.fromStrings(List<String> results, this.from, this.to) :
-      this._results = results;
+  HintResults.fromStrings(List<String> results, this.from, this.to)
+      : this._results = results;
 
-  HintResults.fromHints(List<HintResult> results, this.from, this.to) :
-      this._results = results;
+  HintResults.fromHints(List<HintResult> results, this.from, this.to)
+      : this._results = results;
 
   /// The list of code completion results. This list is either a list of
   /// strings or a list of [HintResult]s.
@@ -162,13 +164,17 @@ class HintResults {
   /// The completion [HintResult] is not guaranteed to be the same object
   /// instance as the one provided by the `HintResults`.
   void registerOnSelect(HintsResultsSelectCallback onSelect) {
-    Hints._cm.callMethod("on", [toProxy(), "select", (completion, element) {
-      if (completion is String) {
-        onSelect(new HintResult(completion), element);
-      } else {
-        onSelect(new HintResult.fromProxy(completion), element);
+    Hints._cm.callMethod("on", [
+      toProxy(),
+      "select",
+      (completion, element) {
+        if (completion is String) {
+          onSelect(new HintResult(completion), element);
+        } else {
+          onSelect(new HintResult.fromProxy(completion), element);
+        }
       }
-    }]);
+    ]);
   }
 
   /// Fired when a completion is picked. Passed the completion value.
@@ -176,13 +182,17 @@ class HintResults {
   /// The completion [HintResult] is not guaranteed to be the same object
   /// instance as the one provided by the `HintResults`.
   void registerOnPick(HintsResultsPickCallback onPick) {
-    Hints._cm.callMethod("on", [toProxy(), "pick", (completion) {
-      if (completion is String) {
-        onPick(new HintResult(completion));
-      } else {
-        onPick(new HintResult.fromProxy(completion));
+    Hints._cm.callMethod("on", [
+      toProxy(),
+      "pick",
+      (completion) {
+        if (completion is String) {
+          onPick(new HintResult(completion));
+        } else {
+          onPick(new HintResult.fromProxy(completion));
+        }
       }
-    }]);
+    ]);
   }
 
   /// Fired when the completion is finished.
@@ -209,7 +219,8 @@ class HintResults {
 
 typedef HintRenderer(Element element, HintResult hint);
 
-typedef HintApplier(CodeMirror editor, HintResult hint, Position from, Position to);
+typedef HintApplier(
+    CodeMirror editor, HintResult hint, Position from, Position to);
 
 class HintResult {
   /// The completion text. This is the only required property.
@@ -238,17 +249,22 @@ class HintResult {
   /// behavior. This cooresponds to the JS codemirror `hint` function.
   final HintApplier hintApplier;
 
-  HintResult(this.text, {this.displayText, this.className, this.from, this.to,
-    this.hintRenderer, this.hintApplier});
+  HintResult(this.text,
+      {this.displayText,
+      this.className,
+      this.from,
+      this.to,
+      this.hintRenderer,
+      this.hintApplier});
 
-  HintResult.fromProxy(JsObject m) :
-    text = m['text'],
-    displayText = m['displayText'],
-    className = m['className'],
-    from = _createPos(m['from']),
-    to = _createPos(m['to']),
-    hintRenderer = null,
-    hintApplier = null;
+  HintResult.fromProxy(JsObject m)
+      : text = m['text'],
+        displayText = m['displayText'],
+        className = m['className'],
+        from = _createPos(m['from']),
+        to = _createPos(m['to']),
+        hintRenderer = null,
+        hintApplier = null;
 
   JsObject toProxy() {
     Map m = {'text': text};

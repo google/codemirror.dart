@@ -77,8 +77,8 @@ class CodeMirror extends ProxyHolder {
 
   static Map<JsObject, CodeMirror> _instances = {};
 
-  static List<String> get MODES => new List.from(
-      keys(_cm['modes']).where((modeName) => modeName != 'null'));
+  static List<String> get MODES =>
+      new List.from(keys(_cm['modes']).where((modeName) => modeName != 'null'));
 
   static List<String> get MIME_MODES => new List.from(keys(_cm['mimeModes']));
 
@@ -91,17 +91,17 @@ class CodeMirror extends ProxyHolder {
    */
   static String get version => _cm['version'];
 
-  static ModeInfo findModeByExtension(String ext)
-      => new ModeInfo(_cm.callMethod('findModeByExtension', [ext]));
+  static ModeInfo findModeByExtension(String ext) =>
+      new ModeInfo(_cm.callMethod('findModeByExtension', [ext]));
 
-  static ModeInfo findModeByMime(String mime)
-      => new ModeInfo(_cm.callMethod('findModeByMIME', [mime]));
+  static ModeInfo findModeByMime(String mime) =>
+      new ModeInfo(_cm.callMethod('findModeByMIME', [mime]));
 
-  static ModeInfo findModeByFileName(String name)
-        => new ModeInfo(_cm.callMethod('findModeByFileName', [name]));
+  static ModeInfo findModeByFileName(String name) =>
+      new ModeInfo(_cm.callMethod('findModeByFileName', [name]));
 
-  static ModeInfo findModeByName(String name)
-      => new ModeInfo(_cm.callMethod('findModeByName', [name]));
+  static ModeInfo findModeByName(String name) =>
+      new ModeInfo(_cm.callMethod('findModeByName', [name]));
 
   /**
    * If you want to define extra methods in terms of the CodeMirror API, it is
@@ -173,8 +173,8 @@ class CodeMirror extends ProxyHolder {
    * Create a new CodeMirror editor in the given element. See
    * http://codemirror.net/doc/manual.html#config for valid options values.
    */
-  CodeMirror.fromElement(Element element, {Map options}) :
-      super(_createFromElement(element, options)) {
+  CodeMirror.fromElement(Element element, {Map options})
+      : super(_createFromElement(element, options)) {
     _instances[jsProxy] = this;
   }
 
@@ -204,8 +204,8 @@ class CodeMirror extends ProxyHolder {
    * will provide the content for the editor. A CodeMirror instance created this
    * way has three additional methods: `save`, `toTextArea`, and `getTextArea`.
    */
-  CodeMirror.fromTextArea(TextAreaElement textArea, {Map options}) :
-      super(_createFromTextArea(textArea, options)) {
+  CodeMirror.fromTextArea(TextAreaElement textArea, {Map options})
+      : super(_createFromTextArea(textArea, options)) {
     _instances[jsProxy] = this;
   }
 
@@ -224,13 +224,15 @@ class CodeMirror extends ProxyHolder {
    * Fired when a mouse is clicked. You can preventDefault the event to signal
    * that CodeMirror should do no further handling.
    */
-  Stream<MouseEvent> get onMouseDown => onEvent('mousedown', true);
+  Stream<MouseEvent> get onMouseDown =>
+      onEvent('mousedown', true).cast<MouseEvent>();
 
   /**
    * Fired when a mouse is double-clicked. You can preventDefault the event to
    * signal that CodeMirror should do no further handling.
    */
-  Stream<MouseEvent> get onDoubleClick => onEvent('dblclick', true);
+  Stream<MouseEvent> get onDoubleClick =>
+      onEvent('dblclick', true).cast<MouseEvent>();
 
   //Stream<MouseEvent> get onContextMenu => onEvent('contextmenu', true);
 
@@ -381,7 +383,7 @@ class CodeMirror extends ProxyHolder {
    * same as passing "head". A {line, ch} object will be returned.
    */
   Position getCursor([String start]) => new Position.fromProxy(
-        start == null ? call('getCursor') : callArg('getCursor', start));
+      start == null ? call('getCursor') : callArg('getCursor', start));
 
   /**
    * Runs the command with the given name on the editor.
@@ -438,19 +440,19 @@ class CodeMirror extends ProxyHolder {
    * the top, N to put it after the Nth other widget). Note that this only has
    * effect once, when the widget is created.
    */
-  LineWidget addLineWidget(dynamic line, Element node, {
-    bool coverGutter,
-    bool noHScroll,
-    bool above,
-    bool handleMouseEvents,
-    int insertAt
-  }) {
+  LineWidget addLineWidget(dynamic line, Element node,
+      {bool coverGutter,
+      bool noHScroll,
+      bool above,
+      bool handleMouseEvents,
+      int insertAt}) {
     Map options = {};
 
     if (coverGutter != null) options['coverGutter'] = coverGutter;
     if (noHScroll != null) options['noHScroll'] = noHScroll;
     if (above != null) options['above'] = above;
-    if (handleMouseEvents != null) options['handleMouseEvents'] = handleMouseEvents;
+    if (handleMouseEvents != null)
+      options['handleMouseEvents'] = handleMouseEvents;
     if (insertAt != null) options['insertAt'] = insertAt;
 
     var l = line is LineHandle ? line.jsProxy : line;
@@ -623,8 +625,8 @@ class Doc extends ProxyHolder {
 
   CodeMirror _editor;
 
-  Doc(String text, [String mode, int firstLineNumber]) :
-    super(_create(text, mode, firstLineNumber));
+  Doc(String text, [String mode, int firstLineNumber])
+      : super(_create(text, mode, firstLineNumber));
 
   Doc.fromProxy(JsObject proxy) : super(proxy);
 
@@ -679,9 +681,13 @@ class Doc extends ProxyHolder {
   void eachLine(LineHandler callback, {int start, int end}) {
     start ??= firstLine();
     end ??= lastLine() + 1;
-    callArgs('eachLine', [start, end, (JsObject line) {
-      callback(new LineHandle(line));
-    }]);
+    callArgs('eachLine', [
+      start,
+      end,
+      (JsObject line) {
+        callback(new LineHandle(line));
+      }
+    ]);
   }
 
   /**
@@ -738,7 +744,7 @@ class Doc extends ProxyHolder {
    * content of the selections.
    */
   Iterable<String> getSelections([String lineSep]) =>
-      callArg('getSelections', lineSep);
+      callArg('getSelections', lineSep).cast<String>();
 
   /**
    * Sets a new set of selections. There must be at least one selection in the
@@ -749,8 +755,11 @@ class Doc extends ProxyHolder {
    * options as [setSelection].
    */
   void setSelections(Iterable<Span> ranges, {int primary, Map options}) {
-    callArgs('setSelections', [new JsArray.from(ranges.map((Span range) =>
-        range.toProxy())), primary, options]);
+    callArgs('setSelections', [
+      new JsArray.from(ranges.map((Span range) => range.toProxy())),
+      primary,
+      options
+    ]);
   }
 
   /**
@@ -759,9 +768,8 @@ class Doc extends ProxyHolder {
    * the array. The select argument works the same as in [replaceSelection].
    */
   void replaceSelections(Iterable<String> replacement, {String select}) {
-    callArgs('replaceSelections', select != null ?
-        [jsify(replacement), select] :
-        [jsify(replacement)]);
+    callArgs('replaceSelections',
+        select != null ? [jsify(replacement), select] : [jsify(replacement)]);
   }
 
   /**
@@ -791,8 +799,9 @@ class Doc extends ProxyHolder {
    */
   void extendSelections(List<Position> heads, [Map options]) {
     callArgs('extendSelections', [
-        new JsArray.from(heads.map((Position head) => head.toProxy())),
-        options]);
+      new JsArray.from(heads.map((Position head) => head.toProxy())),
+      options
+    ]);
   }
 
   /**
@@ -802,7 +811,8 @@ class Doc extends ProxyHolder {
   void extendSelectionsBy(SelectionExtender f, [Map options]) {
     callArgs('extendSelectionsBy', [
       (JsObject obj, int i) => f(new Span.fromProxy(obj), i).toProxy(),
-      options]);
+      options
+    ]);
   }
 
   /**
@@ -844,9 +854,11 @@ class Doc extends ProxyHolder {
    */
   void replaceRange(String replacement, Position from,
       [Position to, String origin]) {
-    callArgs('replaceRange', origin != null
-        ? [replacement, from.toProxy(), to.toProxy(), origin]
-        : [replacement, from.toProxy(), to == null ? null : to.toProxy()]);
+    callArgs(
+        'replaceRange',
+        origin != null
+            ? [replacement, from.toProxy(), to.toProxy(), origin]
+            : [replacement, from.toProxy(), to == null ? null : to.toProxy()]);
   }
 
   /**
@@ -866,8 +878,9 @@ class Doc extends ProxyHolder {
    * combined).
    */
   int changeGeneration([bool closeEvent]) {
-    return closeEvent == null ?
-        call('changeGeneration') : callArg('changeGeneration', closeEvent);
+    return closeEvent == null
+        ? call('changeGeneration')
+        : callArg('changeGeneration', closeEvent);
   }
 
   /**
@@ -877,7 +890,9 @@ class Doc extends ProxyHolder {
    * given.
    */
   bool isClean([int generation]) {
-    return generation == null ? call('isClean') : callArg('isClean', generation);
+    return generation == null
+        ? call('isClean')
+        : callArg('isClean', generation);
   }
 
   /* History-related methods. */
@@ -942,7 +957,7 @@ class Doc extends ProxyHolder {
    * same as passing "head". A {line, ch} object will be returned.
    */
   Position getCursor([String start]) => new Position.fromProxy(
-        start == null ? call('getCursor') : callArg('getCursor', start));
+      start == null ? call('getCursor') : callArg('getCursor', start));
 
   /**
    * Set the cursor position. You can either pass a single {line, ch} object, or
@@ -1024,24 +1039,23 @@ class Doc extends ProxyHolder {
    * set shared to true to make the marker appear in all documents. By default,
    * a marker appears only in its target document.
    */
-  TextMarker markText(Position from, Position to, {
-    String className,
-    bool inclusiveLeft,
-    bool inclusiveRight,
-    bool atomic,
-    bool collapsed,
-    bool clearOnEnter,
-    bool clearWhenEmpty,
-    Element replacedWith,
-    bool handleMouseEvents,
-    bool readOnly,
-    bool addToHistory,
-    String startStyle,
-    String endStyle,
-    String css,
-    String title,
-    bool shared
-  }) {
+  TextMarker markText(Position from, Position to,
+      {String className,
+      bool inclusiveLeft,
+      bool inclusiveRight,
+      bool atomic,
+      bool collapsed,
+      bool clearOnEnter,
+      bool clearWhenEmpty,
+      Element replacedWith,
+      bool handleMouseEvents,
+      bool readOnly,
+      bool addToHistory,
+      String startStyle,
+      String endStyle,
+      String css,
+      String title,
+      bool shared}) {
     Map options = {};
 
     if (className != null) options['className'] = className;
@@ -1052,7 +1066,8 @@ class Doc extends ProxyHolder {
     if (clearOnEnter != null) options['clearOnEnter'] = clearOnEnter;
     if (clearWhenEmpty != null) options['clearWhenEmpty'] = clearWhenEmpty;
     if (replacedWith != null) options['replacedWith'] = replacedWith;
-    if (handleMouseEvents != null) options['handleMouseEvents'] = handleMouseEvents;
+    if (handleMouseEvents != null)
+      options['handleMouseEvents'] = handleMouseEvents;
     if (readOnly != null) options['readOnly'] = readOnly;
     if (addToHistory != null) options['addToHistory'] = addToHistory;
     if (startStyle != null) options['startStyle'] = startStyle;
@@ -1139,7 +1154,8 @@ class Doc extends ProxyHolder {
    *
    * The returned mode is a `JsObject`.
    */
-  dynamic getModeAt(Position pos) => getEditor().callArg('getModeAt', pos.toProxy());
+  dynamic getModeAt(Position pos) =>
+      getEditor().callArg('getModeAt', pos.toProxy());
 
   /// Return the name of the mode at the given position.
   String getModeNameAt(Position pos) => getModeAt(pos)['name'];
@@ -1177,12 +1193,14 @@ class Position implements Comparable<Position> {
 
   Position(this.line, this.ch);
 
-  Position.fromProxy(var obj) : line = obj['line'], ch = obj['ch'];
+  Position.fromProxy(var obj)
+      : line = obj['line'],
+        ch = obj['ch'];
 
   JsObject toProxy() => jsify({'line': line, 'ch': ch});
 
-  operator==(other) => other is Position &&
-      line == other.line && ch == other.ch;
+  operator ==(other) =>
+      other is Position && line == other.line && ch == other.ch;
 
   int get hashCode => (line << 8 | ch).hashCode;
 
@@ -1191,10 +1209,10 @@ class Position implements Comparable<Position> {
     return line - other.line;
   }
 
-  operator<(Position other) => compareTo(other) < 0;
-  operator<=(Position other) => compareTo(other) <= 0;
-  operator>=(Position other) => compareTo(other) >= 0;
-  operator>(Position other) => compareTo(other) > 0;
+  operator <(Position other) => compareTo(other) < 0;
+  operator <=(Position other) => compareTo(other) <= 0;
+  operator >=(Position other) => compareTo(other) >= 0;
+  operator >(Position other) => compareTo(other) > 0;
 
   String toString() => '[${line}:${ch}]';
 }
@@ -1211,7 +1229,7 @@ class ModeInfo extends ProxyHolder {
   String get mime => jsProxy['mime'];
 
   List<String> get mimes =>
-      jsProxy.hasProperty('mimes') ? jsProxy['mimes']: <String>[mime];
+      jsProxy.hasProperty('mimes') ? jsProxy['mimes'] : <String>[mime];
 
   /// The mode's id.
   String get mode => jsProxy['mode'];
@@ -1221,7 +1239,7 @@ class ModeInfo extends ProxyHolder {
 
   /// The mode's other file extensions.
   List<String> get alias =>
-      jsProxy.hasProperty('alias') ? jsProxy['alias']: <String>[];
+      jsProxy.hasProperty('alias') ? jsProxy['alias'] : <String>[];
 }
 
 /**
@@ -1233,15 +1251,15 @@ class Span {
 
   Span(this.head, this.anchor);
 
-  Span.fromProxy(var obj) :
-      head = new Position.fromProxy(obj['head']),
-      anchor = new Position.fromProxy(obj['anchor']);
+  Span.fromProxy(var obj)
+      : head = new Position.fromProxy(obj['head']),
+        anchor = new Position.fromProxy(obj['anchor']);
 
   JsObject toProxy() =>
       jsify({'head': head.toProxy(), 'anchor': anchor.toProxy()});
 
-  operator==(other) => other is Span &&
-      head == other.head && anchor == other.anchor;
+  operator ==(other) =>
+      other is Span && head == other.head && anchor == other.anchor;
 
   int get hashCode => head.hashCode ^ anchor.hashCode;
 
@@ -1252,7 +1270,7 @@ class Span {
  * An object that represents a marker.
  */
 class TextMarker extends ProxyHolder {
-  TextMarker(JsObject jsProxy): super(jsProxy);
+  TextMarker(JsObject jsProxy) : super(jsProxy);
 
   /**
    * Removes the mark.
@@ -1300,7 +1318,7 @@ class TextMarker extends ProxyHolder {
  * See [CodeMirror.addLineWidget].
  */
 class LineWidget extends ProxyHolder {
-  LineWidget(JsObject jsProxy): super(jsProxy);
+  LineWidget(JsObject jsProxy) : super(jsProxy);
 
   // TODO: add `line` property
 
@@ -1318,7 +1336,7 @@ class LineWidget extends ProxyHolder {
 }
 
 class LineHandle extends ProxyHolder {
-  LineHandle(JsObject jsProxy): super(jsProxy);
+  LineHandle(JsObject jsProxy) : super(jsProxy);
 
   num get height => jsProxy['height'];
 
@@ -1328,19 +1346,26 @@ class LineHandle extends ProxyHolder {
 class Token {
   /// The character (on the given line) at which the token starts.
   final int start;
+
   /// The character at which the token ends.
   final int end;
+
   /// The token's string.
   final String string;
+
   /// The token type the mode assigned to the token, such as "keyword" or
   /// "comment" (may also be null).
   final String type;
+
   /// The mode's state at the end of this token.
   final JsObject state;
 
-  Token.fromProxy(var obj) :
-    start = obj['start'], end = obj['end'], string = obj['string'],
-    type = obj['type'], state = obj['state'];
+  Token.fromProxy(var obj)
+      : start = obj['start'],
+        end = obj['end'],
+        string = obj['string'],
+        type = obj['type'],
+        state = obj['state'];
 
   String toString() => string;
 }
@@ -1375,7 +1400,7 @@ abstract class ProxyHolder {
 
   int get hashCode => jsProxy.hashCode;
 
-  operator==(other) => other is ProxyHolder && jsProxy == other.jsProxy;
+  operator ==(other) => other is ProxyHolder && jsProxy == other.jsProxy;
 
   /// This method should be called if any events listeners were added to the
   /// object.

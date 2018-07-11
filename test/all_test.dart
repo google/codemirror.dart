@@ -188,7 +188,8 @@ createHtmlDocTests() {
   CodeMirror editor;
 
   setUp(() {
-    editor = new CodeMirror.fromElement(editorHost, options: {"mode": "text/html"});
+    editor =
+        new CodeMirror.fromElement(editorHost, options: {"mode": "text/html"});
   });
 
   tearDown(() {

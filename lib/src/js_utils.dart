@@ -47,28 +47,34 @@ class JsEventListener<T> {
   StreamController _controller;
   JsFunction _callback;
 
-  JsEventListener(this._proxy, this._name, {this.cvtEvent, this.twoArgs: false});
+  JsEventListener(this._proxy, this._name,
+      {this.cvtEvent, this.twoArgs: false});
 
   Stream<T> get stream {
     if (_controller == null) {
       _controller = new StreamController.broadcast(
-        onListen: () {
-          if (twoArgs) {
-            _callback = _proxy.callMethod('on', [_name, (obj, e) {
-              _controller.add(cvtEvent == null ? null : cvtEvent(e));
-            }]);
-          } else {
-            _callback = _proxy.callMethod('on', [_name, (obj) {
-              _controller.add(cvtEvent == null ? null : cvtEvent(obj));
-            }]);
-          }
-        },
-        onCancel: () {
-          _proxy.callMethod('off', [_name, _callback]);
-          _callback = null;
-        },
-        sync: true
-      );
+          onListen: () {
+            if (twoArgs) {
+              _callback = _proxy.callMethod('on', [
+                _name,
+                (obj, e) {
+                  _controller.add(cvtEvent == null ? null : cvtEvent(e));
+                }
+              ]);
+            } else {
+              _callback = _proxy.callMethod('on', [
+                _name,
+                (obj) {
+                  _controller.add(cvtEvent == null ? null : cvtEvent(obj));
+                }
+              ]);
+            }
+          },
+          onCancel: () {
+            _proxy.callMethod('off', [_name, _callback]);
+            _callback = null;
+          },
+          sync: true);
     }
     return _controller.stream;
   }

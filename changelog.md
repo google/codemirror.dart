@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.3
+- increase the SDK dependency range
+
 ## 0.4.2
 - strong mode fixes
 - remove the use of deprecated constants

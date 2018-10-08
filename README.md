@@ -16,7 +16,7 @@ modes and addons that implement more advanced editing functionality.
 
 ```dart
 Map options = {
-  'mode':  'javascript',
+  'mode': 'javascript',
   'theme': 'monokai'
 };
 

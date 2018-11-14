@@ -5,8 +5,8 @@
 - Update `bower.json` and change the version number for the `codemirror`
   dependency.
 - Update the version number in the `README_.google` file.
-- Run `bower install` (or `grind install`).
-- Run `grind build`.
+- Run `bower install` (or `grind install`). 
+- Run `grind build`. (Don't have `grind`? Install it using `pub global activate grinder`.)
 - Update the `changelog.md` file.
 
 ## publishing the package

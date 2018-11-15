@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.5
+- fix v0.4.4 - update the Javascript codemirror resources
+
 ## 0.4.4
  - updated to CodeMirror 5.41.0
  - exposed more themes

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.4
+ - updated to CodeMirror 5.41.0
+ - exposed more themes
+
 ## 0.4.3
 - increase the SDK dependency range
 

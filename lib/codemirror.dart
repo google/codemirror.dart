@@ -501,9 +501,13 @@ class CodeMirror extends ProxyHolder {
    * [addLineClass]). [cssClass] can be left off to remove all classes for the
    * specified node, or be a string to remove only a specific class.
    */
-  LineHandle removeLineClass(dynamic line, String where, String cssClass) {
+  LineHandle removeLineClass(dynamic line, String where, [String cssClass]) {
     var l = line is LineHandle ? line.jsProxy : line;
-    return new LineHandle(callArgs('addLineClass', [l, where, cssClass]));
+    if (cssClass == null) {
+      return new LineHandle(callArgs('removeLineClass', [l, where]));
+    } else {
+      return new LineHandle(callArgs('removeLineClass', [l, where, cssClass]));
+    }
   }
 
   /**

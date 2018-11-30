@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.6
+- fix a bug in removeLineClass
+
 ## 0.4.5
 - fix v0.4.4 - update the Javascript codemirror resources
 

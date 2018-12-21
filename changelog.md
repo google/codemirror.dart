@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.7
+- expose `getScrollInfo`, `scrollIntoView`, `onGutterClick`
+
 ## 0.4.6
 - fix a bug in removeLineClass
 

@@ -14,6 +14,8 @@ pubspec.lock
 
 .settings/
 /.DS_Store
+.idea/
+codemirror.dart.iml
 
 # Ignore the codemirror copied resources.
 lib/addon/

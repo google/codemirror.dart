@@ -180,8 +180,8 @@ class CodeMirror extends ProxyHolder {
   }
 
   /**
-  * Add a new custom command to CodeMirror.
-  */
+   * Add a new custom command to CodeMirror.
+   */
   static void addCommand(String name, CommandHandler callback) {
     _cm['commands'][name] = (JsObject obj) {
       var editor = new CodeMirror.fromJsObject(obj);
@@ -256,7 +256,20 @@ class CodeMirror extends ProxyHolder {
   Stream<MouseEvent> get onDoubleClick =>
       onEvent('dblclick', true).cast<MouseEvent>();
 
-  //Stream<MouseEvent> get onContextMenu => onEvent('contextmenu', true);
+  /**
+   * Fires when the editor gutter (the line-number area) is clicked.
+   */
+  Stream<int> get onGutterClick {
+    return onEvent('gutterClick', true).map((dynamic event) {
+      // The docs say this event is a structured object; in practice, it seems
+      // to be an int.
+      if (event is int) {
+        return event;
+      } else {
+        return event['line'];
+      }
+    });
+  }
 
   /**
    * Retrieve the currently active document from an editor.
@@ -563,6 +576,31 @@ class CodeMirror extends ProxyHolder {
    * as null or undefined to have no effect.
    */
   void scrollTo(int x, int y) => callArgs('scrollTo', [x, y]);
+
+  /**
+   * Get a [ScrollInfo] object that represents the current scroll position, the
+   * size of the scrollable area, and the size of the visible area (minus
+   * scrollbars).
+   */
+  ScrollInfo getScrollInfo() => new ScrollInfo(call('getScrollInfo'));
+
+  /**
+   * Scrolls the given position into view. The margin parameter is optional.
+   * When given, it indicates the amount of vertical pixels around the given
+   * area that should be made visible as well.
+   */
+  void scrollIntoView(int line, int ch, {int margin}) {
+    if (margin != null) {
+      callArgs('scrollIntoView', [
+        new JsObject.jsify({'line': line, 'ch': ch}),
+        margin,
+      ]);
+    } else {
+      callArgs('scrollIntoView', [
+        new JsObject.jsify({'line': line, 'ch': ch}),
+      ]);
+    }
+  }
 
   /**
    * Fetch the set of applicable helper values for the given position. Helpers
@@ -1236,8 +1274,11 @@ class Position implements Comparable<Position> {
   }
 
   operator <(Position other) => compareTo(other) < 0;
+
   operator <=(Position other) => compareTo(other) <= 0;
+
   operator >=(Position other) => compareTo(other) >= 0;
+
   operator >(Position other) => compareTo(other) > 0;
 
   String toString() => '[${line}:${ch}]';
@@ -1367,6 +1408,22 @@ class LineHandle extends ProxyHolder {
   num get height => jsProxy['height'];
 
   String get text => jsProxy['text'];
+}
+
+class ScrollInfo extends ProxyHolder {
+  ScrollInfo(JsObject jsProxy) : super(jsProxy);
+
+  int get left => jsProxy['left'];
+
+  int get top => jsProxy['top'];
+
+  int get width => jsProxy['width'];
+
+  int get height => jsProxy['height'];
+
+  int get clientWidth => jsProxy['clientWidth'];
+
+  int get clientHeight => jsProxy['clientHeight'];
 }
 
 class Token {

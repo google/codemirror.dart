@@ -234,7 +234,7 @@ class CodeMirror extends ProxyHolder {
   /**
    * Fires every time the content of the editor is changed.
    */
-  Stream get onChange => onEvent('change', true);
+  Stream get onChange => onEvent('change', argCount: 2);
 
   /**
    * Will be fired when the cursor or selection moves, or any change is made to
@@ -247,29 +247,19 @@ class CodeMirror extends ProxyHolder {
    * that CodeMirror should do no further handling.
    */
   Stream<MouseEvent> get onMouseDown =>
-      onEvent('mousedown', true).cast<MouseEvent>();
+      onEvent('mousedown', argCount: 2).cast<MouseEvent>();
 
   /**
    * Fired when a mouse is double-clicked. You can preventDefault the event to
    * signal that CodeMirror should do no further handling.
    */
   Stream<MouseEvent> get onDoubleClick =>
-      onEvent('dblclick', true).cast<MouseEvent>();
+      onEvent('dblclick', argCount: 2).cast<MouseEvent>();
 
   /**
    * Fires when the editor gutter (the line-number area) is clicked.
    */
-  Stream<int> get onGutterClick {
-    return onEvent('gutterClick', true).map((dynamic event) {
-      // The docs say this event is a structured object; in practice, it seems
-      // to be an int.
-      if (event is int) {
-        return event;
-      } else {
-        return event['line'];
-      }
-    });
-  }
+  Stream<int> get onGutterClick => onEvent<int>('gutterClick', argCount: 4);
 
   /**
    * Retrieve the currently active document from an editor.
@@ -1243,7 +1233,7 @@ class Doc extends ProxyHolder {
    * Fired whenever a change occurs to the document. `changeObj` has a similar
    * type as the object passed to the editor's "change" event.
    */
-  Stream get onChange => onEvent('change', true);
+  Stream get onChange => onEvent('change', argCount: 2);
 }
 
 /**
@@ -1473,10 +1463,20 @@ abstract class ProxyHolder {
   dynamic callArgs(String methodName, List args) =>
       jsProxy.callMethod(methodName, args);
 
-  Stream onEvent(String eventName, [bool twoArgs = false]) {
+  Stream<T> onEvent<T>(String eventName, {int argCount = 1}) {
     if (!_events.containsKey(eventName)) {
-      _events[eventName] = new JsEventListener(jsProxy, eventName,
-          cvtEvent: (twoArgs ? (e) => e : null), twoArgs: twoArgs);
+      if (argCount == 4) {
+        _events[eventName] = new JsEventListener<T>(jsProxy, eventName,
+            cvtEvent: (a, b, c) => a, argCount: argCount);
+      } else if (argCount == 3) {
+        _events[eventName] = new JsEventListener<T>(jsProxy, eventName,
+            cvtEvent: (a, b) => a, argCount: argCount);
+      } else if (argCount == 2) {
+        _events[eventName] =
+            new JsEventListener<T>(jsProxy, eventName, argCount: argCount);
+      } else {
+        _events[eventName] = new JsEventListener<T>(jsProxy, eventName);
+      }
     }
     return _events[eventName].stream;
   }

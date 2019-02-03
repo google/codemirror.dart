@@ -42,23 +42,41 @@ class JsEventListener<T> {
   final JsObject _proxy;
   final String _name;
   final Function cvtEvent;
-  final bool twoArgs;
+  final int argCount;
 
   StreamController<T> _controller;
   JsFunction _callback;
 
-  JsEventListener(this._proxy, this._name,
-      {this.cvtEvent, this.twoArgs: false});
+  JsEventListener(
+    this._proxy,
+    this._name, {
+    this.cvtEvent,
+    this.argCount = 1,
+  });
 
   Stream<T> get stream {
     if (_controller == null) {
       _controller = new StreamController.broadcast(
           onListen: () {
-            if (twoArgs) {
+            if (argCount == 4) {
               _callback = _proxy.callMethod('on', [
                 _name,
-                (obj, e) {
-                  _controller.add(cvtEvent == null ? null : cvtEvent(e));
+                (obj, a, b, c) {
+                  _controller.add(cvtEvent == null ? a : cvtEvent(a, b, c));
+                }
+              ]);
+            } else if (argCount == 3) {
+              _callback = _proxy.callMethod('on', [
+                _name,
+                (obj, a, b) {
+                  _controller.add(cvtEvent == null ? a : cvtEvent(a, b));
+                }
+              ]);
+            } else if (argCount == 2) {
+              _callback = _proxy.callMethod('on', [
+                _name,
+                (obj, a) {
+                  _controller.add(cvtEvent == null ? a : cvtEvent(a));
                 }
               ]);
             } else {

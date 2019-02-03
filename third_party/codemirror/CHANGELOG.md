@@ -1,3 +1,53 @@
+## 5.43.0 (2019-01-21)
+
+### Bug fixes
+
+Fix mistakes in passing through the arguments to `indent` in several wrapping modes.
+
+[javascript mode](https://codemirror.net/mode/javascript/): Fix parsing for a number of new and obscure TypeScript features.
+
+[ruby mode](https://codemirror.net/mode/ruby): Support indented end tokens for heredoc strings.
+
+### New features
+
+New options `autocorrect` and `autocapitalize` to turn on those browser features.
+
+## 5.42.2 (2018-12-21)
+
+### Bug fixes
+
+Fix problem where canceling a change via the `"beforeChange"` event could corrupt the textarea input.
+
+Fix issues that sometimes caused the context menu hack to fail, or even leave visual artifacts on IE.
+
+[vim bindings](https://codemirror.net/demo/vim.html): Make it possible to select text between angle brackets.
+
+[css mode](https://codemirror.net/mode/css/): Fix tokenizing of CSS variables.
+
+[python mode](https://codemirror.net/mode/python/): Fix another bug in tokenizing of format strings.
+
+[soy mode](https://codemirror.net/mode/soy/): More accurate highlighting.
+
+## 5.42.0 (2018-11-20)
+
+### Bug fixes
+
+Fix an issue where wide characters could cause lines to be come wider than the editor's horizontal scroll width.
+
+Optimize handling of window resize events.
+
+[show-hint addon](https://codemirror.net/doc/manual.html#addon_show-hint): Don't assume the hints are shown in the same document the library was loaded in.
+
+[python mode](https://codemirror.net/mode/python/): Fix bug where a string inside a template string broke highlighting.
+
+[swift mode](https://codemirror.net/mode/swift): Support multi-line strings.
+
+### New features
+
+The [`markText` method](https://codemirror.net/doc/manual.html#markText) now takes an [`attributes`](https://codemirror.net/doc/manual.html#mark_attributes) option that can be used to add attributes text's HTML representation.
+
+[vim bindings](https://codemirror.net/demo/vim.html): Add support for the `=` binding.
+
 ## 5.41.0 (2018-10-25)
 
 ### Bug fixes

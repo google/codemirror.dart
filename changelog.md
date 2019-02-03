@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0
+- update to CodeMirror 5.43.0
+- fix a bug with `onGutterClick` when compiled with dart2js
+- use the `package:pedantic` analysis options rule set
+
 ## 0.4.7
 - expose `getScrollInfo`, `scrollIntoView`, `onGutterClick`
 

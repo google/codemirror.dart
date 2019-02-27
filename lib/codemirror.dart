@@ -65,6 +65,7 @@ class CodeMirror extends ProxyHolder {
     'neat',
     'neo',
     'night',
+    'nord',
     'oceanic-next',
     'panda-syntax',
     'paraiso-dark',

@@ -29,9 +29,9 @@ class Panel {
 class PanelContainer extends ProxyHolder {
   PanelContainer._(JsObject jsProxy) : super(jsProxy);
 
-  ///Used to remove the panel.
+  /// Used to remove the panel.
   void clear() => call('clear');
 
-  ///Used to notify the addon when the size of the panel's DOM node has changed.
+  /// Used to notify the addon when the size of the panel's DOM node has changed.
   void changed() => call('changed');
 }

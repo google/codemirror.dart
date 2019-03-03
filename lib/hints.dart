@@ -2,9 +2,7 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-/**
- * A wrapper around the `hint/show-hint.js` addon.
- */
+/// A wrapper around the `hint/show-hint.js` addon.
 library codemirror.hints;
 
 import 'dart:async';
@@ -23,22 +21,20 @@ typedef void HintsResultsSelectCallback(HintResult completion, Element element);
 
 typedef void HintsResultsPickCallback(HintResult completion);
 
-/**
- * To use codemirror hints (aka code completion), register either a synchronous
- * or aynchronous hints helper for a given mode (see [Hints.registerHintsHelper]
- * and [Hints.registerHintsHelperAsync]). The second helper type returns a
- * `Future` with the completion results.
- *
- * In addition, you need to tie the `autocomplete` command to a key-binding.
- * When creating a CodeMirror instance, pass
- * `'extraKeys': { 'Ctrl-Space': 'autocomplete' }` into the options object.
- * Then, include the hints css in your entrypoint html file:
- * `<link href="packages/codemirror/addon/hint/show-hint.css" rel="stylesheet">`.
- *
- * See the CodeMirror
- * [sample](https://github.com/google/codemirror.dart/tree/master/example) for a
- * working example of using the hints API.
- */
+/// To use codemirror hints (aka code completion), register either a synchronous
+/// or aynchronous hints helper for a given mode (see [Hints.registerHintsHelper]
+/// and [Hints.registerHintsHelperAsync]). The second helper type returns a
+/// `Future` with the completion results.
+///
+/// In addition, you need to tie the `autocomplete` command to a key-binding.
+/// When creating a CodeMirror instance, pass
+/// `'extraKeys': { 'Ctrl-Space': 'autocomplete' }` into the options object.
+/// Then, include the hints css in your entrypoint html file:
+/// `<link href="packages/codemirror/addon/hint/show-hint.css" rel="stylesheet">`.
+///
+/// See the CodeMirror
+/// [sample](https://github.com/google/codemirror.dart/tree/master/example) for a
+/// working example of using the hints API.
 class Hints {
   static bool _inited = false;
 
@@ -97,11 +93,9 @@ class Hints {
   }
 }
 
-/**
- * The plugin understands the following options (the options object will also be
- * passed along to the hinting function, which may understand additional
- * options).
- */
+/// The plugin understands the following options (the options object will also be
+/// passed along to the hinting function, which may understand additional
+/// options).
 class HintsOptions extends ProxyHolder {
   HintsOptions(JsObject jsProxy) : super(jsProxy);
 
@@ -109,22 +103,19 @@ class HintsOptions extends ProxyHolder {
     return jsProxy == null ? null : new HintsOptions(jsProxy);
   }
 
-  /**
-   * Determines whether, when only a single completion is available, it is
-   * completed without showing the dialog. Defaults to true.
-   */
+  /// Determines whether, when only a single completion is available, it is
+  /// completed without showing the dialog. Defaults to true.
+
   bool get completeSingle => _boolOption('completeSingle', true);
 
-  /**
-   * Whether the pop-up should be horizontally aligned with the start of the
-   * word (true, default), or with the cursor (false).
-   */
+  /// Whether the pop-up should be horizontally aligned with the start of the
+  /// word (true, default), or with the cursor (false).
+
   bool get alignWithWord => _boolOption('alignWithWord', true);
 
-  /**
-   * When enabled (which is the default), the pop-up will close when the editor
-   * is unfocused.
-   */
+  /// When enabled (which is the default), the pop-up will close when the editor
+  /// is unfocused.
+
   bool get closeOnUnfocus => _boolOption('closeOnUnfocus', true);
 
   dynamic getOption(String name) => jsProxy[name];

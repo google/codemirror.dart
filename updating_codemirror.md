@@ -20,6 +20,9 @@ the updated [pub](https://pub.dartlang.org) package.
 
 - `git pull`
 - comment out the `# Ignore the codemirror copied resources.` lines in the `.gitignore` file
-- `pub publish`
+- Verify the build with `pub publish --dry-run`
+  - Confirm the `lib` directory contains
+    `addon`, `codemirror.js`, `css`, `keymap`, `mode`, and `theme`
+- Publish for real with `pub publish`
 - comment back in the lines
 - from the github UI, create a new release with the pub package version

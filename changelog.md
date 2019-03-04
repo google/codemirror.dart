@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.2
+- Replacing broken version (0.5.1+5.44.0) with a fixed version
+
 ## 0.5.1
  - update to CodeMirror 5.44.0
  - expose the `nord` theme

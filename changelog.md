@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+ - update to CodeMirror 5.44.0
+ - expose the `nord` theme
+
 ## 0.5.0
 - update to CodeMirror 5.43.0
 - fix a bug with `onGutterClick` when compiled with dart2js

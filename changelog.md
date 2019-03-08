@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.3
+- adjust the field types for the `ScrollInfo` class
+
 ## 0.5.2
 - Replacing broken version (0.5.1+5.44.0) with a fixed version
 

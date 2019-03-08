@@ -245,9 +245,9 @@ class CodeMirror extends ProxyHolder {
   /// Retrieves the current value of the given option for this editor instance.
   dynamic getOption(String option) => callArg('getOption', option);
 
-  /// Change the configuration of the editor. option should the name of an
+  /// Change the configuration of the editor. [option] should the name of an
   /// option, and value should be a valid value for that option.
-  void setOption(String option, var value) =>
+  void setOption(String option, dynamic value) =>
       callArgs('setOption', [option, value]);
 
   String getTheme() => getOption('theme');
@@ -460,15 +460,15 @@ class CodeMirror extends ProxyHolder {
   /// multiple space-separated style names, otherwise.
   String getTokenTypeAt(Position pos) => callArg('getTokenTypeAt', pos);
 
-  /// Programatically set the size of the editor (overriding the applicable CSS
+  /// Programmatically set the size of the editor (overriding the applicable CSS
   /// rules). [width] and [height] can be either numbers (interpreted as pixels)
   /// or CSS units ("100%", for example). You can pass `null` for either of them
   /// to indicate that that dimension should not be changed.
-  void setSize(width, height) => callArgs('setSize', [width, height]);
+  void setSize(num width, num height) => callArgs('setSize', [width, height]);
 
   /// Scroll the editor to a given (pixel) position. Both arguments may be left
   /// as null or undefined to have no effect.
-  void scrollTo(int x, int y) => callArgs('scrollTo', [x, y]);
+  void scrollTo(num x, num y) => callArgs('scrollTo', [x, y]);
 
   /// Get a [ScrollInfo] object that represents the current scroll position, the
   /// size of the scrollable area, and the size of the visible area (minus
@@ -1176,17 +1176,17 @@ class LineHandle extends ProxyHolder {
 class ScrollInfo extends ProxyHolder {
   ScrollInfo(JsObject jsProxy) : super(jsProxy);
 
-  int get left => jsProxy['left'];
+  num get left => jsProxy['left'];
 
-  int get top => jsProxy['top'];
+  num get top => jsProxy['top'];
 
-  int get width => jsProxy['width'];
+  num get width => jsProxy['width'];
 
-  int get height => jsProxy['height'];
+  num get height => jsProxy['height'];
 
-  int get clientWidth => jsProxy['clientWidth'];
+  num get clientWidth => jsProxy['clientWidth'];
 
-  int get clientHeight => jsProxy['clientHeight'];
+  num get clientHeight => jsProxy['clientHeight'];
 }
 
 class Token {

@@ -23,8 +23,7 @@ void main() {
     }
   };
 
-  CodeMirror editor = new CodeMirror.fromTextArea(
-      querySelector('#textContainer'),
+  CodeMirror editor = CodeMirror.fromTextArea(querySelector('#textContainer'),
       options: options);
 
   querySelector('#version').text = "CodeMirror version ${CodeMirror.version}";
@@ -35,7 +34,7 @@ void main() {
   // Theme control.
   SelectElement themeSelect = querySelector('#theme');
   for (String theme in CodeMirror.THEMES) {
-    themeSelect.children.add(new OptionElement(value: theme)..text = theme);
+    themeSelect.children.add(OptionElement(value: theme)..text = theme);
     if (theme == editor.getTheme()) {
       themeSelect.selectedIndex = themeSelect.length - 1;
     }
@@ -48,7 +47,7 @@ void main() {
   // Mode control.
   SelectElement modeSelect = querySelector('#mode');
   for (String mode in CodeMirror.MODES) {
-    modeSelect.children.add(new OptionElement(value: mode)..text = mode);
+    modeSelect.children.add(OptionElement(value: mode)..text = mode);
     if (mode == editor.getMode()) {
       modeSelect.selectedIndex = modeSelect.length - 1;
     }
@@ -113,13 +112,11 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
   String word = _getCurrentWord(editor).toLowerCase();
   List<HintResult> list = _numbers
       .where((s) => s.startsWith(word))
-      .map((s) => new HintResult(s))
+      .map((s) => HintResult(s))
       .toList();
 
-  HintResults results = new HintResults.fromHints(
-      list,
-      new Position(cur.line, cur.ch - word.length),
-      new Position(cur.line, cur.ch));
+  HintResults results = HintResults.fromHints(list,
+      Position(cur.line, cur.ch - word.length), Position(cur.line, cur.ch));
   results.registerOnShown(() => print('hints shown'));
   results.registerOnSelect((completion, element) {
     print(['hints select: ${completion}']);
@@ -145,13 +142,11 @@ Future<HintResults> _dartCompleterAsync(CodeMirror editor,
     [HintsOptions options]) {
   Position cur = editor.getCursor();
   String word = _getCurrentWord(editor).toLowerCase();
-  List<String> list = new List.from(_numbers.where((s) => s.startsWith(word)));
+  List<String> list = List.from(_numbers.where((s) => s.startsWith(word)));
 
-  return new Future.delayed(new Duration(milliseconds: 200), () {
-    return new HintResults.fromStrings(
-        list,
-        new Position(cur.line, cur.ch - word.length),
-        new Position(cur.line, cur.ch));
+  return Future.delayed(Duration(milliseconds: 200), () {
+    return HintResults.fromStrings(list,
+        Position(cur.line, cur.ch - word.length), Position(cur.line, cur.ch));
   });
 }
 
@@ -168,12 +163,12 @@ final List _numbers = [
   'nine'
 ];
 
-final RegExp _ids = new RegExp(r'[a-zA-Z_0-9]');
+final RegExp _ids = RegExp(r'[a-zA-Z_0-9]');
 
 String _getCurrentWord(CodeMirror editor) {
   Position cur = editor.getCursor();
   String line = editor.getLine(cur.line);
-  StringBuffer buf = new StringBuffer();
+  StringBuffer buf = StringBuffer();
 
   for (int i = cur.ch - 1; i >= 0; i--) {
     String c = line[i];
@@ -184,5 +179,5 @@ String _getCurrentWord(CodeMirror editor) {
     }
   }
 
-  return new String.fromCharCodes(buf.toString().codeUnits.reversed);
+  return String.fromCharCodes(buf.toString().codeUnits.reversed);
 }

@@ -18,10 +18,10 @@ class Panel {
       {bool below}) {
     if (below != null && below) {
       Map options = {'position': 'bottom'};
-      return new PanelContainer._(
+      return PanelContainer._(
           editor.callArgs('addPanel', [element, jsify(options)]));
     } else {
-      return new PanelContainer._(editor.callArg('addPanel', element));
+      return PanelContainer._(editor.callArg('addPanel', element));
     }
   }
 }

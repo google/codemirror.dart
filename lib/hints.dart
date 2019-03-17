@@ -12,14 +12,16 @@ import 'dart:js';
 import 'codemirror.dart';
 import 'src/js_utils.dart';
 
-typedef HintResults HintsHelper(CodeMirror editor, [HintsOptions options]);
-
-typedef Future<HintResults> HintsHelperAsync(CodeMirror editor,
+typedef HintsHelper = HintResults Function(CodeMirror editor,
     [HintsOptions options]);
 
-typedef void HintsResultsSelectCallback(HintResult completion, Element element);
+typedef HintsHelperAsync = Future<HintResults> Function(CodeMirror editor,
+    [HintsOptions options]);
 
-typedef void HintsResultsPickCallback(HintResult completion);
+typedef HintsResultsSelectCallback = void Function(
+    HintResult completion, Element element);
+
+typedef HintsResultsPickCallback = void Function(HintResult completion);
 
 /// To use codemirror hints (aka code completion), register either a synchronous
 /// or aynchronous hints helper for a given mode (see [Hints.registerHintsHelper]
@@ -44,7 +46,7 @@ class Hints {
     if (_inited) return;
     _inited = true;
 
-    _cm['showHint'] = new JsFunction.withThis(_showHint);
+    _cm['showHint'] = JsFunction.withThis(_showHint);
     _cm['commands']['autocomplete'] = _cm['showHint'];
   }
 
@@ -52,8 +54,8 @@ class Hints {
     _init();
 
     CodeMirror.registerHelper('hint', mode, (editor, options) {
-      HintResults results = helper(
-          new CodeMirror.fromJsObject(editor), new HintsOptions(options));
+      HintResults results =
+          helper(CodeMirror.fromJsObject(editor), HintsOptions(options));
       return results == null ? null : results.toProxy();
     });
   }
@@ -62,9 +64,9 @@ class Hints {
     _init();
 
     JsFunction function =
-        new JsFunction.withThis((win, editor, showHints, [options]) {
-      Future<HintResults> results = helper(new CodeMirror.fromJsObject(editor),
-          new HintsOptions.fromProxy(options));
+        JsFunction.withThis((win, editor, showHints, [options]) {
+      Future<HintResults> results = helper(
+          CodeMirror.fromJsObject(editor), HintsOptions.fromProxy(options));
 
       results.then((HintResults r) {
         showHints.apply([results == null ? null : r.toProxy()]);
@@ -100,7 +102,7 @@ class HintsOptions extends ProxyHolder {
   HintsOptions(JsObject jsProxy) : super(jsProxy);
 
   factory HintsOptions.fromProxy(JsObject jsProxy) {
-    return jsProxy == null ? null : new HintsOptions(jsProxy);
+    return jsProxy == null ? null : HintsOptions(jsProxy);
   }
 
   /// Determines whether, when only a single completion is available, it is
@@ -160,9 +162,9 @@ class HintResults {
       "select",
       (completion, element) {
         if (completion is String) {
-          onSelect(new HintResult(completion), element);
+          onSelect(HintResult(completion), element);
         } else {
-          onSelect(new HintResult.fromProxy(completion), element);
+          onSelect(HintResult.fromProxy(completion), element);
         }
       }
     ]);
@@ -178,9 +180,9 @@ class HintResults {
       "pick",
       (completion) {
         if (completion is String) {
-          onPick(new HintResult(completion));
+          onPick(HintResult(completion));
         } else {
-          onPick(new HintResult.fromProxy(completion));
+          onPick(HintResult.fromProxy(completion));
         }
       }
     ]);
@@ -208,9 +210,9 @@ class HintResults {
   }
 }
 
-typedef HintRenderer(Element element, HintResult hint);
+typedef HintRenderer = Function(Element element, HintResult hint);
 
-typedef HintApplier(
+typedef HintApplier = Function(
     CodeMirror editor, HintResult hint, Position from, Position to);
 
 class HintResult {
@@ -268,7 +270,7 @@ class HintResult {
       m['hint'] = (cm, data, completion) {
         Position from = _createPos(data['from']);
         Position to = _createPos(data['to']);
-        hintApplier(new CodeMirror.fromJsObject(cm), this, from, to);
+        hintApplier(CodeMirror.fromJsObject(cm), this, from, to);
       };
     }
 
@@ -284,6 +286,6 @@ class HintResult {
   String toString() => '[${text}]';
 
   static Position _createPos(JsObject obj) {
-    return obj == null ? null : new Position.fromProxy(obj);
+    return obj == null ? null : Position.fromProxy(obj);
   }
 }

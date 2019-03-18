@@ -14,7 +14,7 @@ import 'package:test/test.dart';
 
 // TODO: document mutation
 
-final Element editorHost = new DivElement();
+final Element editorHost = DivElement();
 
 void main() {
   document.body.children.add(editorHost);
@@ -29,7 +29,7 @@ void main() {
 
 createSimpleTests() {
   test('create', () {
-    CodeMirror editor = new CodeMirror.fromElement(editorHost);
+    CodeMirror editor = CodeMirror.fromElement(editorHost);
     expect(editor, isNotNull);
     expect(editorHost.parent, isNotNull);
     editor.dispose();
@@ -67,7 +67,7 @@ createCodeMirrorTests() {
   CodeMirror editor;
 
   setUp(() {
-    editor = new CodeMirror.fromElement(editorHost);
+    editor = CodeMirror.fromElement(editorHost);
   });
 
   tearDown(() {
@@ -99,7 +99,7 @@ createDocTests() {
   CodeMirror editor;
 
   setUp(() {
-    editor = new CodeMirror.fromElement(editorHost);
+    editor = CodeMirror.fromElement(editorHost);
     editor.setMode('clike');
   });
 
@@ -147,15 +147,15 @@ createDocTests() {
     doc.setValue('foo bar');
 
     // Extending flag is off.
-    doc.setSelection(new Position(0, 0));
+    doc.setSelection(Position(0, 0));
     doc.setExtending(false);
-    doc.extendSelection(new Position(0, 3));
+    doc.extendSelection(Position(0, 3));
     expect(doc.getSelection(), '');
 
     // Extending flag is on.
-    doc.setSelection(new Position(0, 0));
+    doc.setSelection(Position(0, 0));
     doc.setExtending(true);
-    doc.extendSelection(new Position(0, 3));
+    doc.extendSelection(Position(0, 3));
     expect(doc.getSelection(), 'foo');
   });
 
@@ -163,10 +163,10 @@ createDocTests() {
     Doc doc = editor.getDoc();
     doc.setValue('foo bar');
 
-    doc.addSelection(anchor: new Position(0, 0));
-    doc.addSelection(anchor: new Position(0, 4));
+    doc.addSelection(anchor: Position(0, 0));
+    doc.addSelection(anchor: Position(0, 4));
     doc.setExtending(true);
-    doc.extendSelections([new Position(0, 3), new Position(0, 7)]);
+    doc.extendSelections([Position(0, 3), Position(0, 7)]);
     expect(doc.getSelections(), ['foo', 'bar']);
   });
 
@@ -174,11 +174,11 @@ createDocTests() {
     Doc doc = editor.getDoc();
     doc.setValue('foo bar');
 
-    doc.addSelection(anchor: new Position(0, 0));
-    doc.addSelection(anchor: new Position(0, 4));
+    doc.addSelection(anchor: Position(0, 0));
+    doc.addSelection(anchor: Position(0, 4));
     doc.setExtending(true);
     doc.extendSelectionsBy((Span range, int i) {
-      return new Position(range.head.line, range.head.ch + 3);
+      return Position(range.head.line, range.head.ch + 3);
     });
     expect(doc.getSelections(), ['foo', 'bar']);
   });
@@ -188,8 +188,7 @@ createHtmlDocTests() {
   CodeMirror editor;
 
   setUp(() {
-    editor =
-        new CodeMirror.fromElement(editorHost, options: {"mode": "text/html"});
+    editor = CodeMirror.fromElement(editorHost, options: {"mode": "text/html"});
   });
 
   tearDown(() {
@@ -200,9 +199,9 @@ createHtmlDocTests() {
   test('getModeAt', () {
     Doc doc = editor.getDoc();
     doc.setValue('<style>\np {color: black;}\n</style>');
-    var mode = doc.getModeAt(new Position(2, 0));
+    var mode = doc.getModeAt(Position(2, 0));
     expect(mode['name'], 'css');
-    expect(doc.getModeNameAt(new Position(2, 0)), 'css');
+    expect(doc.getModeNameAt(Position(2, 0)), 'css');
   });
 }
 
@@ -210,7 +209,7 @@ createHistoryTests() {
   CodeMirror editor;
 
   setUp(() {
-    editor = new CodeMirror.fromElement(editorHost);
+    editor = CodeMirror.fromElement(editorHost);
   });
 
   tearDown(() {

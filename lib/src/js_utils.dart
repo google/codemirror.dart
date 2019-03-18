@@ -13,7 +13,7 @@ final JsObject _jsJSON = context['JSON'];
 final JsObject _Object = context['Object'];
 
 /// Convert a Dart object to a suitable parameter to a JavaScript method.
-JsObject jsify(object) => new JsObject.jsify(object);
+JsObject jsify(object) => JsObject.jsify(object);
 
 /// Convert a JavaScript result object to an equivalent Dart map.
 Map mapify(JsObject obj) {
@@ -46,7 +46,7 @@ class JsEventListener<T> {
 
   Stream<T> get stream {
     if (_controller == null) {
-      _controller = new StreamController.broadcast(
+      _controller = StreamController.broadcast(
           onListen: () {
             if (argCount == 4) {
               _callback = _proxy.callMethod('on', [
@@ -88,7 +88,7 @@ class JsEventListener<T> {
   }
 
   Future dispose() {
-    if (_controller == null) return new Future.value();
+    if (_controller == null) return Future.value();
     return _controller.close();
   }
 }

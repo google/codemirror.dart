@@ -4,3 +4,7 @@ analyzer:
   exclude:
     - 'doc/api/**'
     - 'lib/mode/**'
+
+linter:
+  rules:
+    - unnecessary_new

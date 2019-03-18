@@ -6,8 +6,8 @@ import 'dart:io';
 
 import 'package:grinder/grinder.dart';
 
-final Directory srcDir = new Directory('third_party/codemirror');
-final Directory destDir = new Directory('lib');
+final Directory srcDir = Directory('third_party/codemirror');
+final Directory destDir = Directory('lib');
 
 main(List<String> args) => grind(args);
 

@@ -20,7 +20,7 @@ Map options = {
   'theme': 'monokai'
 };
 
-CodeMirror editor = new CodeMirror.fromElement(
+CodeMirror editor = CodeMirror.fromElement(
     querySelector('#textContainer'), options: options);
 editor.getDoc().setValue('foo.bar(1, 2, 3);');
 ```

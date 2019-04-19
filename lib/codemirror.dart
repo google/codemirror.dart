@@ -78,6 +78,7 @@ class CodeMirror extends ProxyHolder {
     'xq-dark',
     'xq-light',
     'zenburn',
+    'yonce',
     'yeti',
   ];
 

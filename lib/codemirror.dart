@@ -394,8 +394,9 @@ class CodeMirror extends ProxyHolder {
     if (coverGutter != null) options['coverGutter'] = coverGutter;
     if (noHScroll != null) options['noHScroll'] = noHScroll;
     if (above != null) options['above'] = above;
-    if (handleMouseEvents != null)
+    if (handleMouseEvents != null) {
       options['handleMouseEvents'] = handleMouseEvents;
+    }
     if (insertAt != null) options['insertAt'] = insertAt;
 
     var l = line is LineHandle ? line.jsProxy : line;
@@ -928,8 +929,9 @@ class Doc extends ProxyHolder {
     if (clearOnEnter != null) options['clearOnEnter'] = clearOnEnter;
     if (clearWhenEmpty != null) options['clearWhenEmpty'] = clearWhenEmpty;
     if (replacedWith != null) options['replacedWith'] = replacedWith;
-    if (handleMouseEvents != null)
+    if (handleMouseEvents != null) {
       options['handleMouseEvents'] = handleMouseEvents;
+    }
     if (readOnly != null) options['readOnly'] = readOnly;
     if (addToHistory != null) options['addToHistory'] = addToHistory;
     if (startStyle != null) options['startStyle'] = startStyle;

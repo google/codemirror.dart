@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.5
+- update to CodeMirror 5.46.0
+
 ## 0.5.4
 - update to CodeMirror 5.45.0
 - add `yonce` theme

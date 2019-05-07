@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.4
+- update to CodeMirror 5.45.0
+- add `yonce` theme
+
 ## 0.5.3
 - adjust the field types for the `ScrollInfo` class
 

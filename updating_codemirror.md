@@ -5,14 +5,11 @@ CodeMirror that this package uses. The first revolve around updating
 the CodeMirror dependencies from Bower, and the second around publishing
 the updated [pub](https://pub.dartlang.org) package.
 
-## Updating CodeMirror with Bower
+## Updating CodeMirror 
 
-(Don't have Bower? Install it from [bower.io](http://www.bower.io.))
-
-- Update `bower.json` and change the version number for the `codemirror`
-  dependency.
+- Download the latest zip ball from [codemirror.net/codemirror.zip](https://codemirror.net/codemirror.zip)
+- Replace the contents of `third_party/codemirror` with the content of the above download
 - Update the version number in the `README_.google` file.
-- Run `bower install` (or `grind install`).
 - Run `grind build`. (Don't have `grind`? Install it using `pub global activate grinder`.)
 - Update the `changelog.md` file.
 

@@ -11,9 +11,6 @@ final Directory destDir = Directory('lib');
 
 main(List<String> args) => grind(args);
 
-@Task('Update / install a new version of the codemirror library')
-install() => run('bower', arguments: ['install']);
-
 @Task('Copy the codemirror files from third_party/ into lib/')
 build() {
   // Copy codemirror.js.

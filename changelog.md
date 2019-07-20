@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.8
+- update to CodeMirror 5.48.2
+
 ## 0.5.7
 - update to CodeMirror 5.48.0
 

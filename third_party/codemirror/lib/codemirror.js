@@ -817,8 +817,10 @@
     return this.pos > start
   };
   StringStream.prototype.eatSpace = function () {
+      var this$1 = this;
+
     var start = this.pos;
-    while (/[\s\u00a0]/.test(this.string.charAt(this.pos))) { ++this.pos; }
+    while (/[\s\u00a0]/.test(this.string.charAt(this.pos))) { ++this$1.pos; }
     return this.pos > start
   };
   StringStream.prototype.skipToEnd = function () {this.pos = this.string.length;};
@@ -1014,9 +1016,11 @@
   };
 
   Context.prototype.baseToken = function (n) {
+      var this$1 = this;
+
     if (!this.baseTokens) { return null }
     while (this.baseTokens[this.baseTokenPos] <= n)
-      { this.baseTokenPos += 2; }
+      { this$1.baseTokenPos += 2; }
     var type = this.baseTokens[this.baseTokenPos + 1];
     return {type: type && type.replace(/( |^)overlay .*/, ""),
             size: this.baseTokens[this.baseTokenPos] - n}
@@ -3996,8 +4000,10 @@
       { this.events.push(arguments); }
   };
   DisplayUpdate.prototype.finish = function () {
+      var this$1 = this;
+
     for (var i = 0; i < this.events.length; i++)
-      { signal.apply(null, this.events[i]); }
+      { signal.apply(null, this$1.events[i]); }
   };
 
   function maybeClipScrollbars(cm) {
@@ -4529,32 +4535,40 @@
   Selection.prototype.primary = function () { return this.ranges[this.primIndex] };
 
   Selection.prototype.equals = function (other) {
+      var this$1 = this;
+
     if (other == this) { return true }
     if (other.primIndex != this.primIndex || other.ranges.length != this.ranges.length) { return false }
     for (var i = 0; i < this.ranges.length; i++) {
-      var here = this.ranges[i], there = other.ranges[i];
+      var here = this$1.ranges[i], there = other.ranges[i];
       if (!equalCursorPos(here.anchor, there.anchor) || !equalCursorPos(here.head, there.head)) { return false }
     }
     return true
   };
 
   Selection.prototype.deepCopy = function () {
+      var this$1 = this;
+
     var out = [];
     for (var i = 0; i < this.ranges.length; i++)
-      { out[i] = new Range(copyPos(this.ranges[i].anchor), copyPos(this.ranges[i].head)); }
+      { out[i] = new Range(copyPos(this$1.ranges[i].anchor), copyPos(this$1.ranges[i].head)); }
     return new Selection(out, this.primIndex)
   };
 
   Selection.prototype.somethingSelected = function () {
+      var this$1 = this;
+
     for (var i = 0; i < this.ranges.length; i++)
-      { if (!this.ranges[i].empty()) { return true } }
+      { if (!this$1.ranges[i].empty()) { return true } }
     return false
   };
 
   Selection.prototype.contains = function (pos, end) {
+      var this$1 = this;
+
     if (!end) { end = pos; }
     for (var i = 0; i < this.ranges.length; i++) {
-      var range = this.ranges[i];
+      var range = this$1.ranges[i];
       if (cmp(end, range.from()) >= 0 && cmp(pos, range.to()) <= 0)
         { return i }
     }
@@ -5050,9 +5064,11 @@
     var obj = {
       ranges: sel.ranges,
       update: function(ranges) {
+        var this$1 = this;
+
         this.ranges = [];
         for (var i = 0; i < ranges.length; i++)
-          { this.ranges[i] = new Range(clipPos(doc, ranges[i].anchor),
+          { this$1.ranges[i] = new Range(clipPos(doc, ranges[i].anchor),
                                      clipPos(doc, ranges[i].head)); }
       },
       origin: options && options.origin
@@ -5536,11 +5552,13 @@
   // See also http://marijnhaverbeke.nl/blog/codemirror-line-tree.html
 
   function LeafChunk(lines) {
+    var this$1 = this;
+
     this.lines = lines;
     this.parent = null;
     var height = 0;
     for (var i = 0; i < lines.length; ++i) {
-      lines[i].parent = this;
+      lines[i].parent = this$1;
       height += lines[i].height;
     }
     this.height = height;
@@ -5551,9 +5569,11 @@
 
     // Remove the n lines at offset 'at'.
     removeInner: function(at, n) {
+      var this$1 = this;
+
       for (var i = at, e = at + n; i < e; ++i) {
-        var line = this.lines[i];
-        this.height -= line.height;
+        var line = this$1.lines[i];
+        this$1.height -= line.height;
         cleanUpLine(line);
         signalLater(line, "delete");
       }
@@ -5568,25 +5588,31 @@
     // Insert the given array of lines at offset 'at', count them as
     // having the given height.
     insertInner: function(at, lines, height) {
+      var this$1 = this;
+
       this.height += height;
       this.lines = this.lines.slice(0, at).concat(lines).concat(this.lines.slice(at));
-      for (var i = 0; i < lines.length; ++i) { lines[i].parent = this; }
+      for (var i = 0; i < lines.length; ++i) { lines[i].parent = this$1; }
     },
 
     // Used to iterate over a part of the tree.
     iterN: function(at, n, op) {
+      var this$1 = this;
+
       for (var e = at + n; at < e; ++at)
-        { if (op(this.lines[at])) { return true } }
+        { if (op(this$1.lines[at])) { return true } }
     }
   };
 
   function BranchChunk(children) {
+    var this$1 = this;
+
     this.children = children;
     var size = 0, height = 0;
     for (var i = 0; i < children.length; ++i) {
       var ch = children[i];
       size += ch.chunkSize(); height += ch.height;
-      ch.parent = this;
+      ch.parent = this$1;
     }
     this.size = size;
     this.height = height;
@@ -5597,14 +5623,16 @@
     chunkSize: function() { return this.size },
 
     removeInner: function(at, n) {
+      var this$1 = this;
+
       this.size -= n;
       for (var i = 0; i < this.children.length; ++i) {
-        var child = this.children[i], sz = child.chunkSize();
+        var child = this$1.children[i], sz = child.chunkSize();
         if (at < sz) {
           var rm = Math.min(n, sz - at), oldHeight = child.height;
           child.removeInner(at, rm);
-          this.height -= oldHeight - child.height;
-          if (sz == rm) { this.children.splice(i--, 1); child.parent = null; }
+          this$1.height -= oldHeight - child.height;
+          if (sz == rm) { this$1.children.splice(i--, 1); child.parent = null; }
           if ((n -= rm) == 0) { break }
           at = 0;
         } else { at -= sz; }
@@ -5621,14 +5649,18 @@
     },
 
     collapse: function(lines) {
-      for (var i = 0; i < this.children.length; ++i) { this.children[i].collapse(lines); }
+      var this$1 = this;
+
+      for (var i = 0; i < this.children.length; ++i) { this$1.children[i].collapse(lines); }
     },
 
     insertInner: function(at, lines, height) {
+      var this$1 = this;
+
       this.size += lines.length;
       this.height += height;
       for (var i = 0; i < this.children.length; ++i) {
-        var child = this.children[i], sz = child.chunkSize();
+        var child = this$1.children[i], sz = child.chunkSize();
         if (at <= sz) {
           child.insertInner(at, lines, height);
           if (child.lines && child.lines.length > 50) {
@@ -5638,11 +5670,11 @@
             for (var pos = remaining; pos < child.lines.length;) {
               var leaf = new LeafChunk(child.lines.slice(pos, pos += 25));
               child.height -= leaf.height;
-              this.children.splice(++i, 0, leaf);
-              leaf.parent = this;
+              this$1.children.splice(++i, 0, leaf);
+              leaf.parent = this$1;
             }
             child.lines = child.lines.slice(0, remaining);
-            this.maybeSpill();
+            this$1.maybeSpill();
           }
           break
         }
@@ -5674,8 +5706,10 @@
     },
 
     iterN: function(at, n, op) {
+      var this$1 = this;
+
       for (var i = 0; i < this.children.length; ++i) {
-        var child = this.children[i], sz = child.chunkSize();
+        var child = this$1.children[i], sz = child.chunkSize();
         if (at < sz) {
           var used = Math.min(n, sz - at);
           if (child.iterN(at, used, op)) { return true }
@@ -5689,16 +5723,20 @@
   // Line widgets are block elements displayed above or below a line.
 
   var LineWidget = function(doc, node, options) {
+    var this$1 = this;
+
     if (options) { for (var opt in options) { if (options.hasOwnProperty(opt))
-      { this[opt] = options[opt]; } } }
+      { this$1[opt] = options[opt]; } } }
     this.doc = doc;
     this.node = node;
   };
 
   LineWidget.prototype.clear = function () {
+      var this$1 = this;
+
     var cm = this.doc.cm, ws = this.line.widgets, line = this.line, no = lineNo(line);
     if (no == null || !ws) { return }
-    for (var i = 0; i < ws.length; ++i) { if (ws[i] == this) { ws.splice(i--, 1); } }
+    for (var i = 0; i < ws.length; ++i) { if (ws[i] == this$1) { ws.splice(i--, 1); } }
     if (!ws.length) { line.widgets = null; }
     var height = widgetHeight(this);
     updateLineHeight(line, Math.max(0, line.height - height));
@@ -5781,6 +5819,8 @@
 
   // Clear the marker.
   TextMarker.prototype.clear = function () {
+      var this$1 = this;
+
     if (this.explicitlyCleared) { return }
     var cm = this.doc.cm, withOp = cm && !cm.curOp;
     if (withOp) { startOperation(cm); }
@@ -5790,19 +5830,19 @@
     }
     var min = null, max = null;
     for (var i = 0; i < this.lines.length; ++i) {
-      var line = this.lines[i];
-      var span = getMarkedSpanFor(line.markedSpans, this);
-      if (cm && !this.collapsed) { regLineChange(cm, lineNo(line), "text"); }
+      var line = this$1.lines[i];
+      var span = getMarkedSpanFor(line.markedSpans, this$1);
+      if (cm && !this$1.collapsed) { regLineChange(cm, lineNo(line), "text"); }
       else if (cm) {
         if (span.to != null) { max = lineNo(line); }
         if (span.from != null) { min = lineNo(line); }
       }
       line.markedSpans = removeMarkedSpan(line.markedSpans, span);
-      if (span.from == null && this.collapsed && !lineIsHidden(this.doc, line) && cm)
+      if (span.from == null && this$1.collapsed && !lineIsHidden(this$1.doc, line) && cm)
         { updateLineHeight(line, textHeight(cm.display)); }
     }
     if (cm && this.collapsed && !cm.options.lineWrapping) { for (var i$1 = 0; i$1 < this.lines.length; ++i$1) {
-      var visual = visualLine(this.lines[i$1]), len = lineLength(visual);
+      var visual = visualLine(this$1.lines[i$1]), len = lineLength(visual);
       if (len > cm.display.maxLineLength) {
         cm.display.maxLine = visual;
         cm.display.maxLineLength = len;
@@ -5828,11 +5868,13 @@
   // Pos objects returned contain a line object, rather than a line
   // number (used to prevent looking up the same line twice).
   TextMarker.prototype.find = function (side, lineObj) {
+      var this$1 = this;
+
     if (side == null && this.type == "bookmark") { side = 1; }
     var from, to;
     for (var i = 0; i < this.lines.length; ++i) {
-      var line = this.lines[i];
-      var span = getMarkedSpanFor(line.markedSpans, this);
+      var line = this$1.lines[i];
+      var span = getMarkedSpanFor(line.markedSpans, this$1);
       if (span.from != null) {
         from = Pos(lineObj ? line : lineNo(line), span.from);
         if (side == -1) { return from }
@@ -5966,17 +6008,21 @@
   // implemented as a meta-marker-object controlling multiple normal
   // markers.
   var SharedTextMarker = function(markers, primary) {
+    var this$1 = this;
+
     this.markers = markers;
     this.primary = primary;
     for (var i = 0; i < markers.length; ++i)
-      { markers[i].parent = this; }
+      { markers[i].parent = this$1; }
   };
 
   SharedTextMarker.prototype.clear = function () {
+      var this$1 = this;
+
     if (this.explicitlyCleared) { return }
     this.explicitlyCleared = true;
     for (var i = 0; i < this.markers.length; ++i)
-      { this.markers[i].clear(); }
+      { this$1.markers[i].clear(); }
     signalLater(this, "clear");
   };
 
@@ -6146,11 +6192,13 @@
       extendSelections(this, clipPosArray(this, heads), options);
     }),
     setSelections: docMethodOp(function(ranges, primary, options) {
+      var this$1 = this;
+
       if (!ranges.length) { return }
       var out = [];
       for (var i = 0; i < ranges.length; i++)
-        { out[i] = new Range(clipPos(this, ranges[i].anchor),
-                           clipPos(this, ranges[i].head)); }
+        { out[i] = new Range(clipPos(this$1, ranges[i].anchor),
+                           clipPos(this$1, ranges[i].head)); }
       if (primary == null) { primary = Math.min(ranges.length - 1, this.sel.primIndex); }
       setSelection(this, normalizeSelection(this.cm, out, primary), options);
     }),
@@ -6161,19 +6209,23 @@
     }),
 
     getSelection: function(lineSep) {
+      var this$1 = this;
+
       var ranges = this.sel.ranges, lines;
       for (var i = 0; i < ranges.length; i++) {
-        var sel = getBetween(this, ranges[i].from(), ranges[i].to());
+        var sel = getBetween(this$1, ranges[i].from(), ranges[i].to());
         lines = lines ? lines.concat(sel) : sel;
       }
       if (lineSep === false) { return lines }
       else { return lines.join(lineSep || this.lineSeparator()) }
     },
     getSelections: function(lineSep) {
+      var this$1 = this;
+
       var parts = [], ranges = this.sel.ranges;
       for (var i = 0; i < ranges.length; i++) {
-        var sel = getBetween(this, ranges[i].from(), ranges[i].to());
-        if (lineSep !== false) { sel = sel.join(lineSep || this.lineSeparator()); }
+        var sel = getBetween(this$1, ranges[i].from(), ranges[i].to());
+        if (lineSep !== false) { sel = sel.join(lineSep || this$1.lineSeparator()); }
         parts[i] = sel;
       }
       return parts
@@ -6185,14 +6237,16 @@
       this.replaceSelections(dup, collapse, origin || "+input");
     },
     replaceSelections: docMethodOp(function(code, collapse, origin) {
+      var this$1 = this;
+
       var changes = [], sel = this.sel;
       for (var i = 0; i < sel.ranges.length; i++) {
         var range$$1 = sel.ranges[i];
-        changes[i] = {from: range$$1.from(), to: range$$1.to(), text: this.splitLines(code[i]), origin: origin};
+        changes[i] = {from: range$$1.from(), to: range$$1.to(), text: this$1.splitLines(code[i]), origin: origin};
       }
       var newSel = collapse && collapse != "end" && computeReplacedSel(this, changes, collapse);
       for (var i$1 = changes.length - 1; i$1 >= 0; i$1--)
-        { makeChange(this, changes[i$1]); }
+        { makeChange(this$1, changes[i$1]); }
       if (newSel) { setSelectionReplaceHistory(this, newSel); }
       else if (this.cm) { ensureCursorVisible(this.cm); }
     }),
@@ -6403,13 +6457,15 @@
       return copy
     },
     unlinkDoc: function(other) {
+      var this$1 = this;
+
       if (other instanceof CodeMirror) { other = other.doc; }
       if (this.linked) { for (var i = 0; i < this.linked.length; ++i) {
-        var link = this.linked[i];
+        var link = this$1.linked[i];
         if (link.doc != other) { continue }
-        this.linked.splice(i, 1);
-        other.unlinkDoc(this);
-        detachSharedMarkers(findSharedMarkers(this));
+        this$1.linked.splice(i, 1);
+        other.unlinkDoc(this$1);
+        detachSharedMarkers(findSharedMarkers(this$1));
         break
       } }
       // If the histories were shared, split them again
@@ -7830,10 +7886,10 @@
       { onBlur(this); }
 
     for (var opt in optionHandlers) { if (optionHandlers.hasOwnProperty(opt))
-      { optionHandlers[opt](this, options[opt], Init); } }
+      { optionHandlers[opt](this$1, options[opt], Init); } }
     maybeUpdateLineNumberWidth(this);
     if (options.finishInit) { options.finishInit(this); }
-    for (var i = 0; i < initHooks.length; ++i) { initHooks[i](this); }
+    for (var i = 0; i < initHooks.length; ++i) { initHooks[i](this$1); }
     endOperation(this);
     // Suppress optimizelegibility in Webkit, since it breaks text
     // measuring on line wrapping boundaries.
@@ -8197,13 +8253,15 @@
         regChange(this);
       }),
       removeOverlay: methodOp(function(spec) {
+        var this$1 = this;
+
         var overlays = this.state.overlays;
         for (var i = 0; i < overlays.length; ++i) {
           var cur = overlays[i].modeSpec;
           if (cur == spec || typeof spec == "string" && cur.name == spec) {
             overlays.splice(i, 1);
-            this.state.modeGen++;
-            regChange(this);
+            this$1.state.modeGen++;
+            regChange(this$1);
             return
           }
         }
@@ -8217,22 +8275,24 @@
         if (isLine(this.doc, n)) { indentLine(this, n, dir, aggressive); }
       }),
       indentSelection: methodOp(function(how) {
+        var this$1 = this;
+
         var ranges = this.doc.sel.ranges, end = -1;
         for (var i = 0; i < ranges.length; i++) {
           var range$$1 = ranges[i];
           if (!range$$1.empty()) {
             var from = range$$1.from(), to = range$$1.to();
             var start = Math.max(end, from.line);
-            end = Math.min(this.lastLine(), to.line - (to.ch ? 0 : 1)) + 1;
+            end = Math.min(this$1.lastLine(), to.line - (to.ch ? 0 : 1)) + 1;
             for (var j = start; j < end; ++j)
-              { indentLine(this, j, how); }
-            var newRanges = this.doc.sel.ranges;
+              { indentLine(this$1, j, how); }
+            var newRanges = this$1.doc.sel.ranges;
             if (from.ch == 0 && ranges.length == newRanges.length && newRanges[i].from().ch > 0)
-              { replaceOneSelection(this.doc, i, new Range(from, newRanges[i].to()), sel_dontScroll); }
+              { replaceOneSelection(this$1.doc, i, new Range(from, newRanges[i].to()), sel_dontScroll); }
           } else if (range$$1.head.line > end) {
-            indentLine(this, range$$1.head.line, how, true);
+            indentLine(this$1, range$$1.head.line, how, true);
             end = range$$1.head.line;
-            if (i == this.doc.sel.primIndex) { ensureCursorVisible(this); }
+            if (i == this$1.doc.sel.primIndex) { ensureCursorVisible(this$1); }
           }
         }
       }),
@@ -8274,6 +8334,8 @@
       },
 
       getHelpers: function(pos, type) {
+        var this$1 = this;
+
         var found = [];
         if (!helpers.hasOwnProperty(type)) { return found }
         var help = helpers[type], mode = this.getModeAt(pos);
@@ -8291,7 +8353,7 @@
         }
         for (var i$1 = 0; i$1 < help._global.length; i$1++) {
           var cur = help._global[i$1];
-          if (cur.pred(mode, this) && indexOf(found, cur.val) == -1)
+          if (cur.pred(mode, this$1) && indexOf(found, cur.val) == -1)
             { found.push(cur.val); }
         }
         return found
@@ -8391,11 +8453,13 @@
       triggerElectric: methodOp(function(text) { triggerElectric(this, text); }),
 
       findPosH: function(from, amount, unit, visually) {
+        var this$1 = this;
+
         var dir = 1;
         if (amount < 0) { dir = -1; amount = -amount; }
         var cur = clipPos(this.doc, from);
         for (var i = 0; i < amount; ++i) {
-          cur = findPosH(this.doc, cur, dir, unit, visually);
+          cur = findPosH(this$1.doc, cur, dir, unit, visually);
           if (cur.hitSide) { break }
         }
         return cur
@@ -8424,14 +8488,16 @@
       }),
 
       findPosV: function(from, amount, unit, goalColumn) {
+        var this$1 = this;
+
         var dir = 1, x = goalColumn;
         if (amount < 0) { dir = -1; amount = -amount; }
         var cur = clipPos(this.doc, from);
         for (var i = 0; i < amount; ++i) {
-          var coords = cursorCoords(this, cur, "div");
+          var coords = cursorCoords(this$1, cur, "div");
           if (x == null) { x = coords.left; }
           else { coords.left = x; }
-          cur = findPosV(this, coords, dir, unit);
+          cur = findPosV(this$1, coords, dir, unit);
           if (cur.hitSide) { break }
         }
         return cur
@@ -9689,7 +9755,7 @@
 
   addLegacyProps(CodeMirror);
 
-  CodeMirror.version = "5.48.3";
+  CodeMirror.version = "5.48.2";
 
   return CodeMirror;
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.9-alpha
+- update to CodeMirror 5.48.2+1 (pre-release) 
+
 ## 0.5.8
 - update to CodeMirror 5.48.2
 

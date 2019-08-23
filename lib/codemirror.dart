@@ -1124,7 +1124,7 @@ class TextMarker extends ProxyHolder {
     if (result is! JsObject) return null;
 
     try {
-      if (result is Map) {
+      if (result is JsObject && result.hasProperty('from')) {
         return [
           Position.fromProxy(result['from']),
           Position.fromProxy(result['to'])

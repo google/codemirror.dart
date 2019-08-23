@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.10
+- Fix bug in TextMarker.find() method introduced by Dart 2.0.
+
 ## 0.5.9
 - update to CodeMirror 5.48.4
 

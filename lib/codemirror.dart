@@ -1120,11 +1120,11 @@ class TextMarker extends ProxyHolder {
   /// the current position of the marked range, or `null` if the marker is no
   /// longer in the document. For a bookmark, this list will be length 1.
   List<Position> find() {
-    var result = call('find');
+    final result = call('find');
     if (result is! JsObject) return null;
 
     try {
-      if (result is JsObject && result.hasProperty('from')) {
+      if (result.hasProperty('from')) {
         return [
           Position.fromProxy(result['from']),
           Position.fromProxy(result['to'])

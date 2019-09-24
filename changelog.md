@@ -2,7 +2,7 @@
 
 ## 0.5.11
 - update to CodeMirror 5.49.0
-- refesh exposed list of themes
+- refresh exposed list of themes
 
 ## 0.5.10
 - fix bug in TextMarker.find() method introduced by Dart 2.0.

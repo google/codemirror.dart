@@ -9659,7 +9659,7 @@
         textarea.style.display = "";
         if (textarea.form) {
           off(textarea.form, "submit", save);
-          if (typeof textarea.form.submit == "function")
+          if (!options.leaveSubmitMethodAlone && typeof textarea.form.submit == "function")
             { textarea.form.submit = realSubmit; }
         }
       };
@@ -9758,7 +9758,7 @@
 
   addLegacyProps(CodeMirror);
 
-  CodeMirror.version = "5.48.4";
+  CodeMirror.version = "5.49.0";
 
   return CodeMirror;
 

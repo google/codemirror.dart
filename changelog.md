@@ -1,7 +1,11 @@
 # Changelog
 
+## 0.5.11
+- update to CodeMirror 5.49.0
+- refresh exposed list of themes
+
 ## 0.5.10
-- Fix bug in TextMarker.find() method introduced by Dart 2.0.
+- fix bug in TextMarker.find() method introduced by Dart 2.0.
 
 ## 0.5.9
 - update to CodeMirror 5.48.4

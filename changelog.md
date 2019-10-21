@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.12
+- update to CodeMirror 5.49.2
+
 ## 0.5.11
 - update to CodeMirror 5.49.0
 - refresh exposed list of themes

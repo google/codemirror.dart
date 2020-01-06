@@ -27,9 +27,9 @@ void main() {
   group('history', createHistoryTests);
 }
 
-createSimpleTests() {
+void createSimpleTests() {
   test('create', () {
-    CodeMirror editor = CodeMirror.fromElement(editorHost);
+    var editor = CodeMirror.fromElement(editorHost);
     expect(editor, isNotNull);
     expect(editorHost.parent, isNotNull);
     editor.dispose();
@@ -37,7 +37,7 @@ createSimpleTests() {
   });
 }
 
-createCodeMirrorStaticTests() {
+void createCodeMirrorStaticTests() {
   test('modes', () {
     expect(CodeMirror.MODES.length, greaterThanOrEqualTo(10));
   });
@@ -63,7 +63,7 @@ createCodeMirrorStaticTests() {
   });
 }
 
-createCodeMirrorTests() {
+void createCodeMirrorTests() {
   CodeMirror editor;
 
   setUp(() {
@@ -87,7 +87,7 @@ createCodeMirrorTests() {
   });
 
   test('getLine', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     doc.setValue('one\ntwo\nthree');
     expect(editor.getLine(0), 'one');
     expect(editor.getLine(1), 'two');
@@ -95,7 +95,7 @@ createCodeMirrorTests() {
   });
 }
 
-createDocTests() {
+void createDocTests() {
   CodeMirror editor;
 
   setUp(() {
@@ -109,14 +109,14 @@ createDocTests() {
   });
 
   test('getValue / getValue', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     expect(doc.getValue(), '');
     doc.setValue('foo bar');
     expect(doc.getValue(), 'foo bar');
   });
 
   test('getLine', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     doc.setValue('one\ntwo\nthree');
     expect(doc.getLine(0), 'one');
     expect(doc.getLine(1), 'two');
@@ -124,13 +124,13 @@ createDocTests() {
   });
 
   test('getMode', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     expect(doc.getMode()['name'], 'clike');
     expect(doc.getModeName(), 'clike');
   });
 
   test('eachLine', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     doc.setValue('one\ntwo\nthree');
     var lines = [];
     doc.eachLine((LineHandle line) {
@@ -143,7 +143,7 @@ createDocTests() {
   });
 
   test('extendSelection', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     doc.setValue('foo bar');
 
     // Extending flag is off.
@@ -160,7 +160,7 @@ createDocTests() {
   });
 
   test('extendSelections', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     doc.setValue('foo bar');
 
     doc.addSelection(anchor: Position(0, 0));
@@ -171,7 +171,7 @@ createDocTests() {
   });
 
   test('extendSelectionsBy', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     doc.setValue('foo bar');
 
     doc.addSelection(anchor: Position(0, 0));
@@ -184,11 +184,11 @@ createDocTests() {
   });
 }
 
-createHtmlDocTests() {
+void createHtmlDocTests() {
   CodeMirror editor;
 
   setUp(() {
-    editor = CodeMirror.fromElement(editorHost, options: {"mode": "text/html"});
+    editor = CodeMirror.fromElement(editorHost, options: {'mode': 'text/html'});
   });
 
   tearDown(() {
@@ -197,7 +197,7 @@ createHtmlDocTests() {
   });
 
   test('getModeAt', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     doc.setValue('<style>\np {color: black;}\n</style>');
     var mode = doc.getModeAt(Position(2, 0));
     expect(mode['name'], 'css');
@@ -205,7 +205,7 @@ createHtmlDocTests() {
   });
 }
 
-createHistoryTests() {
+void createHistoryTests() {
   CodeMirror editor;
 
   setUp(() {
@@ -218,7 +218,7 @@ createHistoryTests() {
   });
 
   test('undo / redo', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     _expectHistory(doc, 0, 0);
     doc.replaceRange('foo', doc.getCursor());
     _expectHistory(doc, 1, 0);
@@ -229,7 +229,7 @@ createHistoryTests() {
   });
 
   test('clearHistory', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     doc.replaceRange('foo', doc.getCursor());
     _expectHistory(doc, 1, 0);
     doc.clearHistory();
@@ -237,7 +237,7 @@ createHistoryTests() {
   });
 
   test('getHistory', () {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     doc.setValue('one\ntwo\nthree');
     expect(doc.getHistory(), isNotNull);
   });

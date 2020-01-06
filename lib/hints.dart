@@ -54,7 +54,7 @@ class Hints {
     _init();
 
     CodeMirror.registerHelper('hint', mode, (editor, options) {
-      HintResults results =
+      var results =
           helper(CodeMirror.fromJsObject(editor), HintsOptions(options));
       return results == null ? null : results.toProxy();
     });
@@ -63,9 +63,8 @@ class Hints {
   static void registerHintsHelperAsync(String mode, HintsHelperAsync helper) {
     _init();
 
-    JsFunction function =
-        JsFunction.withThis((win, editor, showHints, [options]) {
-      Future<HintResults> results = helper(
+    var function = JsFunction.withThis((win, editor, showHints, [options]) {
+      var results = helper(
           CodeMirror.fromJsObject(editor), HintsOptions.fromProxy(options));
 
       results.then((HintResults r) {
@@ -82,11 +81,9 @@ class Hints {
     var pos = editor.callMethod('getCursor');
     JsObject helper = editor.callMethod('getHelper', [pos, 'hint']);
 
-    if (helper == null) {
-      helper = _cm['hint']['auto'];
-    }
+    helper ??= _cm['hint']['auto'];
 
-    Map options = {'hint': helper};
+    var options = {'hint': helper};
     if (opt != null) {
       options.addAll(opt);
     }
@@ -124,7 +121,7 @@ class HintsOptions extends ProxyHolder {
 
   bool _boolOption(String name, bool defaultValue) {
     bool val = jsProxy[name];
-    return val != null ? val : defaultValue;
+    return val ?? defaultValue;
   }
 }
 
@@ -137,10 +134,10 @@ class HintResults {
   JsObject _obj;
 
   HintResults.fromStrings(List<String> results, this.from, this.to)
-      : this._results = results;
+      : _results = results;
 
   HintResults.fromHints(List<HintResult> results, this.from, this.to)
-      : this._results = results;
+      : _results = results;
 
   /// The list of code completion results. This list is either a list of
   /// strings or a list of [HintResult]s.
@@ -148,7 +145,7 @@ class HintResults {
 
   /// Fired when the pop-up is shown.
   void registerOnShown(Function onShown) {
-    Hints._cm.callMethod("on", [toProxy(), "shown", onShown]);
+    Hints._cm.callMethod('on', [toProxy(), 'shown', onShown]);
   }
 
   /// Fired when a completion is selected. Passed the completion value and the
@@ -157,9 +154,9 @@ class HintResults {
   /// The completion [HintResult] is not guaranteed to be the same object
   /// instance as the one provided by the `HintResults`.
   void registerOnSelect(HintsResultsSelectCallback onSelect) {
-    Hints._cm.callMethod("on", [
+    Hints._cm.callMethod('on', [
       toProxy(),
-      "select",
+      'select',
       (completion, element) {
         if (completion is String) {
           onSelect(HintResult(completion), element);
@@ -175,9 +172,9 @@ class HintResults {
   /// The completion [HintResult] is not guaranteed to be the same object
   /// instance as the one provided by the `HintResults`.
   void registerOnPick(HintsResultsPickCallback onPick) {
-    Hints._cm.callMethod("on", [
+    Hints._cm.callMethod('on', [
       toProxy(),
-      "pick",
+      'pick',
       (completion) {
         if (completion is String) {
           onPick(HintResult(completion));
@@ -190,21 +187,19 @@ class HintResults {
 
   /// Fired when the completion is finished.
   void registerOnClose(Function onShown) {
-    Hints._cm.callMethod("on", [toProxy(), "close", onShown]);
+    Hints._cm.callMethod('on', [toProxy(), 'close', onShown]);
   }
 
   void registerOnUpdate(Function onUpdate) {
-    Hints._cm.callMethod("on", [toProxy(), "update", onUpdate]);
+    Hints._cm.callMethod('on', [toProxy(), 'update', onUpdate]);
   }
 
   JsObject toProxy() {
-    if (_obj == null) {
-      _obj = jsify({
-        'list': _results.map((r) => r is HintResult ? r.toProxy() : r).toList(),
-        'from': from.toProxy(),
-        'to': to.toProxy()
-      });
-    }
+    _obj ??= jsify({
+      'list': _results.map((r) => r is HintResult ? r.toProxy() : r).toList(),
+      'from': from.toProxy(),
+      'to': to.toProxy()
+    });
 
     return _obj;
   }
@@ -260,7 +255,7 @@ class HintResult {
         hintApplier = null;
 
   JsObject toProxy() {
-    Map m = {'text': text};
+    var m = <String,dynamic>{'text': text};
     if (displayText != null) m['displayText'] = displayText;
     if (className != null) m['className'] = className;
     if (from != null) m['from'] = from.toProxy();
@@ -268,8 +263,8 @@ class HintResult {
 
     if (hintApplier != null) {
       m['hint'] = (cm, data, completion) {
-        Position from = _createPos(data['from']);
-        Position to = _createPos(data['to']);
+        var from = _createPos(data['from']);
+        var to = _createPos(data['to']);
         hintApplier(CodeMirror.fromJsObject(cm), this, from, to);
       };
     }
@@ -283,6 +278,7 @@ class HintResult {
     return jsify(m);
   }
 
+  @override
   String toString() => '[${text}]';
 
   static Position _createPos(JsObject obj) {

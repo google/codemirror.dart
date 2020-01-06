@@ -45,45 +45,43 @@ class JsEventListener<T> {
   });
 
   Stream<T> get stream {
-    if (_controller == null) {
-      _controller = StreamController.broadcast(
-          onListen: () {
-            if (argCount == 4) {
-              _callback = _proxy.callMethod('on', [
-                _name,
-                (obj, a, b, c) {
-                  _controller.add(cvtEvent == null ? a : cvtEvent(a, b, c));
-                }
-              ]);
-            } else if (argCount == 3) {
-              _callback = _proxy.callMethod('on', [
-                _name,
-                (obj, a, b) {
-                  _controller.add(cvtEvent == null ? a : cvtEvent(a, b));
-                }
-              ]);
-            } else if (argCount == 2) {
-              _callback = _proxy.callMethod('on', [
-                _name,
-                (obj, a) {
-                  _controller.add(cvtEvent == null ? a : cvtEvent(a));
-                }
-              ]);
-            } else {
-              _callback = _proxy.callMethod('on', [
-                _name,
-                (obj) {
-                  _controller.add(cvtEvent == null ? null : cvtEvent(obj));
-                }
-              ]);
-            }
-          },
-          onCancel: () {
-            _proxy.callMethod('off', [_name, _callback]);
-            _callback = null;
-          },
-          sync: true);
-    }
+    _controller ??= StreamController.broadcast(
+        onListen: () {
+          if (argCount == 4) {
+            _callback = _proxy.callMethod('on', [
+              _name,
+              (obj, a, b, c) {
+                _controller.add(cvtEvent == null ? a : cvtEvent(a, b, c));
+              }
+            ]);
+          } else if (argCount == 3) {
+            _callback = _proxy.callMethod('on', [
+              _name,
+              (obj, a, b) {
+                _controller.add(cvtEvent == null ? a : cvtEvent(a, b));
+              }
+            ]);
+          } else if (argCount == 2) {
+            _callback = _proxy.callMethod('on', [
+              _name,
+              (obj, a) {
+                _controller.add(cvtEvent == null ? a : cvtEvent(a));
+              }
+            ]);
+          } else {
+            _callback = _proxy.callMethod('on', [
+              _name,
+              (obj) {
+                _controller.add(cvtEvent == null ? null : cvtEvent(obj));
+              }
+            ]);
+          }
+        },
+        onCancel: () {
+          _proxy.callMethod('off', [_name, _callback]);
+          _callback = null;
+        },
+        sync: true);
     return _controller.stream;
   }
 

@@ -17,7 +17,7 @@ class Panel {
   static PanelContainer addPanel(CodeMirror editor, Element element,
       {bool below}) {
     if (below != null && below) {
-      Map options = {'position': 'bottom'};
+      var options = {'position': 'bottom'};
       return PanelContainer._(
           editor.callArgs('addPanel', [element, jsify(options)]));
     } else {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.13
+- update to CodeMirror 5.50.2
+- Add a `className` option to `addLineWidget`
+- New themes: [ayu-dark](https://codemirror.net/demo/theme.html#ayu-dark) and
+ [ayu-mirage](https://codemirror.net/demo/theme.html#ayu-mirage)
+
+
 ## 0.5.12
 - update to CodeMirror 5.49.2
 

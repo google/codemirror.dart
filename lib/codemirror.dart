@@ -29,6 +29,8 @@ class CodeMirror extends ProxyHolder {
     'abcdef',
     'ambiance-mobile',
     'ambiance',
+    'ayu-dark',
+    'ayu-mirage',
     'base16-dark',
     'base16-light',
     'bespin',
@@ -386,12 +388,15 @@ class CodeMirror extends ProxyHolder {
   /// line. This option can be used to place it at a different position (zero for
   /// the top, N to put it after the Nth other widget). Note that this only has
   /// effect once, when the widget is created.
+  /// [className]: Add an extra CSS class name to the wrapper element created 
+  /// for the widget.
   LineWidget addLineWidget(dynamic line, Element node,
       {bool coverGutter,
       bool noHScroll,
       bool above,
       bool handleMouseEvents,
-      int insertAt}) {
+      int insertAt,
+      String className}) {
     var options = {};
 
     if (coverGutter != null) options['coverGutter'] = coverGutter;
@@ -401,6 +406,7 @@ class CodeMirror extends ProxyHolder {
       options['handleMouseEvents'] = handleMouseEvents;
     }
     if (insertAt != null) options['insertAt'] = insertAt;
+    if (className != null) options['className'] = className;
 
     var l = line is LineHandle ? line.jsProxy : line;
     return LineWidget(callArgs('addLineWidget', [l, node, jsify(options)]));

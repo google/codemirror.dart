@@ -98,7 +98,7 @@ class CodeMirror extends ProxyHolder {
 
   static JsObject get _cm => context['CodeMirror'];
 
-  static Map<JsObject, CodeMirror> _instances = {};
+  static final Map<JsObject, CodeMirror> _instances = {};
 
   static List<String> get MODES =>
       List.from(keys(_cm['modes']).where((modeName) => modeName != 'null'));
@@ -167,7 +167,7 @@ class CodeMirror extends ProxyHolder {
   }
 
   static JsObject _createFromTextArea(TextAreaElement textArea, Map options) {
-    List args = <dynamic>[textArea];
+    var args = <dynamic>[textArea];
     if (options != null) args.add(jsify(options));
     return _cm.callMethod('fromTextArea', args);
   }
@@ -238,9 +238,7 @@ class CodeMirror extends ProxyHolder {
 
   /// Retrieve the currently active document from an editor.
   Doc getDoc() {
-    if (_doc == null) {
-      _doc = Doc.fromProxy(call('getDoc'));
-    }
+    _doc ??= Doc.fromProxy(call('getDoc'));
     return _doc;
   }
 
@@ -399,7 +397,7 @@ class CodeMirror extends ProxyHolder {
       bool handleMouseEvents,
       int insertAt,
       String className}) {
-    Map options = {};
+    var options = {};
 
     if (coverGutter != null) options['coverGutter'] = coverGutter;
     if (noHScroll != null) options['noHScroll'] = noHScroll;
@@ -552,6 +550,7 @@ class CodeMirror extends ProxyHolder {
 
   /// If you create and discard a large number of `CodeMirror` instances, you
   /// should call [dispose] after finishing with each one.
+  @override
   void dispose() {
     super.dispose();
 
@@ -585,9 +584,7 @@ class Doc extends ProxyHolder {
   Doc.fromProxy(JsObject proxy) : super(proxy);
 
   CodeMirror getEditor() {
-    if (_editor == null) {
-      _editor = CodeMirror.fromJsObject(call('getEditor'));
-    }
+    _editor ??= CodeMirror.fromJsObject(call('getEditor'));
     return _editor;
   }
 
@@ -930,7 +927,7 @@ class Doc extends ProxyHolder {
       String css,
       String title,
       bool shared}) {
-    Map options = {};
+    var options = <String,dynamic>{};
 
     if (className != null) options['className'] = className;
     if (inclusiveLeft != null) options['inclusiveLeft'] = inclusiveLeft;
@@ -969,7 +966,7 @@ class Doc extends ProxyHolder {
   /// documents. By default, a marker appears only in its target document.
   TextMarker setBookmark(Position pos,
       {Element widget, bool insertLeft, bool shared}) {
-    Map options = {};
+    var options = <String,dynamic>{};
 
     if (widget != null) options['widget'] = widget;
     if (insertLeft != null) options['insertLeft'] = insertLeft;
@@ -1053,24 +1050,28 @@ class Position implements Comparable<Position> {
 
   JsObject toProxy() => jsify({'line': line, 'ch': ch});
 
-  operator ==(other) =>
+  @override
+  bool operator ==(other) =>
       other is Position && line == other.line && ch == other.ch;
 
+  @override
   int get hashCode => (line << 8 | ch).hashCode;
 
+  @override
   int compareTo(Position other) {
     if (line == other.line) return ch - other.ch;
     return line - other.line;
   }
 
-  operator <(Position other) => compareTo(other) < 0;
+  bool operator <(Position other) => compareTo(other) < 0;
 
-  operator <=(Position other) => compareTo(other) <= 0;
+  bool operator <=(Position other) => compareTo(other) <= 0;
 
-  operator >=(Position other) => compareTo(other) >= 0;
+  bool operator >=(Position other) => compareTo(other) >= 0;
 
-  operator >(Position other) => compareTo(other) > 0;
+  bool operator >(Position other) => compareTo(other) > 0;
 
+  @override
   String toString() => '[${line}:${ch}]';
 }
 
@@ -1112,11 +1113,14 @@ class Span {
   JsObject toProxy() =>
       jsify({'head': head.toProxy(), 'anchor': anchor.toProxy()});
 
-  operator ==(other) =>
+  @override
+  bool operator ==(other) =>
       other is Span && head == other.head && anchor == other.anchor;
 
+  @override
   int get hashCode => head.hashCode ^ anchor.hashCode;
 
+  @override
   String toString() => '${head}=>${anchor}]';
 }
 
@@ -1150,7 +1154,7 @@ class TextMarker extends ProxyHolder {
 
   /// Return the first (or only) position in this marker / bookmark.
   Position findStart() {
-    List<Position> positions = find();
+    var positions = find();
     return (positions == null || positions.isEmpty) ? null : positions.first;
   }
 
@@ -1223,6 +1227,7 @@ class Token {
         type = obj['type'],
         state = obj['state'];
 
+  @override
   String toString() => string;
 }
 
@@ -1262,15 +1267,17 @@ abstract class ProxyHolder {
     return _events[eventName].stream;
   }
 
+  @override
   int get hashCode => jsProxy.hashCode;
 
-  operator ==(other) => other is ProxyHolder && jsProxy == other.jsProxy;
+  @override
+  bool operator ==(other) => other is ProxyHolder && jsProxy == other.jsProxy;
 
   /// This method should be called if any events listeners were added to the
   /// object.
   void dispose() {
     if (_events.isNotEmpty) {
-      for (JsEventListener event in _events.values) {
+      for (var event in _events.values) {
         event.dispose();
       }
     }

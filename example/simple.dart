@@ -11,7 +11,7 @@ import 'package:codemirror/codemirror.dart';
 import 'package:codemirror/hints.dart';
 
 void main() {
-  Map options = {
+  var options = {
     'theme': 'zenburn',
     'continueComments': {'continueLineComment': false},
     'autoCloseTags': true,
@@ -23,37 +23,37 @@ void main() {
     }
   };
 
-  CodeMirror editor = CodeMirror.fromTextArea(querySelector('#textContainer'),
+  var editor = CodeMirror.fromTextArea(querySelector('#textContainer'),
       options: options);
 
-  querySelector('#version').text = "CodeMirror version ${CodeMirror.version}";
+  querySelector('#version').text = 'CodeMirror version ${CodeMirror.version}';
 
   Hints.registerHintsHelper('dart', _dartCompleter);
   Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
 
   // Theme control.
   SelectElement themeSelect = querySelector('#theme');
-  for (String theme in CodeMirror.THEMES) {
+  for (var theme in CodeMirror.THEMES) {
     themeSelect.children.add(OptionElement(value: theme)..text = theme);
     if (theme == editor.getTheme()) {
       themeSelect.selectedIndex = themeSelect.length - 1;
     }
   }
   themeSelect.onChange.listen((e) {
-    String themeName = themeSelect.options[themeSelect.selectedIndex].value;
+    var themeName = themeSelect.options[themeSelect.selectedIndex].value;
     editor.setTheme(themeName);
   });
 
   // Mode control.
   SelectElement modeSelect = querySelector('#mode');
-  for (String mode in CodeMirror.MODES) {
+  for (var mode in CodeMirror.MODES) {
     modeSelect.children.add(OptionElement(value: mode)..text = mode);
     if (mode == editor.getMode()) {
       modeSelect.selectedIndex = modeSelect.length - 1;
     }
   }
   modeSelect.onChange.listen((e) {
-    String modeName = modeSelect.options[modeSelect.selectedIndex].value;
+    var modeName = modeSelect.options[modeSelect.selectedIndex].value;
     editor.setMode(modeName);
   });
 
@@ -89,7 +89,7 @@ void main() {
   print(CodeMirror.COMMANDS);
 
   editor.onDoubleClick.listen((MouseEvent evt) {
-    Doc doc = editor.getDoc();
+    var doc = editor.getDoc();
     print('[${doc.getLine(doc.getCursor().line).trim()}]');
   });
 
@@ -100,22 +100,22 @@ void main() {
 }
 
 void _updateFooter(CodeMirror editor) {
-  Position pos = editor.getCursor();
-  int off = editor.getDoc().indexFromPos(pos);
-  String str = 'line ${pos.line} • column ${pos.ch} • offset ${off}' +
+  var pos = editor.getCursor();
+  var off = editor.getDoc().indexFromPos(pos);
+  var str = 'line ${pos.line} • column ${pos.ch} • offset ${off}' +
       (editor.getDoc().isClean() ? '' : ' • (modified)');
   querySelector('#footer').text = str;
 }
 
 HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
-  Position cur = editor.getCursor();
-  String word = _getCurrentWord(editor).toLowerCase();
-  List<HintResult> list = _numbers
+  var cur = editor.getCursor();
+  var word = _getCurrentWord(editor).toLowerCase();
+  var list = _numbers
       .where((s) => s.startsWith(word))
       .map((s) => HintResult(s))
       .toList();
 
-  HintResults results = HintResults.fromHints(list,
+  var results = HintResults.fromHints(list,
       Position(cur.line, cur.ch - word.length), Position(cur.line, cur.ch));
   results.registerOnShown(() => print('hints shown'));
   results.registerOnSelect((completion, element) {
@@ -140,9 +140,9 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
 
 Future<HintResults> _dartCompleterAsync(CodeMirror editor,
     [HintsOptions options]) {
-  Position cur = editor.getCursor();
-  String word = _getCurrentWord(editor).toLowerCase();
-  List<String> list = List.from(_numbers.where((s) => s.startsWith(word)));
+  var cur = editor.getCursor();
+  var word = _getCurrentWord(editor).toLowerCase();
+  var list = List.from(_numbers.where((s) => s.startsWith(word)));
 
   return Future.delayed(Duration(milliseconds: 200), () {
     return HintResults.fromStrings(list,
@@ -166,12 +166,12 @@ final List _numbers = [
 final RegExp _ids = RegExp(r'[a-zA-Z_0-9]');
 
 String _getCurrentWord(CodeMirror editor) {
-  Position cur = editor.getCursor();
-  String line = editor.getLine(cur.line);
-  StringBuffer buf = StringBuffer();
+  var cur = editor.getCursor();
+  var line = editor.getLine(cur.line);
+  var buf = StringBuffer();
 
-  for (int i = cur.ch - 1; i >= 0; i--) {
-    String c = line[i];
+  for (var i = cur.ch - 1; i >= 0; i--) {
+    var c = line[i];
     if (_ids.hasMatch(c)) {
       buf.write(c);
     } else {

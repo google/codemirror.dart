@@ -2,6 +2,7 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:grinder/grinder.dart';
@@ -9,12 +10,12 @@ import 'package:grinder/grinder.dart';
 final Directory srcDir = Directory('third_party/codemirror');
 final Directory destDir = Directory('lib');
 
-main(List<String> args) => grind(args);
+Future main(List<String> args) => grind(args);
 
 @Task('Copy the codemirror files from third_party/ into lib/')
-build() {
+void build() {
   // Copy codemirror.js.
-  String jsSource = _concatenateModes(srcDir);
+  var jsSource = _concatenateModes(srcDir);
   joinFile(destDir, ['codemirror.js']).writeAsStringSync(jsSource);
   //copy(joinFile(srcDir, ['lib', 'codemirror.js']), destDir);
 
@@ -35,19 +36,19 @@ build() {
 }
 
 @Task('Run the tests')
-test() {
+void test() {
   run('pub', arguments: ['run', 'test:test', '--platform=chrome']);
 }
 
 @Task('Delete all generated artifacts')
-clean() {
+void clean() {
   delete(joinFile(destDir, ['codemirror.js']));
   delete(joinFile(destDir, ['css', 'codemirror.css']));
   delete(joinFile(destDir, ['theme']));
 }
 
 String _concatenateModes(Directory dir) {
-  List<File> files = [];
+  var files = <File>[];
 
   // Read lib/codemirror.js.
   files.add(joinFile(dir, ['lib', 'codemirror.js']));
@@ -102,7 +103,7 @@ String _concatenateModes(Directory dir) {
 //  files.addAll(modeFiles);
 
   return files.map((File file) {
-    String header = "// ${fileName(file)}\n\n";
-    return header + file.readAsStringSync().trim() + "\n";
-  }).join("\n");
+    var header = '// ${fileName(file)}\n\n';
+    return header + file.readAsStringSync().trim() + '\n';
+  }).join('\n');
 }

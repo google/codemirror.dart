@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.14
+ - update to CodeMirror 5.52.0
+
 ## 0.5.13
 - update to CodeMirror 5.50.2
 - Add a `className` option to `addLineWidget`

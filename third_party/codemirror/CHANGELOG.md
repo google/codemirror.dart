@@ -1,3 +1,33 @@
+## 5.52.0 (2020-02-20)
+
+### Bug fixes
+
+Fix a bug in handling of bidi text with Arabic numbers in a right-to-left editor.
+
+Fix a crash when combining file drop with a `"beforeChange"` filter.
+
+Prevent issue when passing negative coordinates to `scrollTo`.
+
+### New features
+
+[lint](https://codemirror.net/doc/manual.html#addon_lint) and [tern](https://codemirror.net/demo/tern.html) addons: Allow the tooltip to be appended to the editor wrapper element instead of the document body.
+
+## 5.51.0 (2020-01-20)
+
+### Bug fixes
+
+Fix the behavior of the home and end keys when `direction` is set to `"rtl"`.
+
+When dropping multiple files, don't abort the drop of the valid files when there's an invalid or binary file among them.
+
+Make sure `clearHistory` clears the history in all linked docs with a shared history.
+
+[vim bindings](https://codemirror.net/demo/vim.html): Fix behavior of `'` and `` ` `` marks, fix `R` in visual mode.
+
+### New features
+
+[vim bindings](https://codemirror.net/demo/vim.html): Support `gi`, `gI`, and `gJ`.
+
 ## 5.50.2 (2020-01-01)
 
 ### Bug fixes

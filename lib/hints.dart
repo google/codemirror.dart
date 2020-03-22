@@ -255,7 +255,7 @@ class HintResult {
         hintApplier = null;
 
   JsObject toProxy() {
-    var m = <String,dynamic>{'text': text};
+    var m = <String, dynamic>{'text': text};
     if (displayText != null) m['displayText'] = displayText;
     if (className != null) m['className'] = className;
     if (from != null) m['from'] = from.toProxy();

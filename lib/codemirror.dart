@@ -388,7 +388,7 @@ class CodeMirror extends ProxyHolder {
   /// line. This option can be used to place it at a different position (zero for
   /// the top, N to put it after the Nth other widget). Note that this only has
   /// effect once, when the widget is created.
-  /// [className]: Add an extra CSS class name to the wrapper element created 
+  /// [className]: Add an extra CSS class name to the wrapper element created
   /// for the widget.
   LineWidget addLineWidget(dynamic line, Element node,
       {bool coverGutter,
@@ -927,7 +927,7 @@ class Doc extends ProxyHolder {
       String css,
       String title,
       bool shared}) {
-    var options = <String,dynamic>{};
+    var options = <String, dynamic>{};
 
     if (className != null) options['className'] = className;
     if (inclusiveLeft != null) options['inclusiveLeft'] = inclusiveLeft;
@@ -966,7 +966,7 @@ class Doc extends ProxyHolder {
   /// documents. By default, a marker appears only in its target document.
   TextMarker setBookmark(Position pos,
       {Element widget, bool insertLeft, bool shared}) {
-    var options = <String,dynamic>{};
+    var options = <String, dynamic>{};
 
     if (widget != null) options['widget'] = widget;
     if (insertLeft != null) options['insertLeft'] = insertLeft;

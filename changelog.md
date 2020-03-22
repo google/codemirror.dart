@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.15
+ - update to CodeMirror 5.52.2
+
 ## 0.5.14
  - update to CodeMirror 5.52.0
 

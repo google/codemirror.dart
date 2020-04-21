@@ -10,12 +10,13 @@ the updated [pub](https://pub.dartlang.org) package.
 - Download the latest zip ball from [codemirror.net/codemirror.zip](https://codemirror.net/codemirror.zip)
 - Replace the contents of `third_party/codemirror` with the content of the above download
 - Update the version number in the `README_.google` file.
-- Run `grind build`. (Don't have `grind`? Install it using `pub global activate grinder`.)
 - Update the `changelog.md` file.
+- Submit a PR with the changes.
 
 ## Publishing the package
 
-- `git pull`
+- `git pull` to get latest state after aforementioned PR is submitted.
+- Run `grind build`. (Don't have `grind`? Install it using `pub global activate grinder`.)
 - comment out the `# Ignore the codemirror copied resources.` lines in the `.gitignore` file
 - Verify the build with `pub publish --dry-run`
   - Confirm the `lib` directory contains

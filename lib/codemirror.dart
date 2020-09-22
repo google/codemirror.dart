@@ -4,7 +4,6 @@
 
 library codemirror;
 
-import 'dart:async';
 import 'dart:html';
 import 'dart:js';
 

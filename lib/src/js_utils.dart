@@ -5,7 +5,6 @@
 /// Utility methods and classes for working with JS interop.
 library codemirror.js_utils;
 
-import 'dart:async';
 import 'dart:convert' show jsonDecode;
 import 'dart:js';
 

@@ -1230,6 +1230,51 @@ class Token {
   String toString() => string;
 }
 
+/// A wrapper around the MergeView class.
+class MergeView extends ProxyHolder {
+  /// Create a new MergeView in the given element. See
+  /// https://codemirror.net/doc/manual.html#addon_merge for valid options values.
+  MergeView(Element element, Map options) : super(_create(element, options));
+
+  MergeView.fromProxy(JsObject proxy) : super(proxy);
+
+  static JsObject _create(Element element, Map options) {
+    return JsObject(
+        context['CodeMirror']['MergeView'], [element, jsify(options)]);
+  }
+
+  /// The reference to the edit property.
+  CodeMirror get edit => CodeMirror.fromJsObject(jsProxy['edit']);
+
+  /// The reference to the left property.
+  DiffView get left => DiffView.fromJsObject(jsProxy['left']);
+}
+
+/// A wrapper around the DiffView class.
+class DiffView extends ProxyHolder {
+  static final Map<JsObject, DiffView> _instances = {};
+
+  DiffView.fromProxy(JsObject proxy) : super(proxy);
+
+  factory DiffView.fromJsObject(JsObject object) {
+    if (_instances.containsKey(object)) {
+      return _instances[object];
+    } else {
+      return DiffView._fromJsObject(object);
+    }
+  }
+
+  DiffView._fromJsObject(JsObject object) : super(object) {
+    _instances[jsProxy] = this;
+  }
+
+  /// The reference to the edit property.
+  CodeMirror get edit => CodeMirror.fromJsObject(jsProxy['edit']);
+
+  /// The reference to the orig property.
+  CodeMirror get orig => CodeMirror.fromJsObject(jsProxy['orig']);
+}
+
 /// A parent class for objects that can hold references to JavaScript objects.
 /// It has convenience methods for invoking methods on the JavaScript proxy,
 /// a method to add event listeners to the proxy, and a [dispose] method.

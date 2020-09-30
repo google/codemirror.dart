@@ -25,6 +25,8 @@ void main() {
   group('Doc', createDocTests);
   group('HtmlDoc', createHtmlDocTests);
   group('history', createHistoryTests);
+
+  group('MergeView', createMergeViewTests);
 }
 
 void createSimpleTests() {
@@ -240,6 +242,48 @@ void createHistoryTests() {
     var doc = editor.getDoc();
     doc.setValue('one\ntwo\nthree');
     expect(doc.getHistory(), isNotNull);
+  });
+}
+
+void createMergeViewTests() {
+  MergeView mergeView;
+
+  final someMergeViewOptions = {
+    'value': 'AAAAAA',
+    'origLeft': 'BBBBBB',
+    'showDifferences': true,
+    'revertButtons': false,
+  };
+
+  setUp(() {
+    mergeView = MergeView(editorHost, someMergeViewOptions);
+  });
+
+  test('creates a MergeView class', () {
+    expect(mergeView, isA<MergeView>());
+  });
+
+  test('has correct properties', () {
+    expect(mergeView.edit, isA<CodeMirror>());
+    expect(mergeView.left, isA<DiffView>());
+  });
+
+  group(DiffView, () {
+    DiffView diffView;
+
+    setUp(() {
+      diffView = mergeView.left;
+    });
+
+    test('has correct properties', () {
+      expect(diffView.edit, isA<CodeMirror>());
+      expect(diffView.orig, isA<CodeMirror>());
+    });
+
+    test('has correct values', () {
+      expect(diffView.edit.getDoc().getValue(), equals('AAAAAA'));
+      expect(diffView.orig.getDoc().getValue(), equals('BBBBBB'));
+    });
   });
 }
 

@@ -25,7 +25,6 @@ void main() {
   group('Doc', createDocTests);
   group('HtmlDoc', createHtmlDocTests);
   group('history', createHistoryTests);
-
   group('MergeView', createMergeViewTests);
 }
 

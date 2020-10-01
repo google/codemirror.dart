@@ -247,16 +247,14 @@ void createHistoryTests() {
 void createMergeViewTests() {
   MergeView mergeView;
 
-  final someMergeViewOptions = {
+  const someMergeViewOptions = {
     'value': 'AAAAAA',
     'origLeft': 'BBBBBB',
     'showDifferences': true,
     'revertButtons': false,
   };
 
-  setUp(() {
-    mergeView = MergeView(editorHost, someMergeViewOptions);
-  });
+  mergeView = MergeView(editorHost, someMergeViewOptions);
 
   test('creates a MergeView class', () {
     expect(mergeView, isA<MergeView>());

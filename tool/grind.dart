@@ -76,6 +76,9 @@ String _concatenateModes(Directory dir) {
   files.add(joinFile(dir, ['addon', 'search', 'search.js']));
   files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
 
+  // Add merge addons.
+  files.add(joinFile(dir, ['addon', 'merge', 'merge.js']));
+
   // Required by some modes.
   files.add(joinFile(dir, ['addon', 'mode', 'overlay.js']));
   files.add(joinFile(dir, ['addon', 'mode', 'simple.js']));

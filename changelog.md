@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.22
+ - Add `MergeView` and `DiffView` to interop with the merge addon
+
 ## 0.5.21
  - update to CodeMirror 5.58.0
 

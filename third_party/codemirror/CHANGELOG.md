@@ -1,3 +1,47 @@
+## 5.59.0 (2020-12-20)
+
+### Bug fixes
+
+Fix platform detection on recent iPadOS.
+
+[lint addon](https://codemirror.net/doc/manual.html#addon_lint): Don't show duplicate messages for a given line.
+
+[clojure mode](https://codemirror.net/mode/clojure/index.html): Fix regexp that matched in exponential time for some inputs.
+
+[hardwrap addon](https://codemirror.net/doc/manual.html#addon_hardwrap): Improve handling of words that are longer than the line length.
+
+[matchbrackets addon](https://codemirror.net/doc/manual.html#addon_matchbrackets): Fix leaked event handler on disabling the addon.
+
+### New features
+
+[search addon](https://codemirror.net/demo/search/): Make it possible to configure the search addon to show the dialog at the bottom of the editor.
+
+## 5.58.3 (2020-11-19)
+
+### Bug fixes
+
+Suppress quick-firing of blur-focus events when dragging and clicking on Internet Explorer.
+
+Fix the `insertAt` option to `addLineWidget` to actually allow the widget to be placed after all widgets for the line.
+
+[soy mode](https://codemirror.net/mode/soy/): Support `@Attribute` and element composition.
+
+[shell mode](https://codemirror.net/mode/shell/): Support heredoc quoting.
+
+## 5.58.2 (2020-10-23)
+
+### Bug fixes
+
+Fix a bug where horizontally scrolling the cursor into view sometimes failed with a non-fixed gutter.
+
+[julia mode](https://codemirror.net/mode/julia/): Fix an infinite recursion bug.
+
+## 5.58.1 (2020-09-23)
+
+### Bug fixes
+
+[placeholder addon](https://codemirror.net/doc/manual.html#addon_placeholder): Remove arrow function that ended up in the code.
+
 ## 5.58.0 (2020-09-21)
 
 ### Bug fixes

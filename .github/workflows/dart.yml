@@ -20,8 +20,7 @@ jobs:
       - uses: dart-lang/setup-dart@v0.1
         with:
           channel: ${{ matrix.sdk }}
-      - uses: trmcnvn/chrome-addon@v2
-
+      
       - name: Print Dart SDK version
         run: dart --version
 

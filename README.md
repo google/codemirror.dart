@@ -1,7 +1,6 @@
 # codemirror.dart
 
 [![Build Status](https://github.com/google/codemirror.dart/workflows/codemirror.dart/badge.svg)](https://github.com/google/codemirror.dart/actions?workflow=codemirror.dart)
-[![Build Status](https://travis-ci.org/google/codemirror.dart.svg?branch=master)](https://travis-ci.org/google/codemirror.dart)
 [![pub package](https://img.shields.io/pub/v/codemirror.svg)](https://pub.dev/packages/codemirror)
 
 ## What is it?

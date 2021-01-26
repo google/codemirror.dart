@@ -6,7 +6,7 @@
 ## What is it?
 
 A Dart wrapper around the CodeMirror text editor. From 
-[codemirror.net](http://codemirror.net/):
+[codemirror.net](https://codemirror.net/):
 
 > CodeMirror is a versatile text editor implemented in JavaScript for the
 browser. It is specialized for editing code, and comes with a number of language

@@ -52,11 +52,14 @@ class Hints {
   static void registerHintsHelper(String mode, HintsHelper helper) {
     _init();
 
-    CodeMirror.registerHelper('hint', mode, (editor, options) {
-      var results =
-          helper(CodeMirror.fromJsObject(editor), HintsOptions(options));
+    JsFunction function =
+        new JsFunction.withThis((win, editor, showHints, [options]) {
+      HintResults results = helper(new CodeMirror.fromJsObject(editor),
+          new HintsOptions.fromProxy(options));
       return results == null ? null : results.toProxy();
     });
+
+    CodeMirror.registerHelper('hint', mode, function);
   }
 
   static void registerHintsHelperAsync(String mode, HintsHelperAsync helper) {

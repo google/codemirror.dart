@@ -52,9 +52,9 @@ class Hints {
   static void registerHintsHelper(String mode, HintsHelper helper) {
     _init();
 
-    JsFunction function =
+    var function =
         JsFunction.withThis((win, editor, showHints, [options]) {
-      HintResults results = helper(
+      var results = helper(
           CodeMirror.fromJsObject(editor), HintsOptions.fromProxy(options));
       return results == null ? null : results.toProxy();
     });

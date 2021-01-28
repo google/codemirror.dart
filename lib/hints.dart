@@ -53,9 +53,9 @@ class Hints {
     _init();
 
     JsFunction function =
-        new JsFunction.withThis((win, editor, showHints, [options]) {
-      HintResults results = helper(new CodeMirror.fromJsObject(editor),
-          new HintsOptions.fromProxy(options));
+        JsFunction.withThis((win, editor, showHints, [options]) {
+      HintResults results = helper(
+          CodeMirror.fromJsObject(editor), HintsOptions.fromProxy(options));
       return results == null ? null : results.toProxy();
     });
 

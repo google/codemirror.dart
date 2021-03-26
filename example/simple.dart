@@ -23,7 +23,8 @@ void main() {
     }
   };
 
-  var editor = CodeMirror.fromTextArea(querySelector('#textContainer') as TextAreaElement?,
+  var editor = CodeMirror.fromTextArea(
+      querySelector('#textContainer') as TextAreaElement?,
       options: options);
 
   querySelector('#version')!.text = 'CodeMirror version ${CodeMirror.version}';

@@ -1,3 +1,37 @@
+## 5.60.0 (2021-03-20)
+
+### Bug fixes
+
+Fix autofocus feature in contenteditable mode.
+
+[simple mode addon](https://codemirror.net/demo/simplemode.html): Fix a null-dereference crash.
+
+[multiplex addon](https://codemirror.net/demo/multiplex.html): Make it possible to use `parseDelimiters` when both delimiters are the same.
+
+[julia mode](https://codemirror.net/mode/julia/): Fix a lockup bug.
+
+### New features
+
+`setSelections` now allows ranges to omit the `head` property when it is equal to `anchor`.
+
+[sublime bindings](https://codemirror.net/demo/sublime.html): Add support for reverse line sorting.
+
+## 5.59.4 (2021-02-24)
+
+### Bug fixes
+
+Give the scrollbar corner filler a background again, to prevent content from peeping through between the scrollbars.
+
+## 5.59.3 (2021-02-20)
+
+### Bug fixes
+
+Don't override the way zero-with non-joiners are rendered.
+
+Fix an issue where resetting the history cleared the `undoDepth` option's value.
+
+[vim bindings](https://codemirror.net/demo/vim.html): Fix substitute command when joining and splitting lines, fix global command when line number change, add support for `:vglobal`, properly treat caps lock as a modifier key.
+
 ## 5.59.2 (2021-01-20)
 
 ### Bug fixes

@@ -95,45 +95,45 @@ class CodeMirror extends ProxyHolder {
     'vim',
   ];
 
-  static JsObject get _cm => context['CodeMirror'];
+  static JsObject? get _cm => context['CodeMirror'];
 
-  static final Map<JsObject, CodeMirror> _instances = {};
+  static final Map<JsObject?, CodeMirror> _instances = {};
 
   static List<String> get MODES =>
-      List.from(keys(_cm['modes']).where((modeName) => modeName != 'null'));
+      List.from(keys(_cm!['modes'])!.where((modeName) => modeName != 'null'));
 
-  static List<String> get MIME_MODES => List.from(keys(_cm['mimeModes']));
+  static List<String> get MIME_MODES => List.from(keys(_cm!['mimeModes'])!);
 
-  static List<String> get COMMANDS => List.from(keys(_cm['commands']));
+  static List<String> get COMMANDS => List.from(keys(_cm!['commands'])!);
 
   /// It contains a string that indicates the version of the library. This is a
   /// triple of integers "major.minor.patch", where patch is zero for releases,
   /// and something else (usually one) for dev snapshots.
-  static String get version => _cm['version'];
+  static String? get version => _cm!['version'];
 
   static ModeInfo findModeByExtension(String ext) =>
-      ModeInfo(_cm.callMethod('findModeByExtension', [ext]));
+      ModeInfo(_cm!.callMethod('findModeByExtension', [ext]));
 
   static ModeInfo findModeByMime(String mime) =>
-      ModeInfo(_cm.callMethod('findModeByMIME', [mime]));
+      ModeInfo(_cm!.callMethod('findModeByMIME', [mime]));
 
   static ModeInfo findModeByFileName(String name) =>
-      ModeInfo(_cm.callMethod('findModeByFileName', [name]));
+      ModeInfo(_cm!.callMethod('findModeByFileName', [name]));
 
   static ModeInfo findModeByName(String name) =>
-      ModeInfo(_cm.callMethod('findModeByName', [name]));
+      ModeInfo(_cm!.callMethod('findModeByName', [name]));
 
   /// If you want to define extra methods in terms of the CodeMirror API, it is
   /// possible to use defineExtension. This will cause the given value (usually a
   /// method) to be added to all CodeMirror instances created from then on.
   static void defineExtension(String name, dynamic value) {
-    _cm.callMethod('defineExtension', [name, value]);
+    _cm!.callMethod('defineExtension', [name, value]);
   }
 
   /// Like defineExtension, but the method will be added to the interface for Doc
   /// objects instead.
   static void defineDocExtension(String name, dynamic value) {
-    _cm.callMethod('defineDocExtension', [name, value]);
+    _cm!.callMethod('defineDocExtension', [name, value]);
   }
 
   /// Registers a helper value with the given name in the given namespace (type).
@@ -143,7 +143,7 @@ class CodeMirror extends ProxyHolder {
   /// after doing CodeMirror.registerHelper("hint", "foo", myFoo), the value
   /// CodeMirror.hint.foo will point to myFoo.
   static void registerHelper(String type, String mode, dynamic helper) {
-    _cm.callMethod('registerHelper', [type, mode, helper]);
+    _cm!.callMethod('registerHelper', [type, mode, helper]);
   }
 
 //  ///
@@ -157,33 +157,34 @@ class CodeMirror extends ProxyHolder {
 //    // TODO: value may be a Function? always a function?
 //  }
 
-  static JsObject _createFromElement(Element element, Map options) {
+  static JsObject _createFromElement(Element element, Map? options) {
     if (options == null) {
-      return JsObject(_cm, [element]);
+      return JsObject(_cm as JsFunction, [element]);
     } else {
-      return JsObject(_cm, [element, jsify(options)]);
+      return JsObject(_cm as JsFunction, [element, jsify(options)]);
     }
   }
 
-  static JsObject _createFromTextArea(TextAreaElement textArea, Map options) {
+  static JsObject? _createFromTextArea(
+      TextAreaElement? textArea, Map? options) {
     var args = <dynamic>[textArea];
     if (options != null) args.add(jsify(options));
-    return _cm.callMethod('fromTextArea', args);
+    return _cm!.callMethod('fromTextArea', args);
   }
 
   /// Add a new custom command to CodeMirror.
   static void addCommand(String name, CommandHandler callback) {
-    _cm['commands'][name] = (JsObject obj) {
+    _cm!['commands'][name] = (JsObject obj) {
       var editor = CodeMirror.fromJsObject(obj);
       callback(editor);
     };
   }
 
-  Doc _doc;
+  Doc? _doc;
 
   /// Create a new CodeMirror editor in the given element. See
   /// http://codemirror.net/doc/manual.html#config for valid options values.
-  CodeMirror.fromElement(Element element, {Map options})
+  CodeMirror.fromElement(Element element, {Map? options})
       : super(_createFromElement(element, options)) {
     _instances[jsProxy] = this;
   }
@@ -191,15 +192,15 @@ class CodeMirror extends ProxyHolder {
   /// Create a new CodeMirror editor from the given JsObject. This will return an
   /// existing Dart `CodeMirror` object if there is already one for the given
   /// JavaScript proxy.
-  factory CodeMirror.fromJsObject(JsObject object) {
+  factory CodeMirror.fromJsObject(JsObject? object) {
     if (_instances.containsKey(object)) {
-      return _instances[object];
+      return _instances[object]!;
     } else {
       return CodeMirror._fromJsObject(object);
     }
   }
 
-  CodeMirror._fromJsObject(JsObject object) : super(object) {
+  CodeMirror._fromJsObject(JsObject? object) : super(object) {
     _instances[jsProxy] = this;
   }
 
@@ -210,7 +211,7 @@ class CodeMirror extends ProxyHolder {
   /// put into the textarea when the form is submitted. The text in the textarea
   /// will provide the content for the editor. A CodeMirror instance created this
   /// way has three additional methods: `save`, `toTextArea`, and `getTextArea`.
-  CodeMirror.fromTextArea(TextAreaElement textArea, {Map options})
+  CodeMirror.fromTextArea(TextAreaElement? textArea, {Map? options})
       : super(_createFromTextArea(textArea, options)) {
     _instances[jsProxy] = this;
   }
@@ -233,10 +234,10 @@ class CodeMirror extends ProxyHolder {
       onEvent('dblclick', argCount: 2).cast<MouseEvent>();
 
   /// Fires when the editor gutter (the line-number area) is clicked.
-  Stream<int> get onGutterClick => onEvent<int>('gutterClick', argCount: 4);
+  Stream<int?> get onGutterClick => onEvent<int>('gutterClick', argCount: 4);
 
   /// Retrieve the currently active document from an editor.
-  Doc getDoc() {
+  Doc? getDoc() {
     _doc ??= Doc.fromProxy(call('getDoc'));
     return _doc;
   }
@@ -255,36 +256,36 @@ class CodeMirror extends ProxyHolder {
   void setOption(String option, dynamic value) =>
       callArgs('setOption', [option, value]);
 
-  String getTheme() => getOption('theme');
+  String? getTheme() => getOption('theme');
 
   void setTheme(String theme) => setOption('theme', theme);
 
-  String getMode() => getOption('mode');
+  String? getMode() => getOption('mode');
 
   void setMode(String mode) => setOption('mode', mode);
 
   /// Return the current key map.
-  String getKeyMap() => getOption('keyMap');
+  String? getKeyMap() => getOption('keyMap');
 
   /// Valid options are `default`, `vim`, `emacs`, and `sublime`.
   void setKeyMap(String value) => setOption('keyMap', value);
 
   /// Whether to show line numbers to the left of the editor.
-  bool getLineNumbers() => getOption('lineNumbers');
+  bool? getLineNumbers() => getOption('lineNumbers');
 
   /// Whether to show line numbers to the left of the editor.
-  void setLineNumbers(bool value) => setOption('lineNumbers', value);
+  void setLineNumbers(bool? value) => setOption('lineNumbers', value);
 
   /// Get the content of line n.
-  String getLine(int n) => callArg('getLine', n);
+  String? getLine(int? n) => callArg('getLine', n);
 
   /// Whether, when indenting, the first N*tabSize spaces should be replaced by N
   /// tabs. Default is false.
-  bool getIndentWithTabs() => getOption('indentWithTabs');
+  bool? getIndentWithTabs() => getOption('indentWithTabs');
 
   /// Whether, when indenting, the first N*tabSize spaces should be replaced by N
   /// tabs.
-  void setIndentWithTabs(bool value) => setOption('indentWithTabs', value);
+  void setIndentWithTabs(bool? value) => setOption('indentWithTabs', value);
 
   /// Whether editing is disabled.
   bool getReadOnly() =>
@@ -306,14 +307,14 @@ class CodeMirror extends ProxyHolder {
   }
 
   /// The width of a tab character. Defaults to 4.
-  int getTabSize() => getOption('tabSize');
+  int? getTabSize() => getOption('tabSize');
 
   /// The width of a tab character.
   void setTabSize(int value) => setOption('tabSize', value);
 
   /// How many spaces a block (whatever that means in the edited language) should
   /// be indented. The default is 2.
-  int getIndentUnit() => getOption('indentUnit');
+  int? getIndentUnit() => getOption('indentUnit');
 
   /// How many spaces a block (whatever that means in the edited language) should
   /// be indented.
@@ -330,7 +331,7 @@ class CodeMirror extends ProxyHolder {
 
   /// Returns the input field for the editor. Will be a textarea or an editable
   /// div, depending on the value of the inputStyle option.
-  Element getInputField() => call('getInputField');
+  Element? getInputField() => call('getInputField');
 
   /// Retrieve one end of the primary selection. [start] is a an optional string
   /// indicating which end of the selection to return. It may be "from", "to",
@@ -338,7 +339,7 @@ class CodeMirror extends ProxyHolder {
   /// or "anchor" (the fixed side of the selection). Omitting the argument is the
   /// same as passing "head". A {line, ch} object will be returned.
 
-  Position getCursor([String start]) => Position.fromProxy(
+  Position getCursor([String? start]) => Position.fromProxy(
       start == null ? call('getCursor') : callArg('getCursor', start));
 
   /// Runs the command with the given name on the editor.
@@ -390,12 +391,12 @@ class CodeMirror extends ProxyHolder {
   /// [className]: Add an extra CSS class name to the wrapper element created
   /// for the widget.
   LineWidget addLineWidget(dynamic line, Element node,
-      {bool coverGutter,
-      bool noHScroll,
-      bool above,
-      bool handleMouseEvents,
-      int insertAt,
-      String className}) {
+      {bool? coverGutter,
+      bool? noHScroll,
+      bool? above,
+      bool? handleMouseEvents,
+      int? insertAt,
+      String? className}) {
     var options = {};
 
     if (coverGutter != null) options['coverGutter'] = coverGutter;
@@ -427,7 +428,7 @@ class CodeMirror extends ProxyHolder {
   /// [where] should be one of "text", "background", or "wrap" (see
   /// [addLineClass]). [cssClass] can be left off to remove all classes for the
   /// specified node, or be a string to remove only a specific class.
-  LineHandle removeLineClass(dynamic line, String where, [String cssClass]) {
+  LineHandle removeLineClass(dynamic line, String where, [String? cssClass]) {
     var l = line is LineHandle ? line.jsProxy : line;
     if (cssClass == null) {
       return LineHandle(callArgs('removeLineClass', [l, where]));
@@ -443,7 +444,7 @@ class CodeMirror extends ProxyHolder {
   /// recent edits. If false or not specified, the token will use cached state
   /// information, which will be faster but might not be accurate if edits were
   /// recently made and highlighting has not yet completed.
-  Token getTokenAt(Position pos, [bool precise]) {
+  Token getTokenAt(Position pos, [bool? precise]) {
     var r = precise == null
         ? callArg('getTokenAt', pos.toProxy())
         : callArgs('getTokenAt', [pos.toProxy(), precise]);
@@ -453,7 +454,7 @@ class CodeMirror extends ProxyHolder {
   /// This is similar to getTokenAt, but collects all tokens for a given line
   /// into an array. It is much cheaper than repeatedly calling getTokenAt,
   /// which re-parses the part of the line before the token for every call.
-  List<Token> getLineTokens(int line, [bool precise]) {
+  List<Token> getLineTokens(int line, [bool? precise]) {
     var result = precise != null
         ? callArgs('getLineTokens', [line, precise])
         : callArg('getLineTokens', line);
@@ -468,7 +469,7 @@ class CodeMirror extends ProxyHolder {
   /// need the type of the token at a given position, and no other information.
   /// Will return null for unstyled tokens, and a string, potentially containing
   /// multiple space-separated style names, otherwise.
-  String getTokenTypeAt(Position pos) => callArg('getTokenTypeAt', pos);
+  String? getTokenTypeAt(Position pos) => callArg('getTokenTypeAt', pos);
 
   /// Programmatically set the size of the editor (overriding the applicable CSS
   /// rules). [width] and [height] can be either numbers (interpreted as pixels)
@@ -488,7 +489,7 @@ class CodeMirror extends ProxyHolder {
   /// Scrolls the given position into view. The margin parameter is optional.
   /// When given, it indicates the amount of vertical pixels around the given
   /// area that should be made visible as well.
-  void scrollIntoView(int line, int ch, {int margin}) {
+  void scrollIntoView(int line, int ch, {int? margin}) {
     if (margin != null) {
       callArgs('scrollIntoView', [
         JsObject.jsify({'line': line, 'ch': ch}),
@@ -524,7 +525,7 @@ class CodeMirror extends ProxyHolder {
   }
 
   /// Returns the first applicable helper value.
-  JsObject getHelper(Position pos, String type) {
+  JsObject? getHelper(Position pos, String type) {
     return callArgs('getHelper', [pos.toProxy(), type]);
   }
 
@@ -545,7 +546,7 @@ class CodeMirror extends ProxyHolder {
   ///
   /// Only available if the CodeMirror instance was created using the
   /// `CodeMirror.fromTextArea` constructor.
-  TextAreaElement getTextArea() => call('getTextArea');
+  TextAreaElement? getTextArea() => call('getTextArea');
 
   /// If you create and discard a large number of `CodeMirror` instances, you
   /// should call [dispose] after finishing with each one.
@@ -566,7 +567,7 @@ class CodeMirror extends ProxyHolder {
 /// arguments are optional and can be used to set a mode for the document and
 /// make it start at a line number other than 0, respectively.
 class Doc extends ProxyHolder {
-  static JsObject _create(String text, String mode, int firstLineNumber) {
+  static JsObject _create(String text, String? mode, int? firstLineNumber) {
     if (firstLineNumber == null) {
       return JsObject(context['CodeMirror']['Doc'], [text, mode]);
     } else {
@@ -575,48 +576,48 @@ class Doc extends ProxyHolder {
     }
   }
 
-  CodeMirror _editor;
+  CodeMirror? _editor;
 
-  Doc(String text, [String mode, int firstLineNumber])
+  Doc(String text, [String? mode, int? firstLineNumber])
       : super(_create(text, mode, firstLineNumber));
 
-  Doc.fromProxy(JsObject proxy) : super(proxy);
+  Doc.fromProxy(JsObject? proxy) : super(proxy);
 
-  CodeMirror getEditor() {
+  CodeMirror? getEditor() {
     _editor ??= CodeMirror.fromJsObject(call('getEditor'));
     return _editor;
   }
 
   /// Get the current editor content. You can pass it an optional argument to
   /// specify the string to be used to separate lines (defaults to "\n").
-  String getValue([String separator]) => callArg('getValue', separator);
+  String? getValue([String? separator]) => callArg('getValue', separator);
 
   /// Set the editor content.
   void setValue(String value) => callArg('setValue', value);
 
   /// Get the number of lines in the editor.
-  int lineCount() => call('lineCount');
+  int? lineCount() => call('lineCount');
 
   /// Get the first line of the editor. This will usually be zero but for linked
   /// sub-views, or documents instantiated with a non-zero first line, it might
   /// return other values.
-  int firstLine() => call('firstLine');
+  int? firstLine() => call('firstLine');
 
   /// Get the last line of the editor. This will usually be doc.lineCount() - 1,
   /// but for linked sub-views, it might return other values.
-  int lastLine() => call('lastLine');
+  int? lastLine() => call('lastLine');
 
   /// Get the content of line n.
-  String getLine(int n) => callArg('getLine', n);
+  String? getLine(int? n) => callArg('getLine', n);
 
   /// Iterate over the whole document, or if [start] and [end] line numbers are
   /// given, the range from start up to (not including) end, and call f for each
   /// line, passing the line handle. This is a faster way to visit a range of
   /// line handlers than calling getLineHandle for each of them. Note that line
   /// handles have a text property containing the line's content (as a string).
-  void eachLine(LineHandler callback, {int start, int end}) {
+  void eachLine(LineHandler callback, {int? start, int? end}) {
     start ??= firstLine();
-    end ??= lastLine() + 1;
+    end ??= lastLine()! + 1;
     callArgs('eachLine', [
       start,
       end,
@@ -627,12 +628,12 @@ class Doc extends ProxyHolder {
   }
 
   /// Return `true` if any text is selected.
-  bool somethingSelected() => call('somethingSelected');
+  bool? somethingSelected() => call('somethingSelected');
 
   /// Get the currently selected code. Optionally pass a line separator to put
   /// between the lines in the output. When multiple selections are present, they
   /// are concatenated with instances of [lineSep] in between.
-  String getSelection([String lineSep]) => callArg('getSelection', lineSep);
+  String? getSelection([String? lineSep]) => callArg('getSelection', lineSep);
 
   /// Set a single selection range. anchor and head should be {line, ch} objects.
   /// head defaults to anchor when not given. These options are supported:
@@ -652,7 +653,7 @@ class Doc extends ProxyHolder {
   /// (backward) or 1 (forward). When not given, the bias will be based on the
   /// relative position of the old selection—the editor will try to move further
   /// away from that, to prevent getting stuck.
-  void setSelection(Position anchor, {Position head, Map options}) {
+  void setSelection(Position anchor, {Position? head, Map? options}) {
     callArgs('setSelection',
         [anchor.toProxy(), head == null ? null : head.toProxy(), options]);
   }
@@ -662,14 +663,14 @@ class Doc extends ProxyHolder {
   /// be used to change this. Passing `around`: will cause the new text to be
   /// selected; `start`: will collapse the selection to the start of the inserted
   /// text.
-  void replaceSelection(String replacement, [String select]) {
+  void replaceSelection(String replacement, [String? select]) {
     callArgs('replaceSelection',
         select != null ? [replacement, select] : [replacement]);
   }
 
   /// Returns an array containing a string for each selection, representing the
   /// content of the selections.
-  Iterable<String> getSelections([String lineSep]) =>
+  Iterable<String>? getSelections([String? lineSep]) =>
       callArg('getSelections', lineSep).cast<String>();
 
   /// Sets a new set of selections. There must be at least one selection in the
@@ -678,7 +679,7 @@ class Doc extends ProxyHolder {
   /// the previous selection, or set to the last range if the previous
   /// selection had less ranges than the new one. Supports the same
   /// options as [setSelection].
-  void setSelections(Iterable<Span> ranges, {int primary, Map options}) {
+  void setSelections(Iterable<Span> ranges, {int? primary, Map? options}) {
     callArgs('setSelections', [
       JsArray.from(ranges.map((Span range) => range.toProxy())),
       primary,
@@ -689,14 +690,14 @@ class Doc extends ProxyHolder {
   /// The length of the given array should be the same as the number of active
   /// selections. Replaces the content of the selections with the strings in
   /// the array. The select argument works the same as in [replaceSelection].
-  void replaceSelections(Iterable<String> replacement, {String select}) {
+  void replaceSelections(Iterable<String> replacement, {String? select}) {
     callArgs('replaceSelections',
         select != null ? [jsify(replacement), select] : [jsify(replacement)]);
   }
 
   /// Adds a new selection to the existing set of selections, and makes it the
   /// primary selection.
-  void addSelection({Position anchor, Position head}) {
+  void addSelection({required Position anchor, Position? head}) {
     head ??= anchor;
     callArgs('addSelection', [anchor.toProxy(), head.toProxy()]);
   }
@@ -708,19 +709,19 @@ class Doc extends ProxyHolder {
   /// lies between that region and the current anchor). When multiple selections
   /// are present, all but the primary selection will be dropped by this method.
   /// Supports the same options as [setSelection].
-  void extendSelection(Position from, [Position to, Map options]) {
+  void extendSelection(Position from, [Position? to, Map? options]) {
     callArgs('extendSelection', [from.toProxy(), to?.toProxy(), options]);
   }
 
   /// An equivalent of [extendSelection] that acts on all selections at once.
-  void extendSelections(List<Position> heads, [Map options]) {
+  void extendSelections(List<Position> heads, [Map? options]) {
     callArgs('extendSelections',
         [JsArray.from(heads.map((Position head) => head.toProxy())), options]);
   }
 
   /// Applies the given function to all existing selections, and calls
   /// [extendSelections] on the result.
-  void extendSelectionsBy(SelectionExtender f, [Map options]) {
+  void extendSelectionsBy(SelectionExtender f, [Map? options]) {
     callArgs('extendSelectionsBy', [
       (JsObject obj, int i) => f(Span.fromProxy(obj), i).toProxy(),
       options
@@ -735,7 +736,7 @@ class Doc extends ProxyHolder {
   }
 
   /// Get the value of the 'extending' flag.
-  bool getExtending() => call('getExtending');
+  bool? getExtending() => call('getExtending');
 
   /// Retrieves a list of all current selections.
   ///
@@ -743,7 +744,7 @@ class Doc extends ProxyHolder {
   /// and never overlap (overlapping selections are merged). Each object in the
   /// array contains `anchor` and `head` properties referring
   /// to `{line, ch}` objects.
-  Iterable<Span> listSelections() {
+  Iterable<Span>? listSelections() {
     return call('listSelections').map((JsObject selection) {
       return Span.fromProxy(selection);
     });
@@ -757,11 +758,11 @@ class Doc extends ProxyHolder {
   /// first letter will be used to determine whether this change can be merged
   /// with previous history events, in the way described for selection origins.
   void replaceRange(String replacement, Position from,
-      [Position to, String origin]) {
+      [Position? to, String? origin]) {
     callArgs(
         'replaceRange',
         origin != null
-            ? [replacement, from.toProxy(), to.toProxy(), origin]
+            ? [replacement, from.toProxy(), to!.toProxy(), origin]
             : [replacement, from.toProxy(), to == null ? null : to.toProxy()]);
   }
 
@@ -777,7 +778,7 @@ class Doc extends ProxyHolder {
   /// the current history event will be 'closed', meaning it can't be combined
   /// with further changes (rapid typing or deleting events are typically
   /// combined).
-  int changeGeneration([bool closeEvent]) {
+  int? changeGeneration([bool? closeEvent]) {
     return closeEvent == null
         ? call('changeGeneration')
         : callArg('changeGeneration', closeEvent);
@@ -787,7 +788,7 @@ class Doc extends ProxyHolder {
   /// initialization or the last call to [markClean] if no argument is passed, or
   /// since the matching call to [changeGeneration] if a generation value is
   /// given.
-  bool isClean([int generation]) {
+  bool? isClean([int? generation]) {
     return generation == null
         ? call('isClean')
         : callArg('isClean', generation);
@@ -810,7 +811,7 @@ class Doc extends ProxyHolder {
   /// Returns an object with `{'undo': int, 'redo': int}` properties, both of
   /// which hold integers, indicating the amount of stored undo and redo
   /// operations.
-  Map<String, int> historySize() {
+  Map<String, int?> historySize() {
     JsObject result = call('historySize');
 
     return {
@@ -823,7 +824,7 @@ class Doc extends ProxyHolder {
   void clearHistory() => call('clearHistory');
 
   /// Get a (JSON-serializeable) representation of the undo history.
-  JsObject getHistory() => call('getHistory');
+  JsObject? getHistory() => call('getHistory');
 
   /// Replace the editor's undo history with the one provided, which must be a
   /// value as returned by [getHistory]. Note that this will have entirely
@@ -836,21 +837,21 @@ class Doc extends ProxyHolder {
   /// "head" (the side of the selection that moves when you press shift+arrow),
   /// or "anchor" (the fixed side of the selection). Omitting the argument is the
   /// same as passing "head". A {line, ch} object will be returned.
-  Position getCursor([String start]) => Position.fromProxy(
+  Position getCursor([String? start]) => Position.fromProxy(
       start == null ? call('getCursor') : callArg('getCursor', start));
 
   /// Set the cursor position. You can either pass a single {line, ch} object, or
   /// the line and the character as two separate parameters. Will replace all
   /// selections with a single, empty selection at the given position. The
   /// supported options are the same as for setSelection.
-  void setCursor(Position pos, {Map options}) {
+  void setCursor(Position pos, {Map? options}) {
     callArgs('setCursor', [pos.toProxy(), options]);
   }
 
   /// Get the text between the given points in the editor. An optional third
   /// argument can be given to indicate the line separator string to use
   /// (defaults to "\n").
-  String getRange(Position from, Position to, [String separator]) {
+  String? getRange(Position from, Position to, [String? separator]) {
     return callArgs('getRange', [from.toProxy(), to.toProxy(), separator]);
   }
 
@@ -862,7 +863,7 @@ class Doc extends ProxyHolder {
       Position.fromProxy(callArg('posFromIndex', index));
 
   /// The reverse of [posFromIndex].
-  int indexFromPos(Position pos) => callArg('indexFromPos', pos.toProxy());
+  int? indexFromPos(Position pos) => callArg('indexFromPos', pos.toProxy());
 
   /// Can be used to mark a range of text with a specific CSS class name.
   ///
@@ -910,22 +911,22 @@ class Doc extends ProxyHolder {
   /// set shared to true to make the marker appear in all documents. By default,
   /// a marker appears only in its target document.
   TextMarker markText(Position from, Position to,
-      {String className,
-      bool inclusiveLeft,
-      bool inclusiveRight,
-      bool atomic,
-      bool collapsed,
-      bool clearOnEnter,
-      bool clearWhenEmpty,
-      Element replacedWith,
-      bool handleMouseEvents,
-      bool readOnly,
-      bool addToHistory,
-      String startStyle,
-      String endStyle,
-      String css,
-      String title,
-      bool shared}) {
+      {String? className,
+      bool? inclusiveLeft,
+      bool? inclusiveRight,
+      bool? atomic,
+      bool? collapsed,
+      bool? clearOnEnter,
+      bool? clearWhenEmpty,
+      Element? replacedWith,
+      bool? handleMouseEvents,
+      bool? readOnly,
+      bool? addToHistory,
+      String? startStyle,
+      String? endStyle,
+      String? css,
+      String? title,
+      bool? shared}) {
     var options = <String, dynamic>{};
 
     if (className != null) options['className'] = className;
@@ -964,7 +965,7 @@ class Doc extends ProxyHolder {
   /// documents, you can set shared to true to make the marker appear in all
   /// documents. By default, a marker appears only in its target document.
   TextMarker setBookmark(Position pos,
-      {Element widget, bool insertLeft, bool shared}) {
+      {Element? widget, bool? insertLeft, bool? shared}) {
     var options = <String, dynamic>{};
 
     if (widget != null) options['widget'] = widget;
@@ -1005,7 +1006,7 @@ class Doc extends ProxyHolder {
   dynamic getMode() => call('getMode');
 
   /// Return the name of the current mode.
-  String getModeName() => getMode()['name'];
+  String? getModeName() => getMode()['name'];
 
   /// Gets the inner mode at a given position. This will return the same as
   /// getMode for simple modes, but will return an inner mode for nesting modes
@@ -1013,19 +1014,19 @@ class Doc extends ProxyHolder {
   ///
   /// The returned mode is a `JsObject`.
   dynamic getModeAt(Position pos) =>
-      getEditor().callArg('getModeAt', pos.toProxy());
+      getEditor()!.callArg('getModeAt', pos.toProxy());
 
   /// Return the name of the mode at the given position.
-  String getModeNameAt(Position pos) => getModeAt(pos)['name'];
+  String? getModeNameAt(Position pos) => getModeAt(pos)['name'];
 
   /// Fetches the line handle for the given line number.
-  LineHandle getLineHandle(int line) {
+  LineHandle getLineHandle(int? line) {
     return LineHandle(callArg('getLineHandle', line));
   }
 
   /// Given a line handle, returns the current position of that line (or `null`
   /// when it is no longer in the document).
-  int getLineNumber(LineHandle handle) {
+  int? getLineNumber(LineHandle handle) {
     return callArg('getLineNumber', handle.jsProxy);
   }
 
@@ -1038,8 +1039,8 @@ class Doc extends ProxyHolder {
 ///
 /// `{line, ch}`
 class Position implements Comparable<Position> {
-  final int line;
-  final int ch;
+  final int? line;
+  final int? ch;
 
   Position(this.line, this.ch);
 
@@ -1054,12 +1055,12 @@ class Position implements Comparable<Position> {
       other is Position && line == other.line && ch == other.ch;
 
   @override
-  int get hashCode => (line << 8 | ch).hashCode;
+  int get hashCode => (line! << 8 | ch!).hashCode;
 
   @override
   int compareTo(Position other) {
-    if (line == other.line) return ch - other.ch;
-    return line - other.line;
+    if (line == other.line) return ch! - other.ch!;
+    return line! - other.line!;
   }
 
   bool operator <(Position other) => compareTo(other) < 0;
@@ -1075,27 +1076,27 @@ class Position implements Comparable<Position> {
 }
 
 class ModeInfo extends ProxyHolder {
-  factory ModeInfo(JsObject proxy) => proxy == null ? null : ModeInfo._(proxy);
+  factory ModeInfo(JsObject proxy) => ModeInfo._(proxy);
 
   ModeInfo._(JsObject proxy) : super(proxy);
 
   /// The mode's human readable, display name.
-  String get name => jsProxy['name'];
+  String? get name => jsProxy!['name'];
 
-  String get mime => jsProxy['mime'];
+  String? get mime => jsProxy!['mime'];
 
-  List<String> get mimes =>
-      jsProxy.hasProperty('mimes') ? jsProxy['mimes'] : <String>[mime];
+  List<String>? get mimes =>
+      jsProxy!.hasProperty('mimes') ? jsProxy!['mimes'] : <String?>[mime];
 
   /// The mode's id.
-  String get mode => jsProxy['mode'];
+  String? get mode => jsProxy!['mode'];
 
   /// The mode's file extension.
-  List<String> get ext => List.from(jsProxy['ext']);
+  List<String> get ext => List.from(jsProxy!['ext']);
 
   /// The mode's other file extensions.
-  List<String> get alias =>
-      jsProxy.hasProperty('alias') ? jsProxy['alias'] : <String>[];
+  List<String>? get alias =>
+      jsProxy!.hasProperty('alias') ? jsProxy!['alias'] : <String>[];
 }
 
 /// A source span from a start position ([head]) to an end position ([anchor]);
@@ -1125,7 +1126,7 @@ class Span {
 
 /// An object that represents a marker.
 class TextMarker extends ProxyHolder {
-  TextMarker(JsObject jsProxy) : super(jsProxy);
+  TextMarker(JsObject? jsProxy) : super(jsProxy);
 
   /// Removes the mark.
   void clear() => call('clear');
@@ -1133,7 +1134,7 @@ class TextMarker extends ProxyHolder {
   /// Returns a {from, to} object (both holding document positions), indicating
   /// the current position of the marked range, or `null` if the marker is no
   /// longer in the document. For a bookmark, this list will be length 1.
-  List<Position> find() {
+  List<Position>? find() {
     final result = call('find');
     if (result is! JsObject) return null;
 
@@ -1152,7 +1153,7 @@ class TextMarker extends ProxyHolder {
   }
 
   /// Return the first (or only) position in this marker / bookmark.
-  Position findStart() {
+  Position? findStart() {
     var positions = find();
     return (positions == null || positions.isEmpty) ? null : positions.first;
   }
@@ -1165,7 +1166,7 @@ class TextMarker extends ProxyHolder {
 
 /// See [CodeMirror.addLineWidget].
 class LineWidget extends ProxyHolder {
-  LineWidget(JsObject jsProxy) : super(jsProxy);
+  LineWidget(JsObject? jsProxy) : super(jsProxy);
 
   // TODO: add `line` property
 
@@ -1179,45 +1180,45 @@ class LineWidget extends ProxyHolder {
 }
 
 class LineHandle extends ProxyHolder {
-  LineHandle(JsObject jsProxy) : super(jsProxy);
+  LineHandle(JsObject? jsProxy) : super(jsProxy);
 
-  num get height => jsProxy['height'];
+  num? get height => jsProxy!['height'];
 
-  String get text => jsProxy['text'];
+  String? get text => jsProxy!['text'];
 }
 
 class ScrollInfo extends ProxyHolder {
-  ScrollInfo(JsObject jsProxy) : super(jsProxy);
+  ScrollInfo(JsObject? jsProxy) : super(jsProxy);
 
-  num get left => jsProxy['left'];
+  num? get left => jsProxy!['left'];
 
-  num get top => jsProxy['top'];
+  num? get top => jsProxy!['top'];
 
-  num get width => jsProxy['width'];
+  num? get width => jsProxy!['width'];
 
-  num get height => jsProxy['height'];
+  num? get height => jsProxy!['height'];
 
-  num get clientWidth => jsProxy['clientWidth'];
+  num? get clientWidth => jsProxy!['clientWidth'];
 
-  num get clientHeight => jsProxy['clientHeight'];
+  num? get clientHeight => jsProxy!['clientHeight'];
 }
 
 class Token {
   /// The character (on the given line) at which the token starts.
-  final int start;
+  final int? start;
 
   /// The character at which the token ends.
-  final int end;
+  final int? end;
 
   /// The token's string.
-  final String string;
+  final String? string;
 
   /// The token type the mode assigned to the token, such as "keyword" or
   /// "comment" (may also be null).
-  final String type;
+  final String? type;
 
   /// The mode's state at the end of this token.
-  final JsObject state;
+  final JsObject? state;
 
   Token.fromProxy(var obj)
       : start = obj['start'],
@@ -1227,7 +1228,7 @@ class Token {
         state = obj['state'];
 
   @override
-  String toString() => string;
+  String toString() => string!;
 }
 
 /// A parent class for objects that can hold references to JavaScript objects.
@@ -1235,20 +1236,20 @@ class Token {
 /// a method to add event listeners to the proxy, and a [dispose] method.
 /// `dispose` only needs to be called if event listeners were added to an object.
 abstract class ProxyHolder {
-  final JsObject jsProxy;
+  final JsObject? jsProxy;
   final Map<String, JsEventListener> _events = {};
 
   ProxyHolder(this.jsProxy);
 
-  dynamic call(String methodName) => jsProxy.callMethod(methodName);
+  dynamic call(String methodName) => jsProxy!.callMethod(methodName);
 
   dynamic callArg(String methodName, var arg) =>
-      jsProxy.callMethod(methodName, [arg]);
+      jsProxy!.callMethod(methodName, [arg]);
 
   dynamic callArgs(String methodName, List args) =>
-      jsProxy.callMethod(methodName, args);
+      jsProxy!.callMethod(methodName, args);
 
-  Stream<T> onEvent<T>(String eventName, {int argCount = 1}) {
+  Stream<T?> onEvent<T>(String eventName, {int argCount = 1}) {
     if (!_events.containsKey(eventName)) {
       if (argCount == 4) {
         _events[eventName] = JsEventListener<T>(jsProxy, eventName,
@@ -1263,7 +1264,7 @@ abstract class ProxyHolder {
         _events[eventName] = JsEventListener<T>(jsProxy, eventName);
       }
     }
-    return _events[eventName].stream;
+    return _events[eventName]!.stream as Stream<T?>;
   }
 
   @override

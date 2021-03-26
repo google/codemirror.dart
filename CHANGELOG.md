@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0+5.60.0
+ - Null safety migration
+ - update to CodeMirror 5.60.0
+
 ## 0.5.24+5.59.2
  - update to CodeMirror 5.59.2
 

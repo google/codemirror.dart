@@ -16,7 +16,7 @@ final JsObject? _Object = context['Object'];
 JsObject jsify(object) => JsObject.jsify(object);
 
 /// Convert a JavaScript result object to an equivalent Dart map.
-Map? mapify(JsObject obj) {
+Map? mapify(JsObject? obj) {
   if (obj == null) return null;
   return jsonDecode(_jsJSON!.callMethod('stringify', [obj]));
 }

@@ -33,7 +33,7 @@ void main() {
   Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
 
   // Theme control.
-  SelectElement themeSelect = querySelector('#theme') as SelectElement;
+  final themeSelect = querySelector('#theme') as SelectElement;
   for (var theme in CodeMirror.THEMES) {
     themeSelect.children.add(OptionElement(value: theme)..text = theme);
     if (theme == editor.getTheme()) {
@@ -46,7 +46,7 @@ void main() {
   });
 
   // Mode control.
-  SelectElement modeSelect = querySelector('#mode') as SelectElement;
+  final modeSelect = querySelector('#mode') as SelectElement;
   for (var mode in CodeMirror.MODES) {
     modeSelect.children.add(OptionElement(value: mode)..text = mode);
     if (mode == editor.getMode()) {
@@ -59,13 +59,13 @@ void main() {
   });
 
   // Show line numbers.
-  InputElement lineNumbers = querySelector('#lineNumbers') as InputElement;
+  final lineNumbers = querySelector('#lineNumbers') as InputElement;
   lineNumbers.onChange.listen((e) {
     editor.setLineNumbers(lineNumbers.checked);
   });
 
   // Indent with tabs.
-  InputElement tabIndent = querySelector('#tabIndent') as InputElement;
+  final tabIndent = querySelector('#tabIndent') as InputElement;
   tabIndent.onChange.listen((e) {
     editor.setIndentWithTabs(tabIndent.checked);
   });

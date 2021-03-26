@@ -11,7 +11,7 @@ import 'dart:js';
 import 'codemirror.dart';
 import 'src/js_utils.dart';
 
-typedef HintsHelper = HintResults Function(CodeMirror editor,
+typedef HintsHelper = HintResults? Function(CodeMirror editor,
     [HintsOptions options]);
 
 typedef HintsHelperAsync = Future<HintResults> Function(CodeMirror editor,
@@ -68,8 +68,8 @@ class Hints {
       var results = helper(
           CodeMirror.fromJsObject(editor), HintsOptions.fromProxy(options));
 
-      results.then((HintResults r) {
-        showHints.apply([results == null ? null : r.toProxy()]);
+      results.then((HintResults? r) {
+        showHints.apply([r == null ? null : r.toProxy()]);
       });
     });
 

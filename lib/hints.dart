@@ -11,11 +11,11 @@ import 'dart:js';
 import 'codemirror.dart';
 import 'src/js_utils.dart';
 
-typedef HintsHelper = HintResults Function(CodeMirror editor,
+typedef HintsHelper = HintResults? Function(CodeMirror editor,
     [HintsOptions options]);
 
 typedef HintsHelperAsync = Future<HintResults> Function(CodeMirror editor,
-    [HintsOptions options]);
+    [HintsOptions? options]);
 
 typedef HintsResultsSelectCallback = void Function(
     HintResult completion, Element element);
@@ -39,21 +39,20 @@ typedef HintsResultsPickCallback = void Function(HintResult completion);
 class Hints {
   static bool _inited = false;
 
-  static JsObject get _cm => context['CodeMirror'];
+  static JsObject? get _cm => context['CodeMirror'];
 
   static void _init() {
     if (_inited) return;
     _inited = true;
 
-    _cm['showHint'] = JsFunction.withThis(_showHint);
-    _cm['commands']['autocomplete'] = _cm['showHint'];
+    _cm!['showHint'] = JsFunction.withThis(_showHint);
+    _cm!['commands']['autocomplete'] = _cm!['showHint'];
   }
 
   static void registerHintsHelper(String mode, HintsHelper helper) {
     _init();
 
-    var function =
-        JsFunction.withThis((win, editor, showHints, [options]) {
+    var function = JsFunction.withThis((win, editor, showHints, [options]) {
       var results = helper(
           CodeMirror.fromJsObject(editor), HintsOptions.fromProxy(options));
       return results == null ? null : results.toProxy();
@@ -69,8 +68,8 @@ class Hints {
       var results = helper(
           CodeMirror.fromJsObject(editor), HintsOptions.fromProxy(options));
 
-      results.then((HintResults r) {
-        showHints.apply([results == null ? null : r.toProxy()]);
+      results.then((HintResults? r) {
+        showHints.apply([r == null ? null : r.toProxy()]);
       });
     });
 
@@ -81,9 +80,9 @@ class Hints {
 
   static void _showHint(var myThis, var editor, [var hintsFunc, var opt]) {
     var pos = editor.callMethod('getCursor');
-    JsObject helper = editor.callMethod('getHelper', [pos, 'hint']);
+    JsObject? helper = editor.callMethod('getHelper', [pos, 'hint']);
 
-    helper ??= _cm['hint']['auto'];
+    helper ??= _cm!['hint']['auto'];
 
     var options = {'hint': helper};
     if (opt != null) {
@@ -101,7 +100,7 @@ class HintsOptions extends ProxyHolder {
   HintsOptions(JsObject jsProxy) : super(jsProxy);
 
   factory HintsOptions.fromProxy(JsObject jsProxy) {
-    return jsProxy == null ? null : HintsOptions(jsProxy);
+    return HintsOptions(jsProxy);
   }
 
   /// Determines whether, when only a single completion is available, it is
@@ -119,10 +118,10 @@ class HintsOptions extends ProxyHolder {
 
   bool get closeOnUnfocus => _boolOption('closeOnUnfocus', true);
 
-  dynamic getOption(String name) => jsProxy[name];
+  dynamic getOption(String name) => jsProxy![name];
 
   bool _boolOption(String name, bool defaultValue) {
-    bool val = jsProxy[name];
+    bool? val = jsProxy![name];
     return val ?? defaultValue;
   }
 }
@@ -133,7 +132,7 @@ class HintResults {
   final Position from;
   final Position to;
 
-  JsObject _obj;
+  JsObject? _obj;
 
   HintResults.fromStrings(List<String> results, this.from, this.to)
       : _results = results;
@@ -147,7 +146,7 @@ class HintResults {
 
   /// Fired when the pop-up is shown.
   void registerOnShown(Function onShown) {
-    Hints._cm.callMethod('on', [toProxy(), 'shown', onShown]);
+    Hints._cm!.callMethod('on', [toProxy(), 'shown', onShown]);
   }
 
   /// Fired when a completion is selected. Passed the completion value and the
@@ -156,7 +155,7 @@ class HintResults {
   /// The completion [HintResult] is not guaranteed to be the same object
   /// instance as the one provided by the `HintResults`.
   void registerOnSelect(HintsResultsSelectCallback onSelect) {
-    Hints._cm.callMethod('on', [
+    Hints._cm!.callMethod('on', [
       toProxy(),
       'select',
       (completion, element) {
@@ -174,7 +173,7 @@ class HintResults {
   /// The completion [HintResult] is not guaranteed to be the same object
   /// instance as the one provided by the `HintResults`.
   void registerOnPick(HintsResultsPickCallback onPick) {
-    Hints._cm.callMethod('on', [
+    Hints._cm!.callMethod('on', [
       toProxy(),
       'pick',
       (completion) {
@@ -189,14 +188,14 @@ class HintResults {
 
   /// Fired when the completion is finished.
   void registerOnClose(Function onShown) {
-    Hints._cm.callMethod('on', [toProxy(), 'close', onShown]);
+    Hints._cm!.callMethod('on', [toProxy(), 'close', onShown]);
   }
 
   void registerOnUpdate(Function onUpdate) {
-    Hints._cm.callMethod('on', [toProxy(), 'update', onUpdate]);
+    Hints._cm!.callMethod('on', [toProxy(), 'update', onUpdate]);
   }
 
-  JsObject toProxy() {
+  JsObject? toProxy() {
     _obj ??= jsify({
       'list': _results.map((r) => r is HintResult ? r.toProxy() : r).toList(),
       'from': from.toProxy(),
@@ -210,34 +209,34 @@ class HintResults {
 typedef HintRenderer = Function(Element element, HintResult hint);
 
 typedef HintApplier = Function(
-    CodeMirror editor, HintResult hint, Position from, Position to);
+    CodeMirror editor, HintResult hint, Position? from, Position? to);
 
 class HintResult {
   /// The completion text. This is the only required property.
-  final String text;
+  final String? text;
 
   /// The text that should be displayed in the menu.
-  final String displayText;
+  final String? displayText;
 
   /// A CSS class name to apply to the completion's line in the menu.
-  final String className;
+  final String? className;
 
   /// Optional from position that will be used by pick() instead of the global
   /// one passed with the full list of completions.
-  final Position from;
+  final Position? from;
 
   /// Optional to position that will be used by pick() instead of the global one
   /// passed with the full list of completions.
-  final Position to;
+  final Position? to;
 
   /// A method used to create the DOM structure for showing the completion by
   /// appending it to its first argument. This cooresponds to the JS codemirror
   /// `render` function.
-  final HintRenderer hintRenderer;
+  final HintRenderer? hintRenderer;
 
   /// A method used to actually apply the completion, instead of the default
   /// behavior. This cooresponds to the JS codemirror `hint` function.
-  final HintApplier hintApplier;
+  final HintApplier? hintApplier;
 
   HintResult(this.text,
       {this.displayText,
@@ -260,20 +259,20 @@ class HintResult {
     var m = <String, dynamic>{'text': text};
     if (displayText != null) m['displayText'] = displayText;
     if (className != null) m['className'] = className;
-    if (from != null) m['from'] = from.toProxy();
-    if (to != null) m['to'] = to.toProxy();
+    if (from != null) m['from'] = from!.toProxy();
+    if (to != null) m['to'] = to!.toProxy();
 
     if (hintApplier != null) {
       m['hint'] = (cm, data, completion) {
         var from = _createPos(data['from']);
         var to = _createPos(data['to']);
-        hintApplier(CodeMirror.fromJsObject(cm), this, from, to);
+        hintApplier!(CodeMirror.fromJsObject(cm), this, from, to);
       };
     }
 
     if (hintRenderer != null) {
       m['render'] = (element, data, completion) {
-        hintRenderer(element, this);
+        hintRenderer!(element, this);
       };
     }
 
@@ -283,7 +282,7 @@ class HintResult {
   @override
   String toString() => '[${text}]';
 
-  static Position _createPos(JsObject obj) {
+  static Position? _createPos(JsObject? obj) {
     return obj == null ? null : Position.fromProxy(obj);
   }
 }

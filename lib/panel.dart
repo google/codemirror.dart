@@ -15,7 +15,7 @@ class Panel {
   /// Places a DOM node above or below an editor, and shrinks the editor to make
   /// room for the node. By default, the panel ends up above the editor.
   static PanelContainer addPanel(CodeMirror editor, Element element,
-      {bool below}) {
+      {bool? below}) {
     if (below != null && below) {
       var options = {'position': 'bottom'};
       return PanelContainer._(
@@ -27,7 +27,7 @@ class Panel {
 }
 
 class PanelContainer extends ProxyHolder {
-  PanelContainer._(JsObject jsProxy) : super(jsProxy);
+  PanelContainer._(JsObject? jsProxy) : super(jsProxy);
 
   /// Used to remove the panel.
   void clear() => call('clear');

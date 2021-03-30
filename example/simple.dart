@@ -23,48 +23,49 @@ void main() {
     }
   };
 
-  var editor = CodeMirror.fromTextArea(querySelector('#textContainer'),
+  var editor = CodeMirror.fromTextArea(
+      querySelector('#textContainer') as TextAreaElement?,
       options: options);
 
-  querySelector('#version').text = 'CodeMirror version ${CodeMirror.version}';
+  querySelector('#version')!.text = 'CodeMirror version ${CodeMirror.version}';
 
   Hints.registerHintsHelper('dart', _dartCompleter);
   Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
 
   // Theme control.
-  SelectElement themeSelect = querySelector('#theme');
+  final themeSelect = querySelector('#theme') as SelectElement;
   for (var theme in CodeMirror.THEMES) {
     themeSelect.children.add(OptionElement(value: theme)..text = theme);
     if (theme == editor.getTheme()) {
-      themeSelect.selectedIndex = themeSelect.length - 1;
+      themeSelect.selectedIndex = themeSelect.length! - 1;
     }
   }
   themeSelect.onChange.listen((e) {
-    var themeName = themeSelect.options[themeSelect.selectedIndex].value;
+    var themeName = themeSelect.options[themeSelect.selectedIndex!].value;
     editor.setTheme(themeName);
   });
 
   // Mode control.
-  SelectElement modeSelect = querySelector('#mode');
+  final modeSelect = querySelector('#mode') as SelectElement;
   for (var mode in CodeMirror.MODES) {
     modeSelect.children.add(OptionElement(value: mode)..text = mode);
     if (mode == editor.getMode()) {
-      modeSelect.selectedIndex = modeSelect.length - 1;
+      modeSelect.selectedIndex = modeSelect.length! - 1;
     }
   }
   modeSelect.onChange.listen((e) {
-    var modeName = modeSelect.options[modeSelect.selectedIndex].value;
+    var modeName = modeSelect.options[modeSelect.selectedIndex!].value;
     editor.setMode(modeName);
   });
 
   // Show line numbers.
-  InputElement lineNumbers = querySelector('#lineNumbers');
+  final lineNumbers = querySelector('#lineNumbers') as InputElement;
   lineNumbers.onChange.listen((e) {
     editor.setLineNumbers(lineNumbers.checked);
   });
 
   // Indent with tabs.
-  InputElement tabIndent = querySelector('#tabIndent');
+  final tabIndent = querySelector('#tabIndent') as InputElement;
   tabIndent.onChange.listen((e) {
     editor.setIndentWithTabs(tabIndent.checked);
   });
@@ -78,7 +79,7 @@ void main() {
 
   CodeMirror.addCommand('find', (foo) {
     /*LineHandle handle =*/ editor
-        .getDoc()
+        .getDoc()!
         .getLineHandle(editor.getCursor().line);
 
     print('todo: handle find');
@@ -89,8 +90,8 @@ void main() {
   print(CodeMirror.COMMANDS);
 
   editor.onDoubleClick.listen((MouseEvent evt) {
-    var doc = editor.getDoc();
-    print('[${doc.getLine(doc.getCursor().line).trim()}]');
+    var doc = editor.getDoc()!;
+    print('[${doc.getLine(doc.getCursor().line)!.trim()}]');
   });
 
 //  Element e = new ParagraphElement();
@@ -101,13 +102,13 @@ void main() {
 
 void _updateFooter(CodeMirror editor) {
   var pos = editor.getCursor();
-  var off = editor.getDoc().indexFromPos(pos);
+  var off = editor.getDoc()!.indexFromPos(pos);
   var str = 'line ${pos.line} • column ${pos.ch} • offset ${off}' +
-      (editor.getDoc().isClean() ? '' : ' • (modified)');
-  querySelector('#footer').text = str;
+      (editor.getDoc()!.isClean()! ? '' : ' • (modified)');
+  querySelector('#footer')!.text = str;
 }
 
-HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
+HintResults _dartCompleter(CodeMirror editor, [HintsOptions? options]) {
   var cur = editor.getCursor();
   var word = _getCurrentWord(editor).toLowerCase();
   var list = _numbers
@@ -116,7 +117,7 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
       .toList();
 
   var results = HintResults.fromHints(list,
-      Position(cur.line, cur.ch - word.length), Position(cur.line, cur.ch));
+      Position(cur.line, cur.ch! - word.length), Position(cur.line, cur.ch));
   results.registerOnShown(() => print('hints shown'));
   results.registerOnSelect((completion, element) {
     print(['hints select: ${completion}']);
@@ -139,14 +140,14 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions options]) {
 //}
 
 Future<HintResults> _dartCompleterAsync(CodeMirror editor,
-    [HintsOptions options]) {
+    [HintsOptions? options]) {
   var cur = editor.getCursor();
   var word = _getCurrentWord(editor).toLowerCase();
   var list = List.from(_numbers.where((s) => s.startsWith(word)));
 
   return Future.delayed(Duration(milliseconds: 200), () {
-    return HintResults.fromStrings(list,
-        Position(cur.line, cur.ch - word.length), Position(cur.line, cur.ch));
+    return HintResults.fromStrings(list as List<String>,
+        Position(cur.line, cur.ch! - word.length), Position(cur.line, cur.ch));
   });
 }
 
@@ -170,8 +171,8 @@ String _getCurrentWord(CodeMirror editor) {
   var line = editor.getLine(cur.line);
   var buf = StringBuffer();
 
-  for (var i = cur.ch - 1; i >= 0; i--) {
-    var c = line[i];
+  for (var i = cur.ch! - 1; i >= 0; i--) {
+    var c = line![i];
     if (_ids.hasMatch(c)) {
       buf.write(c);
     } else {

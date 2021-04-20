@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.1+5.61.0
+ - update to CodeMirror 5.61.0
+
 ## 0.6.0+5.60.0
  - Same as 0.6.0-nullsafety.0+5.60.0
 

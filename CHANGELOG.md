@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.2+5.61.1
+ - update to CodeMirror 5.61.1
+
 ## 0.6.1+5.61.0
  - update to CodeMirror 5.61.0
 

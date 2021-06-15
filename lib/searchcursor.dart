@@ -28,7 +28,7 @@ class SearchCursorContainer extends ProxyHolder {
   SearchCursorContainer._(JsObject? jsProxy) : super(jsProxy);
 
   bool get atOccurrence => jsProxy!['atOccurrence'];
-  Doc get doc => jsProxy!['doc'];
+  Doc get doc => Doc.fromProxy(jsProxy!['doc']);
   Position get pos => Position.fromProxy(jsProxy!['pos']);
 
   /// Search forward from the current position
@@ -38,6 +38,11 @@ class SearchCursorContainer extends ProxyHolder {
   bool findPrevious() => call('findPrevious');
   Position from() => Position.fromProxy(call('from'));
   Position to() => Position.fromProxy(call('to'));
-  String replace(String text, String? origin) =>
-      callArgs('replace', [text, origin]);
+  String replace(String text, {dynamic origin}) {
+    if (origin == null) {
+      return callArg('replace', text);
+    } else {
+      return callArgs('replace', [text, origin]);
+    }
+  }
 }

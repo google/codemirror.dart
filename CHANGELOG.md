@@ -1,7 +1,7 @@
 # Changelog
 
-## 0.6.4+5.62.1
- - Update to CodeMirror 5.62.1
+## 0.6.4+5.62.2
+ - Update to CodeMirror 5.62.2
  - Add SearchCursor wrapper (thanks to @ayshiff) 
 
 ## 0.6.3+5.62.0

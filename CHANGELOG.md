@@ -1,63 +1,67 @@
 # Changelog
 
+## 0.6.4+5.62.1
+ - Update to CodeMirror 5.62.1
+ - Add SearchCursor wrapper (thanks to @ayshiff) 
+
 ## 0.6.3+5.62.0
- - update to CodeMirror 5.62.0
+ - Update to CodeMirror 5.62.0
 
 ## 0.6.2+5.61.1
- - update to CodeMirror 5.61.1
+ - Update to CodeMirror 5.61.1
 
 ## 0.6.1+5.61.0
- - update to CodeMirror 5.61.0
+ - Update to CodeMirror 5.61.0
 
 ## 0.6.0+5.60.0
  - Same as 0.6.0-nullsafety.0+5.60.0
 
 ## 0.6.0-nullsafety.0+5.60.0
  - Null safety migration
- - update to CodeMirror 5.60.0
+ - Update to CodeMirror 5.60.0
 
 ## 0.5.24+5.59.2
- - update to CodeMirror 5.59.2
+ - Update to CodeMirror 5.59.2
 
 ## 0.5.23+5.59.1
- - update to CodeMirror 5.59.1
+ - Update to CodeMirror 5.59.1
 
 ## 0.5.22+5.59.0
- - update to CodeMirror 5.59.0
+ - Update to CodeMirror 5.59.0
 
 ## 0.5.21+5.58.0
- - update to CodeMirror 5.58.0
+ - Update to CodeMirror 5.58.0
 
 ## 0.5.20+5.57.0
- - update to CodeMirror 5.57.0
+ - Update to CodeMirror 5.57.0
 
 ## 0.5.19+5.56.0
- - update to CodeMirror 5.56.0
+ - Update to CodeMirror 5.56.0
 
 ## 0.5.18+5.55.0
- - update to CodeMirror 5.55.0
+ - Update to CodeMirror 5.55.0
 
 ## 0.5.17+5.54.0
- - update to CodeMirror 5.54.0
+ - Update to CodeMirror 5.54.0
 
 ## 0.5.16+5.53.0
- - update to CodeMirror 5.53.0
+ - Update to CodeMirror 5.53.0
 
 ## 0.5.15+5.52.2
- - update to CodeMirror 5.52.2
+ - Update to CodeMirror 5.52.2
 
 ## 0.5.14+5.52.0
- - update to CodeMirror 5.52.0
+ - Update to CodeMirror 5.52.0
 
 ## 0.5.13+5.50.2
-- update to CodeMirror 5.50.2
+- Update to CodeMirror 5.50.2
 - Add a `className` option to `addLineWidget`
 - New themes: [ayu-dark](https://codemirror.net/demo/theme.html#ayu-dark) and
  [ayu-mirage](https://codemirror.net/demo/theme.html#ayu-mirage)
 
 
 ## 0.5.12+5.49.2
-- update to CodeMirror 5.49.2
+- Update to CodeMirror 5.49.2
 
 ## 0.5.11+5.49.0
 - update to CodeMirror 5.49.0

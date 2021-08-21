@@ -654,8 +654,7 @@ class Doc extends ProxyHolder {
   /// relative position of the old selection—the editor will try to move further
   /// away from that, to prevent getting stuck.
   void setSelection(Position anchor, {Position? head, Map? options}) {
-    callArgs('setSelection',
-        [anchor.toProxy(), head == null ? null : head.toProxy(), options]);
+    callArgs('setSelection', [anchor.toProxy(), head?.toProxy(), options]);
   }
 
   /// Replace the selection(s) with the given string. By default, the new
@@ -763,7 +762,7 @@ class Doc extends ProxyHolder {
         'replaceRange',
         origin != null
             ? [replacement, from.toProxy(), to!.toProxy(), origin]
-            : [replacement, from.toProxy(), to == null ? null : to.toProxy()]);
+            : [replacement, from.toProxy(), to?.toProxy()]);
   }
 
   /// Set the editor content as 'clean', a flag that it will retain until it is
@@ -1072,7 +1071,7 @@ class Position implements Comparable<Position> {
   bool operator >(Position other) => compareTo(other) > 0;
 
   @override
-  String toString() => '[${line}:${ch}]';
+  String toString() => '[$line:$ch]';
 }
 
 class ModeInfo extends ProxyHolder {
@@ -1121,7 +1120,7 @@ class Span {
   int get hashCode => head.hashCode ^ anchor.hashCode;
 
   @override
-  String toString() => '${head}=>${anchor}]';
+  String toString() => '$head=>$anchor]';
 }
 
 /// An object that represents a marker.

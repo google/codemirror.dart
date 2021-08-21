@@ -10,7 +10,7 @@ the updated [pub](https://pub.dartlang.org) package.
 - Download the latest zip ball from [codemirror.net/codemirror.zip](https://codemirror.net/codemirror.zip)
 - Replace the contents of `third_party/codemirror` with the content of the above download
 - Update the version number in the `README_.google` file.
-- Update the `changelog.md` file.
+- Update the `CHANGELOG.md` file.
 - Update the `pubspec.yaml` file.
 - Submit a PR with the changes.
 

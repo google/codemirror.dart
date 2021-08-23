@@ -1,4 +1,4 @@
-include: package:pedantic/analysis_options.1.9.0.yaml
+include: package:lints/recommended.yaml
 
 analyzer:
   exclude:
@@ -7,4 +7,4 @@ analyzer:
 
 linter:
   rules:
-    - unnecessary_new
+    non_constant_identifier_names: false

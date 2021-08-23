@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.5+5.62.3
+ - Update to CodeMirror 5.62.3
+ - Migrate from `pedantic` to `lints/recomended`
+
 ## 0.6.4+5.62.2
  - Update to CodeMirror 5.62.2
  - Add SearchCursor wrapper (thanks to @ayshiff) 

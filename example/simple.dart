@@ -103,7 +103,7 @@ void main() {
 void _updateFooter(CodeMirror editor) {
   var pos = editor.getCursor();
   var off = editor.getDoc()!.indexFromPos(pos);
-  var str = 'line ${pos.line} • column ${pos.ch} • offset ${off}' +
+  var str = 'line ${pos.line} • column ${pos.ch} • offset $off' +
       (editor.getDoc()!.isClean()! ? '' : ' • (modified)');
   querySelector('#footer')!.text = str;
 }
@@ -120,10 +120,10 @@ HintResults _dartCompleter(CodeMirror editor, [HintsOptions? options]) {
       Position(cur.line, cur.ch! - word.length), Position(cur.line, cur.ch));
   results.registerOnShown(() => print('hints shown'));
   results.registerOnSelect((completion, element) {
-    print(['hints select: ${completion}']);
+    print(['hints select: $completion']);
   });
   results.registerOnPick((completion) {
-    print(['hints pick: ${completion}']);
+    print(['hints pick: $completion']);
   });
   results.registerOnUpdate(() => print('hints update'));
   results.registerOnClose(() => print('hints close'));

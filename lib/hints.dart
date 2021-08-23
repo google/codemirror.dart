@@ -55,7 +55,7 @@ class Hints {
     var function = JsFunction.withThis((win, editor, showHints, [options]) {
       var results = helper(
           CodeMirror.fromJsObject(editor), HintsOptions.fromProxy(options));
-      return results == null ? null : results.toProxy();
+      return results?.toProxy();
     });
 
     CodeMirror.registerHelper('hint', mode, function);
@@ -69,7 +69,7 @@ class Hints {
           CodeMirror.fromJsObject(editor), HintsOptions.fromProxy(options));
 
       results.then((HintResults? r) {
-        showHints.apply([r == null ? null : r.toProxy()]);
+        showHints.apply([r?.toProxy()]);
       });
     });
 
@@ -78,7 +78,7 @@ class Hints {
     CodeMirror.registerHelper('hint', mode, function);
   }
 
-  static void _showHint(var myThis, var editor, [var hintsFunc, var opt]) {
+  static dynamic _showHint(var myThis, var editor, [var hintsFunc, var opt]) {
     var pos = editor.callMethod('getCursor');
     JsObject? helper = editor.callMethod('getHelper', [pos, 'hint']);
 
@@ -280,7 +280,7 @@ class HintResult {
   }
 
   @override
-  String toString() => '[${text}]';
+  String toString() => '[$text]';
 
   static Position? _createPos(JsObject? obj) {
     return obj == null ? null : Position.fromProxy(obj);

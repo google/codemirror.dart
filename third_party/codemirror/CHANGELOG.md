@@ -1,3 +1,21 @@
+## 5.63.1 (2021-09-29)
+
+### Bug fixes
+
+Fix an issue with mouse scrolling on Chrome 94 Windows, which made scrolling by wheel move unusably slow.
+
+## 5.63.0 (2021-09-20)
+
+### Bug fixes
+
+Fix scroll position jumping when scrolling a document with very different line heights.
+
+[xml mode](https://codemirror.net/mode/xml/): Look up HTML element behavior in a case-insensitive way.
+
+### New features
+
+[vim bindings](https://codemirror.net/demo/vim.html): Support guu for case-changing.
+
 ## 5.62.3 (2021-08-20)
 
 ### Bug fixes

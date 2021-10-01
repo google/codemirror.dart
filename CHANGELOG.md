@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.6+5.63.1
+ - Update to CodeMirror 5.63.1
+
 ## 0.6.5+5.62.3
  - Update to CodeMirror 5.62.3
  - Migrate from `pedantic` to `lints/recomended`

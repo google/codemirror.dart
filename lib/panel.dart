@@ -16,7 +16,7 @@ class Panel {
   /// room for the node. By default, the panel ends up above the editor.
   static PanelContainer addPanel(CodeMirror editor, Element element,
       {bool? below}) {
-    if (below != null && below) {
+    if (below ?? false) {
       var options = {'position': 'bottom'};
       return PanelContainer._(
           editor.callArgs('addPanel', [element, jsify(options)]));

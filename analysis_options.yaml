@@ -7,4 +7,6 @@ analyzer:
 
 linter:
   rules:
+    constant_identifier_names: false
     non_constant_identifier_names: false
+    prefer_final_in_for_each: true

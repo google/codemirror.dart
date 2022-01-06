@@ -15,14 +15,14 @@ modes and addons that implement more advanced editing functionality.
 ## An example
 
 ```dart
-Map options = {
+final options = <String, String>{
   'mode': 'javascript',
   'theme': 'monokai'
 };
 
-CodeMirror editor = CodeMirror.fromElement(
-    querySelector('#textContainer'), options: options);
-editor.getDoc().setValue('foo.bar(1, 2, 3);');
+final editor = CodeMirror.fromElement(
+    querySelector('#textContainer')!, options: options);
+editor.getDoc()!.setValue('foo.bar(1, 2, 3);');
 ```
 
 See also our
@@ -49,7 +49,7 @@ This Dart package ships with several language modes built in. CodeMirror itself
 supports over 100 modes; the modes built into the Dart package include the
 usual suspects for web development - `css`, `html`, `dart` and `javascript` as
 well as a few
-[others](https://github.com/google/codemirror.dart/blob/master/tool/grind.dart#L122).
+[others](https://github.com/google/codemirror.dart/blob/master/tool/grind.dart#L86).
 In order to add additional modes, you'll need to reference the mode file from
 your html entry-point. So,
 
@@ -84,19 +84,6 @@ only the ones you're interested in:
 
     <link href="packages/codemirror/theme/monokai.css" rel="stylesheet">
     <link href="packages/codemirror/theme/zenburn.css" rel="stylesheet">
-
-## Polymer transformer
-
-The Polymer transfomer will inline our theme css references incorrectly.
-Currently, to use the `codemirror` package with Polymer, you'll need to add the
-following lines to your `pubspec.yaml` file.
-
-```yaml
-- polymer:
-    entry_points: web/foo_bar.html
-    inline_stylesheets:
-      packages/codemirror/codemirror.css: false
-```          
 
 ## Disclaimer
 

@@ -4,7 +4,6 @@
 
 library example.simple;
 
-import 'dart:async';
 import 'dart:html';
 
 import 'package:codemirror/codemirror.dart';
@@ -34,7 +33,7 @@ void main() {
 
   // Theme control.
   final themeSelect = querySelector('#theme') as SelectElement;
-  for (var theme in CodeMirror.THEMES) {
+  for (final theme in CodeMirror.themes) {
     themeSelect.children.add(OptionElement(value: theme)..text = theme);
     if (theme == editor.getTheme()) {
       themeSelect.selectedIndex = themeSelect.length! - 1;
@@ -47,7 +46,7 @@ void main() {
 
   // Mode control.
   final modeSelect = querySelector('#mode') as SelectElement;
-  for (var mode in CodeMirror.MODES) {
+  for (final mode in CodeMirror.modes) {
     modeSelect.children.add(OptionElement(value: mode)..text = mode);
     if (mode == editor.getMode()) {
       modeSelect.selectedIndex = modeSelect.length! - 1;
@@ -78,19 +77,17 @@ void main() {
   editor.focus();
 
   CodeMirror.addCommand('find', (foo) {
-    /*LineHandle handle =*/ editor
-        .getDoc()!
-        .getLineHandle(editor.getCursor().line);
+    /*LineHandle handle =*/ editor.doc.getLineHandle(editor.getCursor().line);
 
     print('todo: handle find');
   });
 
-  print(CodeMirror.MODES);
-  print(CodeMirror.MIME_MODES);
-  print(CodeMirror.COMMANDS);
+  print(CodeMirror.modes);
+  print(CodeMirror.mimeModes);
+  print(CodeMirror.commands);
 
   editor.onDoubleClick.listen((MouseEvent evt) {
-    var doc = editor.getDoc()!;
+    var doc = editor.doc;
     print('[${doc.getLine(doc.getCursor().line)!.trim()}]');
   });
 
@@ -102,9 +99,9 @@ void main() {
 
 void _updateFooter(CodeMirror editor) {
   var pos = editor.getCursor();
-  var off = editor.getDoc()!.indexFromPos(pos);
+  var off = editor.doc.indexFromPos(pos);
   var str = 'line ${pos.line} • column ${pos.ch} • offset $off' +
-      (editor.getDoc()!.isClean()! ? '' : ' • (modified)');
+      (editor.doc.isClean() ? '' : ' • (modified)');
   querySelector('#footer')!.text = str;
 }
 
@@ -143,15 +140,15 @@ Future<HintResults> _dartCompleterAsync(CodeMirror editor,
     [HintsOptions? options]) {
   var cur = editor.getCursor();
   var word = _getCurrentWord(editor).toLowerCase();
-  var list = List.from(_numbers.where((s) => s.startsWith(word)));
+  var list = List.of(_numbers.where((s) => s.startsWith(word)));
 
   return Future.delayed(Duration(milliseconds: 200), () {
-    return HintResults.fromStrings(list as List<String>,
+    return HintResults.fromStrings(list,
         Position(cur.line, cur.ch! - word.length), Position(cur.line, cur.ch));
   });
 }
 
-final List _numbers = [
+const List<String> _numbers = [
   'zero',
   'one',
   'two',

@@ -23,7 +23,7 @@ typedef HintsResultsSelectCallback = void Function(
 typedef HintsResultsPickCallback = void Function(HintResult completion);
 
 /// To use codemirror hints (aka code completion), register either a synchronous
-/// or aynchronous hints helper for a given mode (see [Hints.registerHintsHelper]
+/// or asynchronous hints helper for a given mode (see [Hints.registerHintsHelper]
 /// and [Hints.registerHintsHelperAsync]). The second helper type returns a
 /// `Future` with the completion results.
 ///

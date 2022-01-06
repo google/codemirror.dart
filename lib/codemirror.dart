@@ -22,7 +22,7 @@ typedef SelectionExtender = Position Function(Span range, int i);
 
 /// A wrapper around the CodeMirror editor.
 class CodeMirror extends ProxyHolder {
-  static final List<String> THEMES = const [
+  static const List<String> themes = [
     '3024-day',
     '3024-night',
     'abcdef',
@@ -88,23 +88,38 @@ class CodeMirror extends ProxyHolder {
     'zenburn',
   ];
 
-  static final List<String> KEY_MAPS = const [
+  @Deprecated('Use CodeMirror.themes instead.')
+  static const List<String> THEMES = themes;
+
+  static const List<String> keyMaps = [
     'default',
     'emacs',
     'sublime',
     'vim',
   ];
 
+  @Deprecated('Use CodeMirror.keyMaps instead.')
+  static const List<String> KEY_MAPS = keyMaps;
+
   static JsObject? get _cm => context['CodeMirror'];
 
   static final Map<JsObject?, CodeMirror> _instances = {};
 
-  static List<String> get MODES =>
+  static List<String> get modes =>
       List.from(keys(_cm!['modes'])!.where((modeName) => modeName != 'null'));
 
-  static List<String> get MIME_MODES => List.from(keys(_cm!['mimeModes'])!);
+  @Deprecated('Use CodeMirror.modes instead.')
+  static List<String> get MODES => modes;
 
-  static List<String> get COMMANDS => List.from(keys(_cm!['commands'])!);
+  static List<String> get mimeModes => List.from(keys(_cm!['mimeModes'])!);
+
+  @Deprecated('Use CodeMirror.mimeModes instead.')
+  static List<String> get MIME_MODES => mimeModes;
+
+  static List<String> get commands => List.from(keys(_cm!['commands'])!);
+
+  @Deprecated('Use CodeMirror.commands instead.')
+  static List<String> get COMMANDS => commands;
 
   /// It contains a string that indicates the version of the library. This is a
   /// triple of integers "major.minor.patch", where patch is zero for releases,
@@ -237,10 +252,18 @@ class CodeMirror extends ProxyHolder {
   Stream<int?> get onGutterClick => onEvent<int>('gutterClick', argCount: 4);
 
   /// Retrieve the currently active document from an editor.
-  Doc? getDoc() {
-    _doc ??= Doc.fromProxy(call('getDoc'));
-    return _doc;
+  Doc get doc {
+    var doc = _doc;
+    if (doc == null) {
+      doc = Doc.fromProxy(call('getDoc'));
+      _doc = doc;
+    }
+    return doc;
   }
+
+  /// Retrieve the currently active document from an editor.
+  @Deprecated('Use CodeMirror.doc instead.')
+  Doc getDoc() => doc;
 
   /// Attach a new document to the editor.
   void swapDoc(Doc doc) {
@@ -281,7 +304,7 @@ class CodeMirror extends ProxyHolder {
 
   /// Whether, when indenting, the first N*tabSize spaces should be replaced by N
   /// tabs. Default is false.
-  bool? getIndentWithTabs() => getOption('indentWithTabs');
+  bool getIndentWithTabs() => getOption('indentWithTabs') ?? false;
 
   /// Whether, when indenting, the first N*tabSize spaces should be replaced by N
   /// tabs.
@@ -307,7 +330,7 @@ class CodeMirror extends ProxyHolder {
   }
 
   /// The width of a tab character. Defaults to 4.
-  int? getTabSize() => getOption('tabSize');
+  int getTabSize() => getOption('tabSize') ?? 4;
 
   /// The width of a tab character.
   void setTabSize(int value) => setOption('tabSize', value);
@@ -459,7 +482,7 @@ class CodeMirror extends ProxyHolder {
         ? callArgs('getLineTokens', [line, precise])
         : callArg('getLineTokens', line);
     if (result is List) {
-      return List.from(result.map((t) => Token.fromProxy(t)));
+      return List.of(result.map((t) => Token.fromProxy(t)));
     } else {
       return [];
     }
@@ -576,17 +599,17 @@ class Doc extends ProxyHolder {
     }
   }
 
-  CodeMirror? _editor;
+  late final CodeMirror _editor = CodeMirror.fromJsObject(call('getEditor'));
 
   Doc(String text, [String? mode, int? firstLineNumber])
       : super(_create(text, mode, firstLineNumber));
 
   Doc.fromProxy(JsObject? proxy) : super(proxy);
 
-  CodeMirror? getEditor() {
-    _editor ??= CodeMirror.fromJsObject(call('getEditor'));
-    return _editor;
-  }
+  CodeMirror get editor => _editor;
+
+  @Deprecated('Use Doc.editor instead.')
+  CodeMirror getEditor() => editor;
 
   /// Get the current editor content. You can pass it an optional argument to
   /// specify the string to be used to separate lines (defaults to "\n").
@@ -628,7 +651,7 @@ class Doc extends ProxyHolder {
   }
 
   /// Return `true` if any text is selected.
-  bool? somethingSelected() => call('somethingSelected');
+  bool somethingSelected() => call('somethingSelected') ?? false;
 
   /// Get the currently selected code. Optionally pass a line separator to put
   /// between the lines in the output. When multiple selections are present, they
@@ -641,7 +664,7 @@ class Doc extends ProxyHolder {
   /// `scroll`: determines whether the selection head should be scrolled into
   /// view. Defaults to true.
   ///
-  /// `origin`: detemines whether the selection history event may be merged with
+  /// `origin`: determines whether the selection history event may be merged with
   /// the previous one. When an origin starts with the character +, and the last
   /// recorded selection had the same origin and was similar (close in time, both
   /// collapsed or both non-collapsed), the new one will replace the old one.
@@ -669,8 +692,8 @@ class Doc extends ProxyHolder {
 
   /// Returns an array containing a string for each selection, representing the
   /// content of the selections.
-  Iterable<String>? getSelections([String? lineSep]) =>
-      callArg('getSelections', lineSep).cast<String>();
+  Iterable<String> getSelections([String? lineSep]) =>
+      callArg('getSelections', lineSep)?.cast<String>() ?? [];
 
   /// Sets a new set of selections. There must be at least one selection in the
   /// given array. When [primary] is a number, it determines which selection is
@@ -744,7 +767,7 @@ class Doc extends ProxyHolder {
   /// array contains `anchor` and `head` properties referring
   /// to `{line, ch}` objects.
   Iterable<Span>? listSelections() {
-    return call('listSelections').map((JsObject selection) {
+    return call('listSelections')?.map((JsObject selection) {
       return Span.fromProxy(selection);
     });
   }
@@ -787,10 +810,11 @@ class Doc extends ProxyHolder {
   /// initialization or the last call to [markClean] if no argument is passed, or
   /// since the matching call to [changeGeneration] if a generation value is
   /// given.
-  bool? isClean([int? generation]) {
-    return generation == null
-        ? call('isClean')
-        : callArg('isClean', generation);
+  bool isClean([int? generation]) {
+    return (generation == null
+            ? call('isClean')
+            : callArg('isClean', generation)) ??
+        false;
   }
 
   // History-related methods.
@@ -822,7 +846,7 @@ class Doc extends ProxyHolder {
   /// Clears the editor's undo history.
   void clearHistory() => call('clearHistory');
 
-  /// Get a (JSON-serializeable) representation of the undo history.
+  /// Get a (JSON-serializable) representation of the undo history.
   JsObject? getHistory() => call('getHistory');
 
   /// Replace the editor's undo history with the one provided, which must be a
@@ -979,7 +1003,7 @@ class Doc extends ProxyHolder {
   List<TextMarker> findMarks(Position from, Position to) {
     var result = callArgs('findMarks', [from.toProxy(), to.toProxy()]);
     if (result is! List) return [];
-    return List.from(result.map((mark) => TextMarker(mark)));
+    return List.of(result.map((mark) => TextMarker(mark)));
   }
 
   /// Returns an array of all the bookmarks and marked ranges present at the
@@ -987,14 +1011,14 @@ class Doc extends ProxyHolder {
   List<TextMarker> findMarksAt(Position pos) {
     var result = callArg('findMarksAt', pos.toProxy());
     if (result is! List) return [];
-    return List.from(result.map((mark) => TextMarker(mark)));
+    return List.of(result.map((mark) => TextMarker(mark)));
   }
 
   /// Returns an array containing all marked ranges in the document.
   List<TextMarker> getAllMarks() {
     var result = call('getAllMarks');
     if (result is! List) return [];
-    return List.from(result.map((mark) => TextMarker(mark)));
+    return List.of(result.map((mark) => TextMarker(mark)));
   }
 
   /// Gets the (outer) mode object for the editor. Note that this is distinct
@@ -1012,8 +1036,7 @@ class Doc extends ProxyHolder {
   /// (such as htmlmixed).
   ///
   /// The returned mode is a `JsObject`.
-  dynamic getModeAt(Position pos) =>
-      getEditor()!.callArg('getModeAt', pos.toProxy());
+  dynamic getModeAt(Position pos) => editor.callArg('getModeAt', pos.toProxy());
 
   /// Return the name of the mode at the given position.
   String? getModeNameAt(Position pos) => getModeAt(pos)['name'];
@@ -1249,21 +1272,22 @@ abstract class ProxyHolder {
       jsProxy!.callMethod(methodName, args);
 
   Stream<T?> onEvent<T>(String eventName, {int argCount = 1}) {
-    if (!_events.containsKey(eventName)) {
+    var listener = _events[eventName];
+    if (listener == null) {
       if (argCount == 4) {
-        _events[eventName] = JsEventListener<T>(jsProxy, eventName,
+        listener = JsEventListener<T>(jsProxy, eventName,
             cvtEvent: (a, b, c) => a, argCount: argCount);
       } else if (argCount == 3) {
-        _events[eventName] = JsEventListener<T>(jsProxy, eventName,
+        listener = JsEventListener<T>(jsProxy, eventName,
             cvtEvent: (a, b) => a, argCount: argCount);
       } else if (argCount == 2) {
-        _events[eventName] =
-            JsEventListener<T>(jsProxy, eventName, argCount: argCount);
+        listener = JsEventListener<T>(jsProxy, eventName, argCount: argCount);
       } else {
-        _events[eventName] = JsEventListener<T>(jsProxy, eventName);
+        listener = JsEventListener<T>(jsProxy, eventName);
       }
+      _events[eventName] = listener;
     }
-    return _events[eventName]!.stream as Stream<T?>;
+    return listener.stream as Stream<T?>;
   }
 
   @override
@@ -1276,7 +1300,7 @@ abstract class ProxyHolder {
   /// object.
   void dispose() {
     if (_events.isNotEmpty) {
-      for (var event in _events.values) {
+      for (final event in _events.values) {
         event.dispose();
       }
     }

@@ -4,7 +4,6 @@
 
 library example.simple;
 
-import 'dart:async';
 import 'dart:html';
 
 import 'package:codemirror/codemirror.dart';

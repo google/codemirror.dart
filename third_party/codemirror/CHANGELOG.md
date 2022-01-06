@@ -1,3 +1,25 @@
+## 5.65.0 (2021-12-20)
+
+### Bug fixes
+
+brace-folding addon: Fix broken folding on lines with both braces and square brackets.
+
+### New features
+
+[vim bindings](https://codemirror.net/demo/vim.html): Support g0, g$, g<Arrow>.
+
+## 5.64.0 (2021-11-20)
+
+### Bug fixes
+
+Fix a crash that occurred in some situations with replacing marks across line breaks.
+
+Make sure native scrollbars reset their position when hidden and re-shown.
+
+### New features
+
+[vim bindings](https://codemirror.net/demo/vim.html): Support C-u to delete back a line.
+
 ## 5.63.3 (2021-10-11)
 
 ### Bug fixes

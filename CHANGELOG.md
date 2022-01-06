@@ -1,6 +1,7 @@
 # Changelog
 
-## Unreleased
+## 0.6.8+5.65.0
+- UPdate to CodeMirror 5.65.0
 - Deprecate and replace various APIs to match Dart standards
 - Switch some nullable types to non-nullable
 

@@ -87,7 +87,7 @@ void createCodeMirrorTests() {
   });
 
   test('getLine', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     doc.setValue('one\ntwo\nthree');
     expect(editor.getLine(0), 'one');
     expect(editor.getLine(1), 'two');
@@ -109,14 +109,14 @@ void createDocTests() {
   });
 
   test('getValue / getValue', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     expect(doc.getValue(), '');
     doc.setValue('foo bar');
     expect(doc.getValue(), 'foo bar');
   });
 
   test('getLine', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     doc.setValue('one\ntwo\nthree');
     expect(doc.getLine(0), 'one');
     expect(doc.getLine(1), 'two');
@@ -124,13 +124,13 @@ void createDocTests() {
   });
 
   test('getMode', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     expect(doc.getMode()['name'], 'clike');
     expect(doc.getModeName(), 'clike');
   });
 
   test('eachLine', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     doc.setValue('one\ntwo\nthree');
     var lines = [];
     doc.eachLine((LineHandle line) {
@@ -143,7 +143,7 @@ void createDocTests() {
   });
 
   test('extendSelection', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     doc.setValue('foo bar');
 
     // Extending flag is off.
@@ -160,7 +160,7 @@ void createDocTests() {
   });
 
   test('extendSelections', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     doc.setValue('foo bar');
 
     doc.addSelection(anchor: Position(0, 0));
@@ -171,7 +171,7 @@ void createDocTests() {
   });
 
   test('extendSelectionsBy', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     doc.setValue('foo bar');
 
     doc.addSelection(anchor: Position(0, 0));
@@ -197,7 +197,7 @@ void createHtmlDocTests() {
   });
 
   test('getModeAt', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     doc.setValue('<style>\np {color: black;}\n</style>');
     var mode = doc.getModeAt(Position(2, 0));
     expect(mode['name'], 'css');
@@ -218,7 +218,7 @@ void createHistoryTests() {
   });
 
   test('undo / redo', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     _expectHistory(doc, 0, 0);
     doc.replaceRange('foo', doc.getCursor());
     _expectHistory(doc, 1, 0);
@@ -229,7 +229,7 @@ void createHistoryTests() {
   });
 
   test('clearHistory', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     doc.replaceRange('foo', doc.getCursor());
     _expectHistory(doc, 1, 0);
     doc.clearHistory();
@@ -237,7 +237,7 @@ void createHistoryTests() {
   });
 
   test('getHistory', () {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     doc.setValue('one\ntwo\nthree');
     expect(doc.getHistory(), isNotNull);
   });

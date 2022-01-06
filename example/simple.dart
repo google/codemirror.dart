@@ -77,9 +77,7 @@ void main() {
   editor.focus();
 
   CodeMirror.addCommand('find', (foo) {
-    /*LineHandle handle =*/ editor
-        .getDoc()
-        .getLineHandle(editor.getCursor().line);
+    /*LineHandle handle =*/ editor.doc.getLineHandle(editor.getCursor().line);
 
     print('todo: handle find');
   });
@@ -89,7 +87,7 @@ void main() {
   print(CodeMirror.commands);
 
   editor.onDoubleClick.listen((MouseEvent evt) {
-    var doc = editor.getDoc();
+    var doc = editor.doc;
     print('[${doc.getLine(doc.getCursor().line)!.trim()}]');
   });
 
@@ -101,9 +99,9 @@ void main() {
 
 void _updateFooter(CodeMirror editor) {
   var pos = editor.getCursor();
-  var off = editor.getDoc().indexFromPos(pos);
+  var off = editor.doc.indexFromPos(pos);
   var str = 'line ${pos.line} • column ${pos.ch} • offset $off' +
-      (editor.getDoc().isClean() ? '' : ' • (modified)');
+      (editor.doc.isClean() ? '' : ' • (modified)');
   querySelector('#footer')!.text = str;
 }
 

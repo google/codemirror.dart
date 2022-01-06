@@ -22,7 +22,7 @@ final options = <String, String>{
 
 final editor = CodeMirror.fromElement(
     querySelector('#textContainer')!, options: options);
-editor.getDoc()!.setValue('foo.bar(1, 2, 3);');
+editor.getDoc().setValue('foo.bar(1, 2, 3);');
 ```
 
 See also our

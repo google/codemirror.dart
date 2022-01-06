@@ -252,7 +252,7 @@ class CodeMirror extends ProxyHolder {
   Stream<int?> get onGutterClick => onEvent<int>('gutterClick', argCount: 4);
 
   /// Retrieve the currently active document from an editor.
-  Doc getDoc() {
+  Doc get doc {
     var doc = _doc;
     if (doc == null) {
       doc = Doc.fromProxy(call('getDoc'));
@@ -260,6 +260,10 @@ class CodeMirror extends ProxyHolder {
     }
     return doc;
   }
+
+  /// Retrieve the currently active document from an editor.
+  @Deprecated('Use CodeMirror.doc instead.')
+  Doc getDoc() => doc;
 
   /// Attach a new document to the editor.
   void swapDoc(Doc doc) {

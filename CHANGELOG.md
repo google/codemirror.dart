@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.1+5.65.1
+- Update to CodeMirror 5.65.1
+
 ## 0.7.0+5.65.0
 - 0.6.8 contained API breaking changes, should have been a semver step release
 

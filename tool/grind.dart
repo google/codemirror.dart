@@ -70,10 +70,15 @@ String _concatenateModes(Directory dir) {
 
   // Add an API to add a panel above or below the editor.
   files.add(joinFile(dir, ['addon', 'display', 'panel.js']));
+  files.add(joinFile(dir, ['addon', 'scroll', 'simplescrollbars.js']));
 
   // Add search addons.
+  files.add(joinFile(dir, ['addon', 'scroll', 'simplescrollbars.js']));
   files.add(joinFile(dir, ['addon', 'search', 'search.js']));
   files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
+  files.add(joinFile(dir, ['addon', 'scroll', 'annotatescrollbar.js']));
+  files.add(joinFile(dir, ['addon', 'search', 'matchesonscrollbar.js']));
+  files.add(joinFile(dir, ['addon', 'search', 'match-highlighter.js']));
 
   // Required by some modes.
   files.add(joinFile(dir, ['addon', 'mode', 'overlay.js']));
@@ -93,6 +98,11 @@ String _concatenateModes(Directory dir) {
   files.add(joinFile(dir, ['mode', 'shell', 'shell.js']));
   files.add(joinFile(dir, ['mode', 'xml', 'xml.js']));
   files.add(joinFile(dir, ['mode', 'yaml', 'yaml.js']));
+
+  // Read things we need for vim keymap
+  files.add(joinFile(dir, ['addon', 'dialog', 'dialog.js']));
+  files.add(joinFile(dir, ['keymap', 'vim.js']));
+
 
 //  var modeFiles = joinDir(dir, ['mode'])
 //    .listSync()

@@ -157,12 +157,15 @@ String _concatenateModesAndOtherDependencies(Directory dir) {
   files.add(joinFile(dir, ['addon', 'dialog', 'dialog.js']));
   files.add(joinFile(dir, ['keymap', 'vim.js']));
 
-//  var modeFiles = joinDir(dir, ['mode'])
-//    .listSync()
-//    .where((dir) => dir is Directory)
-//    .map((dir) => joinFile(dir, ['${fileName(dir)}.js']))
-//    .where((f) => f.existsSync());
-//  files.addAll(modeFiles);
+  //  var modeFiles = joinDir(dir, ['mode'])
+  //    .listSync()
+  //    .where((dir) => dir is Directory)
+  //    .map((dir) => joinFile(dir, ['${fileName(dir)}.js']))
+  //    .where((f) => f.existsSync());
+  //  files.addAll(modeFiles);
+
+  // make a header for the file with a list of every file we combined
+  //   so this info is available in one convenient place
   int count = 0;
   String topHeaderFileList = files.map((File file) {
     String filenameCommentForHeader;
@@ -170,7 +173,7 @@ String _concatenateModesAndOtherDependencies(Directory dir) {
       // codemirror file
       filenameCommentForHeader = '// ${fileName(file)}';
     } else {
-      // addons
+      // for modes,addons,keymaps include path and indent
       List<String> fileparts = file.path.split('/');
       int len = fileparts.length;
       filenameCommentForHeader = '//    ' +

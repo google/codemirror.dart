@@ -15,7 +15,7 @@ final Directory destDir = Directory('lib');
 Future main(List<String> args) => grind(args);
 
 @Task(
-    'Minify the codemirror files, and then proceed with "build" using minified codemirror\n--verbose shows intermediate output')
+    'Minify the codemirror files, and then proceed with "build" using minified codemirror\noptional args (can include "build" arguments also):\n --verbose shows intermediate output')
 @Depends(clean_minified)
 void build_minified() {
   TaskArgs args = context.invocation.arguments;
@@ -33,7 +33,7 @@ void build_minified() {
   build();
 }
 
-@Task('Copy the codemirror files from third_party/ into lib/')
+@Task('Copy the codemirror files from third_party/ into lib/\noptional args:\n  --legacyaddons : include no extra addons\n  --noheader : do not include summary filelist in codemirror.js header')
 void build() {
   // Copy codemirror.js.
   var jsSource = _concatenateModesAndOtherDependencies(srcDir);
@@ -86,7 +86,7 @@ void clean_node() {
 String _concatenateModesAndOtherDependencies(Directory dir) {
   TaskArgs args = context.invocation.arguments;
   bool legacyAddons = args.getFlag('legacyaddons');
-
+  bool noHeader = args.getFlag('noheader');
   var files = <File>[];
 
   // Read lib/codemirror.js.
@@ -132,6 +132,10 @@ String _concatenateModesAndOtherDependencies(Directory dir) {
     files.add(joinFile(dir, ['addon', 'fold', 'comment-fold.js']));
     // html tag matching
     files.add(joinFile(dir, ['addon', 'edit', 'matchtags.js']));
+
+    // Read things we need for vim keymap
+    files.add(joinFile(dir, ['addon', 'dialog', 'dialog.js']));
+    files.add(joinFile(dir, ['keymap', 'vim.js']));
   }
 
   // Required by some modes.
@@ -153,10 +157,6 @@ String _concatenateModesAndOtherDependencies(Directory dir) {
   files.add(joinFile(dir, ['mode', 'xml', 'xml.js']));
   files.add(joinFile(dir, ['mode', 'yaml', 'yaml.js']));
 
-  // Read things we need for vim keymap
-  files.add(joinFile(dir, ['addon', 'dialog', 'dialog.js']));
-  files.add(joinFile(dir, ['keymap', 'vim.js']));
-
   //  var modeFiles = joinDir(dir, ['mode'])
   //    .listSync()
   //    .where((dir) => dir is Directory)
@@ -167,26 +167,29 @@ String _concatenateModesAndOtherDependencies(Directory dir) {
   // make a header for the file with a list of every file we combined
   //   so this info is available in one convenient place
   int count = 0;
-  String topHeaderFileList = files.map((File file) {
-    String filenameCommentForHeader;
-    if (count++ == 0) {
-      // codemirror file
-      filenameCommentForHeader = '// ${fileName(file)}';
-    } else {
-      // for modes,addons,keymaps include path and indent
-      List<String> fileparts = file.path.split('/');
-      int len = fileparts.length;
-      filenameCommentForHeader = '//    ' +
-          (len >= 3 && (fileparts[len - 3] != cm_minified_dirname)
-              ? fileparts[len - 3] + '/'
-              : '') +
-          (len >= 2 ? fileparts[len - 2] + '/' : '') +
-          fileparts[len - 1];
-    }
-    return filenameCommentForHeader;
-  }).join('\n');
-
-  return '$topHeaderFileList\n\n' +
+  String topHeaderFileList = '';
+  
+  if(!noHeader) {
+    topHeaderFileList = files.map((File file) {
+          String filenameCommentForHeader;
+          if (count++ == 0) {
+            // codemirror file
+            filenameCommentForHeader = '// ${fileName(file)}';
+          } else {
+            // for modes,addons,keymaps include path and indent
+            List<String> fileparts = file.path.split('/');
+            int len = fileparts.length;
+            filenameCommentForHeader = '//    ' +
+                (len >= 3 && (fileparts[len - 3] != cm_minified_dirname)
+                    ? fileparts[len - 3] + '/'
+                    : '') +
+                (len >= 2 ? fileparts[len - 2] + '/' : '') +
+                fileparts[len - 1];
+          }
+          return filenameCommentForHeader;
+        }).join('\n') + '\n\n';
+  }
+  return topHeaderFileList +
       files.map((File file) {
         var header = '// ${fileName(file)}\n\n';
         return header + file.readAsStringSync().trim() + '\n';

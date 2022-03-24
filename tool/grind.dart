@@ -33,7 +33,7 @@ void build_minified() {
   build();
 }
 
-@Task('Copy the codemirror files from third_party/ into lib/\noptional args:\n  --legacyaddons : include no extra addons\n  --noheader : do not include summary filelist in codemirror.js header')
+@Task('Copy the codemirror files from third_party/ into lib/\noptional args:\n  --extras : include extra addons\n  --noheader : do not include summary filelist in codemirror.js header')
 void build() {
   // Copy codemirror.js.
   var jsSource = _concatenateModesAndOtherDependencies(srcDir);
@@ -85,7 +85,7 @@ void clean_node() {
 
 String _concatenateModesAndOtherDependencies(Directory dir) {
   TaskArgs args = context.invocation.arguments;
-  bool legacyAddons = args.getFlag('legacyaddons');
+  bool extraAddons = args.getFlag('extras');
   bool noHeader = args.getFlag('noheader');
   var files = <File>[];
 
@@ -115,7 +115,7 @@ String _concatenateModesAndOtherDependencies(Directory dir) {
   files.add(joinFile(dir, ['addon', 'search', 'search.js']));
   files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
 
-  if (!legacyAddons) {
+  if (extraAddons) {
     // used on all dart-pads
     files.add(joinFile(dir, ['addon', 'scroll', 'simplescrollbars.js']));
 

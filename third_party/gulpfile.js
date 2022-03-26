@@ -37,13 +37,15 @@ const {series, parallel, src, dest} = require('gulp');
 const flatmap = require('gulp-flatmap');
 const closureCompiler = require('google-closure-compiler').gulp();
 const cleanCss = require('gulp-clean-css');
+const path = require('path');
 
 const CM_ROOT = 'codemirror/';
+const CM_ROOT_PLATFORM_SEP = 'codemirror'+path.sep;
 const CM_MINIFIED_ROOT = 'codemirror_minified/';
 
 function runFlatMap() {
   return flatmap((stream, file) => {
-    const pathAtCmRoot = file.relative.replace(CM_ROOT, '');
+    const pathAtCmRoot = file.relative.replace(CM_ROOT_PLATFORM_SEP, '');
     // Travis kills a build if no log output for 10 minutes
     console.log('Minifying ' + pathAtCmRoot);
     return stream.pipe(closureCompiler({

@@ -15,7 +15,7 @@ final Directory destDir = Directory('lib');
 Future main(List<String> args) => grind(args);
 
 @Task(
-    'Minify the codemirror files, and then proceed with "build" using minified codemirror\noptional args (can include "build" arguments also):\n --verbose shows intermediate output')
+    'Minify the codemirror files, and then proceed with "build" using minified codemirror\noptional args (can include "build" arguments also):\n --verbose shows intermediate node/closure output')
 @Depends(clean_minified)
 void build_minified() {
   TaskArgs args = context.invocation.arguments;
@@ -34,17 +34,17 @@ void build_minified() {
 }
 
 @Task(
-    'Copy the codemirror files from third_party/ into lib/\noptional args:\n  --extras : include extra addons\n  --noheader : do not include summary filelist in codemirror.js header')
+    'Copy the codemirror files from third_party/ into lib/\noptional args:\n  --noextras : do not include extra addons or css\n  --noheader : do not include summary filelist in codemirror.js header')
 void build() {
   TaskArgs args = context.invocation.arguments;
-  bool joinCss = args.getFlag('css');
+  bool noExtraCss = args.getFlag('noextras');
 
   // Copy codemirror.js.
   var jsSource = _concatenateModesAndOtherDependencies(srcDir);
   joinFile(destDir, ['codemirror.js']).writeAsStringSync(jsSource);
   //copy(joinFile(srcDir, ['lib', 'codemirror.js']), destDir);
 
-  if (!joinCss) {
+  if (noExtraCss) {
     // Copy codemirror.css.
     copy(
         joinFile(srcDir, ['lib', 'codemirror.css']), joinDir(destDir, ['css']));
@@ -95,7 +95,7 @@ void clean_node() {
 
 String _concatenateModesAndOtherDependencies(Directory dir) {
   TaskArgs args = context.invocation.arguments;
-  bool extraAddons = args.getFlag('extras');
+  bool noExtraAddons = args.getFlag('noextras');
   bool noHeader = args.getFlag('noheader');
   var files = <File>[];
 
@@ -125,7 +125,7 @@ String _concatenateModesAndOtherDependencies(Directory dir) {
   files.add(joinFile(dir, ['addon', 'search', 'search.js']));
   files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
 
-  if (extraAddons) {
+  if (!noExtraAddons) {
     // used on all dart-pads
     files.add(joinFile(dir, ['addon', 'scroll', 'simplescrollbars.js']));
 

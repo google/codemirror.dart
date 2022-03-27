@@ -15,7 +15,7 @@ final Directory destDir = Directory('lib');
 Future main(List<String> args) => grind(args);
 
 @Task(
-    'Minify the codemirror files, and then proceed with "build" using minified codemirror\noptional args (can include "build" arguments also):\n --verbose shows intermediate node/closure output')
+    'Minify the codemirror files, and then proceed with "build" using minified codemirror\n      optional args (can include "build" arguments also):\n        --verbose  : shows intermediate node/closure output')
 @Depends(clean_minified)
 void build_minified() {
   TaskArgs args = context.invocation.arguments;
@@ -34,7 +34,7 @@ void build_minified() {
 }
 
 @Task(
-    'Copy the codemirror files from third_party/ into lib/\noptional args:\n  --noextras : do not include extra addons or css\n  --noheader : do not include summary filelist in codemirror.js header')
+    'Copy the codemirror files from third_party/ into lib/\n      optional args:\n        --noextras : do not include extra addons or css\n        --noheader : do not include summary filelist in codemirror.js header')
 void build() {
   TaskArgs args = context.invocation.arguments;
   bool noExtraCss = args.getFlag('noextras');

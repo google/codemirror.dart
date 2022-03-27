@@ -71,8 +71,13 @@ void test() {
   run('pub', arguments: ['run', 'test:test', '--platform=chrome']);
 }
 
-@Task('Delete all generated artifacts')
+@Task('Delete all generated and minifier artifacts')
+@Depends(clean_lib,clean_minified,clean_node)
 void clean() {
+}
+
+@Task('Delete all generated artifacts placed in lib/')
+void clean_lib() {
   delete(joinFile(destDir, ['codemirror.js']));
   delete(joinFile(destDir, ['css', 'codemirror.css']));
   delete(joinDir(destDir, ['addon']));

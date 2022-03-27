@@ -33,15 +33,25 @@ void build_minified() {
   build();
 }
 
-@Task('Copy the codemirror files from third_party/ into lib/\noptional args:\n  --extras : include extra addons\n  --noheader : do not include summary filelist in codemirror.js header')
+@Task(
+    'Copy the codemirror files from third_party/ into lib/\noptional args:\n  --extras : include extra addons\n  --noheader : do not include summary filelist in codemirror.js header')
 void build() {
+  TaskArgs args = context.invocation.arguments;
+  bool joinCss = args.getFlag('css');
+
   // Copy codemirror.js.
   var jsSource = _concatenateModesAndOtherDependencies(srcDir);
   joinFile(destDir, ['codemirror.js']).writeAsStringSync(jsSource);
   //copy(joinFile(srcDir, ['lib', 'codemirror.js']), destDir);
 
-  // Copy codemirror.css.
-  copy(joinFile(srcDir, ['lib', 'codemirror.css']), joinDir(destDir, ['css']));
+  if (!joinCss) {
+    // Copy codemirror.css.
+    copy(
+        joinFile(srcDir, ['lib', 'codemirror.css']), joinDir(destDir, ['css']));
+  } else {
+    var cssFiles = _concatenateCSSFileDependencies(srcDir);
+    joinFile(destDir, ['css', 'codemirror.css']).writeAsStringSync(cssFiles);
+  }
 
   // Copy the addons.
   copy(joinDir(srcDir, ['addon']), joinDir(destDir, ['addon']));
@@ -164,34 +174,79 @@ String _concatenateModesAndOtherDependencies(Directory dir) {
   //    .where((f) => f.existsSync());
   //  files.addAll(modeFiles);
 
-  // make a header for the file with a list of every file we combined
-  //   so this info is available in one convenient place
-  int count = 0;
   String topHeaderFileList = '';
-  
-  if(!noHeader) {
-    topHeaderFileList = files.map((File file) {
-          String filenameCommentForHeader;
-          if (count++ == 0) {
-            // codemirror file
-            filenameCommentForHeader = '// ${fileName(file)}';
-          } else {
-            // for modes,addons,keymaps include path and indent
-            List<String> fileparts = file.path.split('/');
-            int len = fileparts.length;
-            filenameCommentForHeader = '//    ' +
-                (len >= 3 && (fileparts[len - 3] != cm_minified_dirname)
-                    ? fileparts[len - 3] + '/'
-                    : '') +
-                (len >= 2 ? fileparts[len - 2] + '/' : '') +
-                fileparts[len - 1];
-          }
-          return filenameCommentForHeader;
-        }).join('\n') + '\n\n';
+  if (!noHeader) {
+    topHeaderFileList = makeHeaderWithListOfALlFilesFromFileList(files);
   }
+
   return topHeaderFileList +
       files.map((File file) {
         var header = '// ${fileName(file)}\n\n';
         return header + file.readAsStringSync().trim() + '\n';
       }).join('\n');
+}
+
+/// Concatonates all of the css files needed for dartpad
+String _concatenateCSSFileDependencies(Directory dir) {
+  TaskArgs args = context.invocation.arguments;
+  bool noHeader = args.getFlag('noheader');
+  var files = <File>[];
+
+  // Read lib/codemirror.js.
+  files.add(joinFile(dir, ['lib', 'codemirror.css']));
+
+  // add codemirror css we always include on dart-pad pages
+  files.add(joinFile(dir, ['addon', 'lint', 'lint.css']));
+  files.add(joinFile(dir, ['addon', 'hint', 'show-hint.css']));
+  files.add(joinFile(dir, ['addon', 'dialog', 'dialog.css']));
+
+  String topHeaderFileList = '';
+  if (!noHeader) {
+    topHeaderFileList =
+        makeHeaderWithListOfALlFilesFromFileList(files, cssStyleComments: true);
+  }
+
+  return topHeaderFileList +
+      files.map((File file) {
+        var header = '/*   ${fileName(file)}   */\n\n';
+        return header + file.readAsStringSync().trim() + '\n';
+      }).join('\n');
+}
+
+String makeHeaderWithListOfALlFilesFromFileList(List<File> files,
+    {bool cssStyleComments = false}) {
+  // make a header for the file with a list of every file we combined
+  //   so this info is available at top of file in one convenient place
+  int count = 0;
+  String topHeaderFileList = files.map((File file) {
+        String filenameCommentForHeader;
+        if (count++ == 0) {
+          // codemirror file
+          final String filename = fileName(file);
+          if (cssStyleComments) {
+            filenameCommentForHeader = '/*  $filename'.padRight(40) + '*/';
+          } else {
+            filenameCommentForHeader = '//  $filename';
+          }
+        } else {
+          // for modes,addons,keymaps include path and indent
+          final List<String> fileparts =
+              file.path.split(Platform.pathSeparator);
+          final int len = fileparts.length;
+          final String filename =
+              (len >= 3 && (fileparts[len - 3] != cm_minified_dirname)
+                      ? fileparts[len - 3] + '/'
+                      : '') +
+                  (len >= 2 ? fileparts[len - 2] + '/' : '') +
+                  fileparts[len - 1];
+          if (cssStyleComments) {
+            filenameCommentForHeader = '/*      $filename'.padRight(40) + '*/';
+          } else {
+            filenameCommentForHeader = '//      $filename';
+          }
+        }
+        return filenameCommentForHeader;
+      }).join('\n') +
+      '\n\n';
+  return topHeaderFileList;
 }

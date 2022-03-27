@@ -5,7 +5,7 @@ CodeMirror that this package uses. The first revolve around updating
 the CodeMirror dependencies from Bower, and the second around publishing
 the updated [pub](https://pub.dev) package.
 
-## Updating CodeMirror 
+## Updating CodeMirror
 
 - Download the latest zip ball from [codemirror.net/codemirror.zip](https://codemirror.net/codemirror.zip)
 - Replace the contents of `third_party/codemirror` with the content of the above download

@@ -72,9 +72,8 @@ void test() {
 }
 
 @Task('Delete all generated and minifier artifacts')
-@Depends(clean_lib,clean_minified,clean_node)
-void clean() {
-}
+@Depends(clean_lib, clean_minified, clean_node)
+void clean() {}
 
 @Task('Delete all generated artifacts placed in lib/')
 void clean_lib() {

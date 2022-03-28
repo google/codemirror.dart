@@ -35,7 +35,7 @@ void build_minified() {
 
 @Task(
     'Copy the codemirror files from third_party/ into lib/\n      optional args:\n        --noextras : do not include extra addons or css\n        --noheader : do not include summary filelist in codemirror.js header')
-void build() {
+void build() async {
   TaskArgs args = context.invocation.arguments;
   bool noExtraCss = args.getFlag('noextras');
 
@@ -44,13 +44,20 @@ void build() {
   joinFile(destDir, ['codemirror.js']).writeAsStringSync(jsSource);
   //copy(joinFile(srcDir, ['lib', 'codemirror.js']), destDir);
 
+  // ensure output directories exist before continuing
+  await joinDir(destDir, ['css']).create(recursive: true);
+  await joinDir(destDir, ['addon']).create(recursive: true);
+  await joinDir(destDir, ['keymap']).create(recursive: true);
+  await joinDir(destDir, ['mode']).create(recursive: true);
+  await joinDir(destDir, ['theme']).create(recursive: true);
+
   if (noExtraCss) {
     // Copy codemirror.css.
     copy(
         joinFile(srcDir, ['lib', 'codemirror.css']), joinDir(destDir, ['css']));
   } else {
     var cssFiles = _concatenateCSSFileDependencies(srcDir);
-    joinFile( joinDir(destDir, ['css']), ['codemirror.css']).writeAsStringSync(cssFiles);
+    joinFile(destDir, ['css', 'codemirror.css']).writeAsStringSync(cssFiles);
   }
 
   // Copy the addons.

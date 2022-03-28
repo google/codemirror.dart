@@ -50,7 +50,7 @@ void build() {
         joinFile(srcDir, ['lib', 'codemirror.css']), joinDir(destDir, ['css']));
   } else {
     var cssFiles = _concatenateCSSFileDependencies(srcDir);
-    joinFile(destDir, ['css', 'codemirror.css']).writeAsStringSync(cssFiles);
+    joinFile( joinDir(destDir, ['css']), ['codemirror.css']).writeAsStringSync(cssFiles);
   }
 
   // Copy the addons.

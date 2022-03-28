@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.3+5.65.2
+- `build` task now creates all required output directories before proceeding with build.
+- Added `build_minified` task which minifies all codemirror source files using the google closure compilers SIMPLE_OPTIMIZATIONS before running `build` task.  The final minified output is functionaly equivalent to the non-minified version, only smaller.  Node is required for `build_minified` as npm is used to install the google closure compiler, et al.
+- Added `clean_node` and `clean_minified` tasks to remove all artifacts from the `build_minified` task
+- Renamed `clean` to `clean_lib` and fixed it so that it truely removed all artifacts from the `build` task
+- Made `clean` dependent on `clean_lib`, `clean_node` and `clean_minified` so that the clean task will run all these in turn and clean all possible artifacts from either the `build` or `build_minified` tasks
+- By default now create a `css/codemirror.css` file which has all of the codemirror css files dart-pad uses contenated together.  `--noextras` option can be used to create same codemirror.css as previous version (preventing contenation)
+- By default output `codemirror.js` file now includes all additional codemirror addon files which dart-pad now uses. `--noextras` option can be used to create the same codemirror.js file as previous version  
+- By default `codemirror.js` and `css/codemirror.css` output files both receive a summary header comment which details all concontenated codemirror source files they include.  `--noheader` option can be used to prevent the summary header and produce the same output as previous version
+
 ## 0.7.2+5.65.2
 - Update to CodeMirror 5.65.2
 

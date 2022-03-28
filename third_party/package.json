@@ -1,0 +1,22 @@
+{
+  "name": "codemirror-dart-minifier",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "description": "Minifies CodeMirror distribution",
+  "license": "MIT",
+  "files": [
+    "package.json",
+    "gulpfile.js"
+  ],
+  "devDependencies": {
+    "google-closure-compiler": "^20220301.0.0",
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-flatmap": "^1.0.2"
+  },
+  "jspm": {
+    "directories": {},
+    "dependencies": {},
+    "devDependencies": {}
+  }
+}

@@ -6,20 +6,59 @@ import 'dart:io';
 
 import 'package:grinder/grinder.dart';
 
-final Directory srcDir = Directory('third_party/codemirror');
+final String cm_minified_dirname = 'codemirror_minified';
+final Directory srcMinifiedDir =
+    joinDir(Directory('third_party'), [cm_minified_dirname]);
+Directory srcDir = Directory('third_party/codemirror');
 final Directory destDir = Directory('lib');
 
 Future main(List<String> args) => grind(args);
 
-@Task('Copy the codemirror files from third_party/ into lib/')
-void build() {
+@Task(
+    'Minify the codemirror files, and then proceed with "build" using minified codemirror\n      optional args (can include "build" arguments also):\n        --verbose  : shows intermediate node/closure output')
+@Depends(clean_minified)
+void build_minified() {
+  TaskArgs args = context.invocation.arguments;
+  bool verbose = args.getFlag('verbose');
+  RunOptions runOpts = RunOptions(
+      workingDirectory: 'third_party', includeParentEnvironment: true);
+  // make sure google closure compiler is there
+  run('npm', arguments: ['install'], quiet: !verbose, runOptions: runOpts);
+
+  // run the gulpfile.js and minify codemirror into codemirror_minified
+  run('gulp', quiet: !verbose, runOptions: runOpts);
+
+  // OK we can go ahead and build like normal, but using the minified source
+  srcDir = srcMinifiedDir;
+  build();
+}
+
+@Task(
+    'Copy the codemirror files from third_party/ into lib/\n      optional args:\n        --noextras : do not include extra addons or css\n        --noheader : do not include summary filelist in codemirror.js header')
+void build() async {
+  TaskArgs args = context.invocation.arguments;
+  bool noExtraCss = args.getFlag('noextras');
+
   // Copy codemirror.js.
-  var jsSource = _concatenateModes(srcDir);
+  var jsSource = _concatenateModesAndOtherDependencies(srcDir);
   joinFile(destDir, ['codemirror.js']).writeAsStringSync(jsSource);
   //copy(joinFile(srcDir, ['lib', 'codemirror.js']), destDir);
 
-  // Copy codemirror.css.
-  copy(joinFile(srcDir, ['lib', 'codemirror.css']), joinDir(destDir, ['css']));
+  // ensure output directories exist before continuing
+  await joinDir(destDir, ['css']).create(recursive: true);
+  await joinDir(destDir, ['addon']).create(recursive: true);
+  await joinDir(destDir, ['keymap']).create(recursive: true);
+  await joinDir(destDir, ['mode']).create(recursive: true);
+  await joinDir(destDir, ['theme']).create(recursive: true);
+
+  if (noExtraCss) {
+    // Copy codemirror.css.
+    copy(
+        joinFile(srcDir, ['lib', 'codemirror.css']), joinDir(destDir, ['css']));
+  } else {
+    var cssFiles = _concatenateCSSFileDependencies(srcDir);
+    joinFile(destDir, ['css', 'codemirror.css']).writeAsStringSync(cssFiles);
+  }
 
   // Copy the addons.
   copy(joinDir(srcDir, ['addon']), joinDir(destDir, ['addon']));
@@ -39,14 +78,36 @@ void test() {
   run('pub', arguments: ['run', 'test:test', '--platform=chrome']);
 }
 
-@Task('Delete all generated artifacts')
-void clean() {
+@Task('Delete all generated and minifier artifacts')
+@Depends(clean_lib, clean_minified, clean_node)
+void clean() {}
+
+@Task('Delete all generated artifacts placed in lib/')
+void clean_lib() {
   delete(joinFile(destDir, ['codemirror.js']));
   delete(joinFile(destDir, ['css', 'codemirror.css']));
-  delete(joinFile(destDir, ['theme']));
+  delete(joinDir(destDir, ['addon']));
+  delete(joinDir(destDir, ['keymap']));
+  delete(joinDir(destDir, ['mode']));
+  delete(joinDir(destDir, ['theme']));
 }
 
-String _concatenateModes(Directory dir) {
+@Task('Delete all generated minified codemirror')
+void clean_minified() {
+  delete(srcMinifiedDir);
+}
+
+@Task('Delete all node modules used by minifier,build_minified will reinstall')
+void clean_node() {
+  final Directory thirdPartyDir = Directory('third_party');
+  delete(joinDir(thirdPartyDir, ['node_modules']));
+  delete(joinFile(thirdPartyDir, ['package-lock.json']));
+}
+
+String _concatenateModesAndOtherDependencies(Directory dir) {
+  TaskArgs args = context.invocation.arguments;
+  bool noExtraAddons = args.getFlag('noextras');
+  bool noHeader = args.getFlag('noheader');
   var files = <File>[];
 
   // Read lib/codemirror.js.
@@ -75,6 +136,29 @@ String _concatenateModes(Directory dir) {
   files.add(joinFile(dir, ['addon', 'search', 'search.js']));
   files.add(joinFile(dir, ['addon', 'search', 'searchcursor.js']));
 
+  if (!noExtraAddons) {
+    // used on all dart-pads
+    files.add(joinFile(dir, ['addon', 'scroll', 'simplescrollbars.js']));
+
+    // search dialog
+    files.add(joinFile(dir, ['addon', 'scroll', 'annotatescrollbar.js']));
+    files.add(joinFile(dir, ['addon', 'search', 'matchesonscrollbar.js']));
+    files.add(joinFile(dir, ['addon', 'search', 'match-highlighter.js']));
+    // code folding
+    files.add(joinFile(dir, ['addon', 'fold', 'foldcode.js']));
+    files.add(joinFile(dir, ['addon', 'fold', 'foldgutter.js']));
+    files.add(joinFile(dir, ['addon', 'fold', 'brace-fold.js']));
+    files.add(joinFile(dir, ['addon', 'fold', 'xml-fold.js']));
+    files.add(joinFile(dir, ['addon', 'fold', 'indent-fold.js']));
+    files.add(joinFile(dir, ['addon', 'fold', 'comment-fold.js']));
+    // html tag matching
+    files.add(joinFile(dir, ['addon', 'edit', 'matchtags.js']));
+
+    // Read things we need for vim keymap
+    files.add(joinFile(dir, ['addon', 'dialog', 'dialog.js']));
+    files.add(joinFile(dir, ['keymap', 'vim.js']));
+  }
+
   // Required by some modes.
   files.add(joinFile(dir, ['addon', 'mode', 'overlay.js']));
   files.add(joinFile(dir, ['addon', 'mode', 'simple.js']));
@@ -94,15 +178,86 @@ String _concatenateModes(Directory dir) {
   files.add(joinFile(dir, ['mode', 'xml', 'xml.js']));
   files.add(joinFile(dir, ['mode', 'yaml', 'yaml.js']));
 
-//  var modeFiles = joinDir(dir, ['mode'])
-//    .listSync()
-//    .where((dir) => dir is Directory)
-//    .map((dir) => joinFile(dir, ['${fileName(dir)}.js']))
-//    .where((f) => f.existsSync());
-//  files.addAll(modeFiles);
+  //  var modeFiles = joinDir(dir, ['mode'])
+  //    .listSync()
+  //    .where((dir) => dir is Directory)
+  //    .map((dir) => joinFile(dir, ['${fileName(dir)}.js']))
+  //    .where((f) => f.existsSync());
+  //  files.addAll(modeFiles);
 
-  return files.map((File file) {
-    var header = '// ${fileName(file)}\n\n';
-    return header + file.readAsStringSync().trim() + '\n';
-  }).join('\n');
+  String topHeaderFileList = '';
+  if (!noHeader) {
+    topHeaderFileList = makeHeaderWithListOfALlFilesFromFileList(files);
+  }
+
+  return topHeaderFileList +
+      files.map((File file) {
+        var header = '// ${fileName(file)}\n\n';
+        return header + file.readAsStringSync().trim() + '\n';
+      }).join('\n');
+}
+
+/// Concatonates all of the css files needed for dartpad
+String _concatenateCSSFileDependencies(Directory dir) {
+  TaskArgs args = context.invocation.arguments;
+  bool noHeader = args.getFlag('noheader');
+  var files = <File>[];
+
+  // Read lib/codemirror.js.
+  files.add(joinFile(dir, ['lib', 'codemirror.css']));
+
+  // add codemirror css we always include on dart-pad pages
+  files.add(joinFile(dir, ['addon', 'lint', 'lint.css']));
+  files.add(joinFile(dir, ['addon', 'hint', 'show-hint.css']));
+  files.add(joinFile(dir, ['addon', 'dialog', 'dialog.css']));
+
+  String topHeaderFileList = '';
+  if (!noHeader) {
+    topHeaderFileList =
+        makeHeaderWithListOfALlFilesFromFileList(files, cssStyleComments: true);
+  }
+
+  return topHeaderFileList +
+      files.map((File file) {
+        var header = '/*   ${fileName(file)}   */\n\n';
+        return header + file.readAsStringSync().trim() + '\n';
+      }).join('\n');
+}
+
+String makeHeaderWithListOfALlFilesFromFileList(List<File> files,
+    {bool cssStyleComments = false}) {
+  // make a header for the file with a list of every file we combined
+  //   so this info is available at top of file in one convenient place
+  int count = 0;
+  String topHeaderFileList = files.map((File file) {
+        String filenameCommentForHeader;
+        if (count++ == 0) {
+          // codemirror file
+          final String filename = fileName(file);
+          if (cssStyleComments) {
+            filenameCommentForHeader = '/*  $filename'.padRight(40) + '*/';
+          } else {
+            filenameCommentForHeader = '//  $filename';
+          }
+        } else {
+          // for modes,addons,keymaps include path and indent
+          final List<String> fileparts =
+              file.path.split(Platform.pathSeparator);
+          final int len = fileparts.length;
+          final String filename =
+              (len >= 3 && (fileparts[len - 3] != cm_minified_dirname)
+                      ? fileparts[len - 3] + '/'
+                      : '') +
+                  (len >= 2 ? fileparts[len - 2] + '/' : '') +
+                  fileparts[len - 1];
+          if (cssStyleComments) {
+            filenameCommentForHeader = '/*      $filename'.padRight(40) + '*/';
+          } else {
+            filenameCommentForHeader = '//      $filename';
+          }
+        }
+        return filenameCommentForHeader;
+      }).join('\n') +
+      '\n\n';
+  return topHeaderFileList;
 }

@@ -75,7 +75,7 @@ void build() async {
 
 @Task('Run the tests')
 void test() {
-  run('pub', arguments: ['run', 'test:test', '--platform=chrome']);
+  run('dart', arguments: ['pub', 'run', 'test:test', '--platform=chrome']);
 }
 
 @Task('Delete all generated and minifier artifacts')

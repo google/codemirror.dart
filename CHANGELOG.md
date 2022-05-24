@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.5+5.65.4
+ - Update to CodeMirror 5.65.4
+
+
 ## 0.7.4+5.65.3
  - Update to CodeMirror 5.65.3
 

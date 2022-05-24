@@ -100,8 +100,8 @@ void main() {
 void _updateFooter(CodeMirror editor) {
   var pos = editor.getCursor();
   var off = editor.doc.indexFromPos(pos);
-  var str = 'line ${pos.line} • column ${pos.ch} • offset $off' +
-      (editor.doc.isClean() ? '' : ' • (modified)');
+  var str =
+      'line ${pos.line} • column ${pos.ch} • offset $off${editor.doc.isClean() ? '' : ' • (modified)'}';
   querySelector('#footer')!.text = str;
 }
 

@@ -193,7 +193,7 @@ String _concatenateModesAndOtherDependencies(Directory dir) {
   return topHeaderFileList +
       files.map((File file) {
         var header = '// ${fileName(file)}\n\n';
-        return header + file.readAsStringSync().trim() + '\n';
+        return '$header${file.readAsStringSync().trim()}\n';
       }).join('\n');
 }
 
@@ -220,7 +220,7 @@ String _concatenateCSSFileDependencies(Directory dir) {
   return topHeaderFileList +
       files.map((File file) {
         var header = '/*   ${fileName(file)}   */\n\n';
-        return header + file.readAsStringSync().trim() + '\n';
+        return '$header${file.readAsStringSync().trim()}\n';
       }).join('\n');
 }
 
@@ -229,35 +229,33 @@ String makeHeaderWithListOfALlFilesFromFileList(List<File> files,
   // make a header for the file with a list of every file we combined
   //   so this info is available at top of file in one convenient place
   int count = 0;
-  String topHeaderFileList = files.map((File file) {
-        String filenameCommentForHeader;
-        if (count++ == 0) {
-          // codemirror file
-          final String filename = fileName(file);
-          if (cssStyleComments) {
-            filenameCommentForHeader = '/*  $filename'.padRight(40) + '*/';
-          } else {
-            filenameCommentForHeader = '//  $filename';
-          }
-        } else {
-          // for modes,addons,keymaps include path and indent
-          final List<String> fileparts =
-              file.path.split(Platform.pathSeparator);
-          final int len = fileparts.length;
-          final String filename =
-              (len >= 3 && (fileparts[len - 3] != cm_minified_dirname)
-                      ? fileparts[len - 3] + '/'
-                      : '') +
-                  (len >= 2 ? fileparts[len - 2] + '/' : '') +
-                  fileparts[len - 1];
-          if (cssStyleComments) {
-            filenameCommentForHeader = '/*      $filename'.padRight(40) + '*/';
-          } else {
-            filenameCommentForHeader = '//      $filename';
-          }
-        }
-        return filenameCommentForHeader;
-      }).join('\n') +
-      '\n\n';
+  String topHeaderFileList = '${files.map((File file) {
+    String filenameCommentForHeader;
+    if (count++ == 0) {
+      // codemirror file
+      final String filename = fileName(file);
+      if (cssStyleComments) {
+        filenameCommentForHeader = '${'/*  $filename'.padRight(40)}*/';
+      } else {
+        filenameCommentForHeader = '//  $filename';
+      }
+    } else {
+      // for modes,addons,keymaps include path and indent
+      final List<String> fileparts = file.path.split(Platform.pathSeparator);
+      final int len = fileparts.length;
+      final String filename =
+          (len >= 3 && (fileparts[len - 3] != cm_minified_dirname)
+                  ? '${fileparts[len - 3]}/'
+                  : '') +
+              (len >= 2 ? '${fileparts[len - 2]}/' : '') +
+              fileparts[len - 1];
+      if (cssStyleComments) {
+        filenameCommentForHeader = '${'/*      $filename'.padRight(40)}*/';
+      } else {
+        filenameCommentForHeader = '//      $filename';
+      }
+    }
+    return filenameCommentForHeader;
+  }).join('\n')}\n\n';
   return topHeaderFileList;
 }

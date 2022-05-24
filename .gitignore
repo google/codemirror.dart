@@ -17,6 +17,11 @@ pubspec.lock
 .idea/
 codemirror.dart.iml
 
+# build minifier generated files
+third_party/package-lock.json
+third_party/codemirror_minified/
+third_party/node_modules
+
 # Ignore the codemirror copied resources.
 lib/addon/
 lib/codemirror.js

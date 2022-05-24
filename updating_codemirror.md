@@ -17,7 +17,7 @@ the updated [pub](https://pub.dev) package.
 ## Publishing the package
 
 - `git pull` to get latest state after aforementioned PR is submitted.
-- Run `grind build`. (Don't have `grind`? Install it using `dart pub global activate grinder`.)
+- Run `grind build_minified --verbose`. (Don't have `grind`? Install it using `dart pub global activate grinder`.)
 - Comment out the `# Ignore the codemirror copied resources.` lines in the `.gitignore` file
 - Verify the build with `dart pub publish --dry-run`
   - Confirm the `lib` directory contains

@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.7+5.65.5
+ - Fixed a bug of the parameters of `setSize` and `scrollTo` functions are not nullable.
+
 ## 0.7.6+5.65.5
  - Update to CodeMirror 5.65.5
 

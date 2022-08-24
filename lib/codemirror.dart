@@ -498,11 +498,11 @@ class CodeMirror extends ProxyHolder {
   /// rules). [width] and [height] can be either numbers (interpreted as pixels)
   /// or CSS units ("100%", for example). You can pass `null` for either of them
   /// to indicate that that dimension should not be changed.
-  void setSize(num width, num height) => callArgs('setSize', [width, height]);
+  void setSize(num? width, num? height) => callArgs('setSize', [width, height]);
 
   /// Scroll the editor to a given (pixel) position. Both arguments may be left
   /// as null or undefined to have no effect.
-  void scrollTo(num x, num y) => callArgs('scrollTo', [x, y]);
+  void scrollTo(num? x, num? y) => callArgs('scrollTo', [x, y]);
 
   /// Get a [ScrollInfo] object that represents the current scroll position, the
   /// size of the scrollable area, and the size of the visible area (minus

@@ -28,6 +28,7 @@ export default class TextareaInput {
     // Used to work around IE issue with selection being forgotten when focus moves away from textarea
     this.hasSelection = false
     this.composing = null
+    this.resetting = false
   }
 
   init(display) {
@@ -158,8 +159,9 @@ export default class TextareaInput {
   // Reset the input to correspond to the selection (or to be empty,
   // when not typing and nothing is selected)
   reset(typing) {
-    if (this.contextMenuPending || this.composing) return
+    if (this.contextMenuPending || this.composing && typing) return
     let cm = this.cm
+    this.resetting = true
     if (cm.somethingSelected()) {
       this.prevInput = ""
       let content = cm.getSelection()
@@ -170,6 +172,7 @@ export default class TextareaInput {
       this.prevInput = this.textarea.value = ""
       if (ie && ie_version >= 9) this.hasSelection = null
     }
+    this.resetting = false
   }
 
   getField() { return this.textarea }
@@ -177,7 +180,7 @@ export default class TextareaInput {
   supportsTouch() { return false }
 
   focus() {
-    if (this.cm.options.readOnly != "nocursor" && (!mobile || activeElt() != this.textarea)) {
+    if (this.cm.options.readOnly != "nocursor" && (!mobile || activeElt(this.textarea.ownerDocument) != this.textarea)) {
       try { this.textarea.focus() }
       catch (e) {} // IE8 will throw if the textarea is display: none or not in DOM
     }
@@ -227,7 +230,7 @@ export default class TextareaInput {
     // possible when it is clear that nothing happened. hasSelection
     // will be the case when there is a lot of text in the textarea,
     // in which case reading its value would be expensive.
-    if (this.contextMenuPending || !cm.state.focused ||
+    if (this.contextMenuPending || this.resetting || !cm.state.focused ||
         (hasSelection(input) && !prevInput && !this.composing) ||
         cm.isReadOnly() || cm.options.disableInput || cm.state.keySeq)
       return false
@@ -299,9 +302,9 @@ export default class TextareaInput {
       z-index: 1000; background: ${ie ? "rgba(255, 255, 255, .05)" : "transparent"};
       outline: none; border-width: 0; outline: none; overflow: hidden; opacity: .05; filter: alpha(opacity=5);`
     let oldScrollY
-    if (webkit) oldScrollY = window.scrollY // Work around Chrome issue (#2712)
+    if (webkit) oldScrollY = te.ownerDocument.defaultView.scrollY // Work around Chrome issue (#2712)
     display.input.focus()
-    if (webkit) window.scrollTo(null, oldScrollY)
+    if (webkit) te.ownerDocument.defaultView.scrollTo(null, oldScrollY)
     display.input.reset()
     // Adds "Select all" to context menu in FF
     if (!cm.somethingSelected()) te.value = input.prevInput = " "

@@ -1,3 +1,31 @@
+## 5.65.11 (2022-12-20)
+
+### Bug fixes
+
+Also respect autocapitalize/autocorrect/spellcheck options in textarea mode.
+
+[sql-hint addon](https://codemirror.net/5/doc/manual.html#addon_sql-hint): Fix keyword completion in generic SQL mode.
+
+## 5.65.10 (2022-11-20)
+
+### Bug fixes
+
+[sql-hint addon](https://codemirror.net/5/doc/manual.html#addon_sql-hint): Fix completion when the SQL mode is wrapped by some outer mode.
+
+[javascript mode](https://codemirror.net/5/mode/javascript/index.html): Fix parsing of property keywords before private property names.
+
+## 5.65.9 (2022-09-20)
+
+### Bug fixes
+
+Add a workaround for a regression in Chrome 105 that could cause content below the editor to not receive mouse events.
+
+[show-hint addon](https://codemirror.net/5/doc/manual.html#addon_show-hint): Resize the tooltip if it doesn't fit the screen.
+
+[swift mode](https://codemirror.net/5/mode/swift): Fix tokenizing of block comments.
+
+[jinja2 mode](https://codemirror.net/5/mode/jinja2/): Support line statements.
+
 ## 5.65.8 (2022-08-20)
 
 ### Bug fixes

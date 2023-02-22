@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.9+5.65.12
+ - Update to CodeMirror 5.65.12
+
 ## 0.7.8+5.65.11
  - Update to CodeMirror 5.65.11
 

@@ -12,6 +12,9 @@ A Dart wrapper around the CodeMirror text editor. From
 browser. It is specialized for editing code, and comes with a number of language
 modes and addons that implement more advanced editing functionality.
 
+**Note:** This is NOT a Flutter package, it is a Dart package for writing web applications 
+like [DartPad](https://github.com/dart-lang/dart-pad). 
+
 ## An example
 
 ```dart
@@ -51,7 +54,7 @@ usual suspects for web development - `css`, `html`, `dart` and `javascript` as
 well as a few
 [others](https://github.com/google/codemirror.dart/blob/master/tool/grind.dart#L86).
 In order to add additional modes, you'll need to reference the mode file from
-your html entry-point. So,
+your `html` entry point. So,
 
     <script src="packages/codemirror/mode/lua.js"></script>
 
@@ -64,7 +67,7 @@ others available to import on a case-by-case basis. In order to use the
     <script src="packages/codemirror/addon/selection/active-line.js"></script>
 
 Be aware that many addons need additional configuration in order to enable then.
-This is generally done by passing values into the options of the CodeMirror
+This is generally done by passing values into the options of the `CodeMirror`
 constructor.
 
 Some addons are exposed through the main Dart interface. Some are exposed via
@@ -74,7 +77,7 @@ have yet to be exposed. Pull requests welcome :)
 
 ## Themes
 
-By importing the codemirror.css file:
+By importing the `codemirror.css` file:
 
     <link href="packages/codemirror/codemirror.css" rel="stylesheet">
 

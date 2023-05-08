@@ -1,4 +1,6 @@
 # Changelog
+## 0.7.11+5.65.13
+ - add setSizeInCssUnits(String?, String?) to the editor
 
 ## 0.7.10+5.65.13
  - Update to CodeMirror 5.65.13

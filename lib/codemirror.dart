@@ -501,10 +501,11 @@ class CodeMirror extends ProxyHolder {
   void setSize(num? width, num? height) => callArgs('setSize', [width, height]);
 
   /// Programmatically set the size of the editor (overriding the applicable CSS
-  /// rules). [width] and [height] should be CSS units ("100%", for example). 
+  /// rules). [width] and [height] should be CSS units ("100%", for example).
   /// You can pass `null` for either of them
   /// to indicate that that dimension should not be changed.
-  void setSizeInCssUnits(String? width, String? height) => callArgs('setSize', [width, height]);
+  void setSizeInCssUnits(String? width, String? height) =>
+      callArgs('setSize', [width, height]);
 
   /// Scroll the editor to a given (pixel) position. Both arguments may be left
   /// as null or undefined to have no effect.

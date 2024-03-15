@@ -56,7 +56,7 @@ void main() {
       ..value = mode
       ..text = mode);
     if (mode == editor.getMode()) {
-      modeSelect.selectedIndex = modeSelect.length! - 1;
+      modeSelect.selectedIndex = modeSelect.length - 1;
     }
   }
   modeSelect.onChange.listen((e) {

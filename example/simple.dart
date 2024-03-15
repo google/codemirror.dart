@@ -26,7 +26,8 @@ void main() {
       document.querySelector('#textContainer') as HTMLTextAreaElement?,
       options: options);
 
-  document.querySelector('#version')!.text = 'CodeMirror version ${CodeMirror.version}';
+  document.querySelector('#version')!.text =
+      'CodeMirror version ${CodeMirror.version}';
 
   Hints.registerHintsHelper('dart', _dartCompleter);
   Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
@@ -42,7 +43,9 @@ void main() {
     }
   }
   themeSelect.onChange.listen((e) {
-    var themeName = (themeSelect.options.item(themeSelect.selectedIndex) as HTMLOptionElement).value;
+    var themeName = (themeSelect.options.item(themeSelect.selectedIndex)
+            as HTMLOptionElement)
+        .value;
     editor.setTheme(themeName);
   });
 
@@ -57,12 +60,15 @@ void main() {
     }
   }
   modeSelect.onChange.listen((e) {
-    var modeName = (modeSelect.options.item(themeSelect.selectedIndex) as HTMLOptionElement).value;
+    var modeName = (modeSelect.options.item(themeSelect.selectedIndex)
+            as HTMLOptionElement)
+        .value;
     editor.setMode(modeName);
   });
 
   // Show line numbers.
-  final lineNumbers = document.querySelector('#lineNumbers') as HTMLInputElement;
+  final lineNumbers =
+      document.querySelector('#lineNumbers') as HTMLInputElement;
   lineNumbers.onChange.listen((e) {
     editor.setLineNumbers(lineNumbers.checked);
   });

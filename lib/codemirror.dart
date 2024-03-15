@@ -172,7 +172,7 @@ class CodeMirror extends ProxyHolder {
 //    // TODO: value may be a Function? always a function?
 //  }
 
-  static JsObject _createFromElement(Element element, Map? options) {
+  static JsObject _createFromElement(HTMLElement element, Map? options) {
     if (options == null) {
       return JsObject(_cm as JsFunction, [element]);
     } else {
@@ -199,7 +199,7 @@ class CodeMirror extends ProxyHolder {
 
   /// Create a new CodeMirror editor in the given element. See
   /// http://codemirror.net/doc/manual.html#config for valid options values.
-  CodeMirror.fromElement(Element element, {Map? options})
+  CodeMirror.fromElement(HTMLElement element, {Map? options})
       : super(_createFromElement(element, options)) {
     _instances[jsProxy] = this;
   }

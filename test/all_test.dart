@@ -14,7 +14,7 @@ import 'package:test/test.dart';
 
 // TODO: document mutation
 
-final Element editorHost = HTMLDivElement();
+final HTMLElement editorHost = HTMLDivElement();
 
 void main() {
   document.body!.appendChild(editorHost);

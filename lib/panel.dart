@@ -5,7 +5,7 @@
 /// A wrapper around the `addon/display/panel.js` addon.
 library codemirror.panel;
 
-import 'dart:html';
+import 'package:web/web.dart';
 import 'dart:js';
 
 import 'codemirror.dart';

@@ -5,7 +5,7 @@
 @TestOn('browser')
 library codemirror.tests;
 
-import 'dart:html';
+import 'package:web/web.dart';
 
 import 'package:codemirror/codemirror.dart';
 import 'package:test/test.dart';
@@ -14,10 +14,10 @@ import 'package:test/test.dart';
 
 // TODO: document mutation
 
-final Element editorHost = DivElement();
+final Element editorHost = HTMLDivElement();
 
 void main() {
-  document.body!.children.add(editorHost);
+  document.body!.appendChild(editorHost);
 
   group('simple', createSimpleTests);
   group('CodeMirror', createCodeMirrorTests);
@@ -31,9 +31,9 @@ void createSimpleTests() {
   test('create', () {
     var editor = CodeMirror.fromElement(editorHost);
     expect(editor, isNotNull);
-    expect(editorHost.parent, isNotNull);
+    expect(editorHost.parentElement, isNotNull);
     editor.dispose();
-    editorHost.children.clear();
+    editorHost.innerHTML = '';
   });
 }
 
@@ -72,12 +72,12 @@ void createCodeMirrorTests() {
 
   tearDown(() {
     editor.dispose();
-    editorHost.children.clear();
+    editorHost.innerHTML = '';
   });
 
   test('simple', () {
     expect(editor, isNotNull);
-    expect(editorHost.parent, isNotNull);
+    expect(editorHost.parentElement, isNotNull);
   });
 
   test('getOption / setOption', () {
@@ -105,7 +105,7 @@ void createDocTests() {
 
   tearDown(() {
     editor.dispose();
-    editorHost.children.clear();
+    editorHost.innerHTML = '';
   });
 
   test('getValue / getValue', () {
@@ -193,7 +193,7 @@ void createHtmlDocTests() {
 
   tearDown(() {
     editor.dispose();
-    editorHost.children.clear();
+    editorHost.innerHTML = '';
   });
 
   test('getModeAt', () {
@@ -214,7 +214,7 @@ void createHistoryTests() {
 
   tearDown(() {
     editor.dispose();
-    editorHost.children.clear();
+    editorHost.innerHTML = '';
   });
 
   test('undo / redo', () {

@@ -24,7 +24,7 @@ final options = <String, String>{
 };
 
 final editor = CodeMirror.fromElement(
-    querySelector('#textContainer')!, options: options);
+    document.querySelector('#textContainer')!, options: options);
 editor.doc.setValue('foo.bar(1, 2, 3);');
 ```
 

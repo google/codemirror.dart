@@ -5,7 +5,7 @@
 @TestOn('browser')
 library codemirror.tests;
 
-import 'dart:html';
+import 'package:web/web.dart';
 
 import 'package:codemirror/codemirror.dart';
 import 'package:test/test.dart';
@@ -20,7 +20,7 @@ void createSearchCursorTests() {
 
   setUp(() {
     editor = CodeMirror.fromTextArea(
-        querySelector('#textContainer') as TextAreaElement?);
+        document.querySelector('#textContainer') as HTMLTextAreaElement?);
   });
 
   tearDown(() {

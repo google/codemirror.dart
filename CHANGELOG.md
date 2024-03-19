@@ -1,6 +1,8 @@
 # Changelog
-## 0.7.12+5.65.13
- - Migrate dart:html to package:web/web.dart
+
+## 0.7.12+5.65.16
+ - Update to CodeMirror 5.65.16
+ - Migrate dart:html to package:web
 
 ## 0.7.11+5.65.13
  - add setSizeInCssUnits(String?, String?) to the editor

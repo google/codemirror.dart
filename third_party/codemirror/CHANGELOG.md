@@ -1,3 +1,31 @@
+## 5.65.16 (2023-11-20)
+
+### Bug fixes
+
+Fix focus tracking in shadow DOM.
+
+[go mode](https://codemirror.net/5/mode/go/): Allow underscores in numbers.
+
+[jsx mode](https://codemirror.net/5/mode/jsx/index.html): Support TS generics marked by trailing comma.
+
+## 5.65.15 (2023-08-29)
+
+### Bug fixes
+
+[lint addon](https://codemirror.net/5/doc/manual.html#addon_lint): Prevent tooltips from sticking out of the viewport.
+
+[yaml mode](https://codemirror.net/5/mode/yaml/): Fix an exponential-complexity regular expression.
+
+## 5.65.14 (2023-07-17)
+
+### Bug fixes
+
+[clike mode](https://codemirror.net/5/mode/clike/): Fix poor indentation in some Java code.
+
+[nsis mode](https://codemirror.net/5/mode/nsis/index.html): Recognize `!assert` command.
+
+[lint addon](https://codemirror.net/5/doc/manual.html#addon_lint): Remove broken annotation deduplication.
+
 ## 5.65.13 (2023-04-27)
 
 ### Bug fixes

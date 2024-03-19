@@ -4,7 +4,7 @@
 
 library codemirror;
 
-import 'dart:html';
+import 'package:web/web.dart';
 import 'dart:js';
 
 import 'src/js_utils.dart';
@@ -172,7 +172,7 @@ class CodeMirror extends ProxyHolder {
 //    // TODO: value may be a Function? always a function?
 //  }
 
-  static JsObject _createFromElement(Element element, Map? options) {
+  static JsObject _createFromElement(HTMLElement element, Map? options) {
     if (options == null) {
       return JsObject(_cm as JsFunction, [element]);
     } else {
@@ -181,7 +181,7 @@ class CodeMirror extends ProxyHolder {
   }
 
   static JsObject? _createFromTextArea(
-      TextAreaElement? textArea, Map? options) {
+      HTMLTextAreaElement? textArea, Map? options) {
     var args = <dynamic>[textArea];
     if (options != null) args.add(jsify(options));
     return _cm!.callMethod('fromTextArea', args);
@@ -199,7 +199,7 @@ class CodeMirror extends ProxyHolder {
 
   /// Create a new CodeMirror editor in the given element. See
   /// http://codemirror.net/doc/manual.html#config for valid options values.
-  CodeMirror.fromElement(Element element, {Map? options})
+  CodeMirror.fromElement(HTMLElement element, {Map? options})
       : super(_createFromElement(element, options)) {
     _instances[jsProxy] = this;
   }
@@ -226,7 +226,7 @@ class CodeMirror extends ProxyHolder {
   /// put into the textarea when the form is submitted. The text in the textarea
   /// will provide the content for the editor. A CodeMirror instance created this
   /// way has three additional methods: `save`, `toTextArea`, and `getTextArea`.
-  CodeMirror.fromTextArea(TextAreaElement? textArea, {Map? options})
+  CodeMirror.fromTextArea(HTMLTextAreaElement? textArea, {Map? options})
       : super(_createFromTextArea(textArea, options)) {
     _instances[jsProxy] = this;
   }
@@ -576,7 +576,7 @@ class CodeMirror extends ProxyHolder {
   ///
   /// Only available if the CodeMirror instance was created using the
   /// `CodeMirror.fromTextArea` constructor.
-  TextAreaElement? getTextArea() => call('getTextArea');
+  HTMLTextAreaElement? getTextArea() => call('getTextArea');
 
   /// If you create and discard a large number of `CodeMirror` instances, you
   /// should call [dispose] after finishing with each one.

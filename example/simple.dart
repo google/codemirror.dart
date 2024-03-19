@@ -4,7 +4,7 @@
 
 library example.simple;
 
-import 'dart:html';
+import 'package:web/web.dart';
 
 import 'package:codemirror/codemirror.dart';
 import 'package:codemirror/hints.dart';
@@ -23,48 +23,58 @@ void main() {
   };
 
   var editor = CodeMirror.fromTextArea(
-      querySelector('#textContainer') as TextAreaElement?,
+      document.querySelector('#textContainer') as HTMLTextAreaElement?,
       options: options);
 
-  querySelector('#version')!.text = 'CodeMirror version ${CodeMirror.version}';
+  document.querySelector('#version')!.text =
+      'CodeMirror version ${CodeMirror.version}';
 
   Hints.registerHintsHelper('dart', _dartCompleter);
   Hints.registerHintsHelperAsync('dart', _dartCompleterAsync);
 
   // Theme control.
-  final themeSelect = querySelector('#theme') as SelectElement;
+  final themeSelect = document.querySelector('#theme') as HTMLSelectElement;
   for (final theme in CodeMirror.themes) {
-    themeSelect.children.add(OptionElement(value: theme)..text = theme);
+    themeSelect.add(HTMLOptionElement()
+      ..value = theme
+      ..text = theme);
     if (theme == editor.getTheme()) {
-      themeSelect.selectedIndex = themeSelect.length! - 1;
+      themeSelect.selectedIndex = themeSelect.length - 1;
     }
   }
   themeSelect.onChange.listen((e) {
-    var themeName = themeSelect.options[themeSelect.selectedIndex!].value;
+    var themeName = (themeSelect.options.item(themeSelect.selectedIndex)
+            as HTMLOptionElement)
+        .value;
     editor.setTheme(themeName);
   });
 
   // Mode control.
-  final modeSelect = querySelector('#mode') as SelectElement;
+  final modeSelect = document.querySelector('#mode') as HTMLSelectElement;
   for (final mode in CodeMirror.modes) {
-    modeSelect.children.add(OptionElement(value: mode)..text = mode);
+    modeSelect.add(HTMLOptionElement()
+      ..value = mode
+      ..text = mode);
     if (mode == editor.getMode()) {
-      modeSelect.selectedIndex = modeSelect.length! - 1;
+      modeSelect.selectedIndex = modeSelect.length - 1;
     }
   }
   modeSelect.onChange.listen((e) {
-    var modeName = modeSelect.options[modeSelect.selectedIndex!].value;
+    var modeName = (modeSelect.options.item(themeSelect.selectedIndex)
+            as HTMLOptionElement)
+        .value;
     editor.setMode(modeName);
   });
 
   // Show line numbers.
-  final lineNumbers = querySelector('#lineNumbers') as InputElement;
+  final lineNumbers =
+      document.querySelector('#lineNumbers') as HTMLInputElement;
   lineNumbers.onChange.listen((e) {
     editor.setLineNumbers(lineNumbers.checked);
   });
 
   // Indent with tabs.
-  final tabIndent = querySelector('#tabIndent') as InputElement;
+  final tabIndent = document.querySelector('#tabIndent') as HTMLInputElement;
   tabIndent.onChange.listen((e) {
     editor.setIndentWithTabs(tabIndent.checked);
   });
@@ -102,7 +112,7 @@ void _updateFooter(CodeMirror editor) {
   var off = editor.doc.indexFromPos(pos);
   var str =
       'line ${pos.line} • column ${pos.ch} • offset $off${editor.doc.isClean() ? '' : ' • (modified)'}';
-  querySelector('#footer')!.text = str;
+  document.querySelector('#footer')!.text = str;
 }
 
 HintResults _dartCompleter(CodeMirror editor, [HintsOptions? options]) {

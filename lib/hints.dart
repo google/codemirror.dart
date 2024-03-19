@@ -5,7 +5,7 @@
 /// A wrapper around the `hint/show-hint.js` addon.
 library codemirror.hints;
 
-import 'dart:html' show Element;
+import 'package:web/web.dart' show Element;
 import 'dart:js';
 
 import 'codemirror.dart';

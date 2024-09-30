@@ -5,6 +5,8 @@
 @TestOn('browser')
 library codemirror.tests;
 
+import 'dart:js_interop';
+
 import 'package:web/web.dart';
 
 import 'package:codemirror/codemirror.dart';
@@ -33,7 +35,7 @@ void createSimpleTests() {
     expect(editor, isNotNull);
     expect(editorHost.parentElement, isNotNull);
     editor.dispose();
-    editorHost.innerHTML = '';
+    editorHost.innerHTML = ''.toJS;
   });
 }
 
@@ -72,7 +74,7 @@ void createCodeMirrorTests() {
 
   tearDown(() {
     editor.dispose();
-    editorHost.innerHTML = '';
+    editorHost.innerHTML = ''.toJS;
   });
 
   test('simple', () {
@@ -105,7 +107,7 @@ void createDocTests() {
 
   tearDown(() {
     editor.dispose();
-    editorHost.innerHTML = '';
+    editorHost.innerHTML = ''.toJS;
   });
 
   test('getValue / getValue', () {
@@ -193,7 +195,7 @@ void createHtmlDocTests() {
 
   tearDown(() {
     editor.dispose();
-    editorHost.innerHTML = '';
+    editorHost.innerHTML = ''.toJS;
   });
 
   test('getModeAt', () {
@@ -214,7 +216,7 @@ void createHistoryTests() {
 
   tearDown(() {
     editor.dispose();
-    editorHost.innerHTML = '';
+    editorHost.innerHTML = ''.toJS;
   });
 
   test('undo / redo', () {

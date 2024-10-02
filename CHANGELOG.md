@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.14+5.65.18
+ - Update package:web to 1.0.1
+
 ## 0.7.13+5.65.18
  - Update to CodeMirror 5.65.18
 

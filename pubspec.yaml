@@ -3,7 +3,7 @@
 # license that can be found in the LICENSE file.
 
 name: codemirror
-version: 0.7.13+5.65.18
+version: 0.7.14+5.65.18
 description: A Dart wrapper around the CodeMirror text editor.
 repository: https://github.com/google/codemirror.dart
 
@@ -15,4 +15,4 @@ dev_dependencies:
   lints: ^2.0.0
   test: ^1.0.0
 dependencies:
-  web: ^0.5.1
+  web: ^1.1.0

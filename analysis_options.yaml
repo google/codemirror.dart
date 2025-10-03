@@ -4,6 +4,8 @@ analyzer:
   exclude:
     - "doc/api/**"
     - "lib/mode/**"
+  errors:
+    deprecated_member_use: false
 
 linter:
   rules:

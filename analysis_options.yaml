@@ -5,7 +5,7 @@ analyzer:
     - "doc/api/**"
     - "lib/mode/**"
   errors:
-    deprecated_member_use: false
+    deprecated_member_use: ignore
 
 linter:
   rules:
